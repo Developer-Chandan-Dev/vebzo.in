@@ -1,0 +1,221 @@
+Apana Store Backend
+
+<=== controller/ ====>   # Handles business logic for routes
+----> authController.js
+----> productController.js
+----> orderController.js
+----> userController.js
+
+<=== models/ ====>  # MongoDB schemas
+----> Product.js
+----> Order.js
+----> User.js
+----> Category.js
+
+<=== routes/ ====>  # Route definitions
+----> authRoutes.js
+----> productRoutes.js
+----> orderRoutes.js
+----> userRoutes.js
+
+<=== services/ ====>    # Reusable services (e.g., email, payments)
+----> emailService.js
+----> paymentService.js
+----> uploadsService.js
+
+<=== middlewares/ =====>    # Middleware (e.g., auth, error handling)
+----> authMiddleware.js
+----> errorHandler.js
+----> uploadMiddleware.js
+
+<=== config/ ====> #    Configuration (e.g., DB connection)
+----> db.js
+----> env.js
+
+<=== utils/ ====>   # Utility functions
+----> validator.js
+----> tokenGenerator.js
+----> logger.js
+
+.env        #   Environment variables
+server.js   #   Entry point for the backend
+package.json
+
+// Questions
+Q.1. How to handle 2 items order at one time? 
+
+Total Steps:
+
+1. User Management
+
+--> Customer Registration and Login ( Done )
+    ** Register new users with fields like name, email and password
+    ** Login with email and password, returning a JWT token.
+    ** Secure password hassing using bcrypt.
+
+--> User Profile  ( Not Added)
+    ** Fetch and update user details (name, email, password)
+
+----> Role-based Access ( Done )
+    ** Admin vs. Customer roles for different levels of access to resources.
+
+2. Product Management 
+
+--> CRUD Operations for productRoutes ( Done )
+    ** Add Product : Admin can create new products with details like name, description, price category, stock, and image.
+    ** Edit Product : Admin can update prodcut details
+    ** Delete Product : Remove a product.
+    ** Get Products : Retrieve all products fro listing on the frontend.
+
+--> Image Upload ( Not Added)
+    ** Use a cloud storage service (e.g. Cloudinary, AWS S3) for product image uploads
+
+--> Stock Management ( Not Added)
+    ** Decrease stock when an order is placed.
+    ** Prevent orders for out-of-stock items.
+
+3. Category Management ( Done )
+
+--> CRUD Operations for Categories
+    ** Add Category : Admin can create a new category (e.g. vagetables, fruits)
+    ** Edit Category : Update category details.
+    ** Delete Category : Remove a category (ensure cascading removal or warning if products exist).
+    ** Get Categories : Retrieve all categories for filtering products on the frontend.
+
+4. Order Management. ( Done )
+
+--> Order Placement
+    ** Create an order with details like:
+        ## User information (linked to User model).
+        ## Ordered products with their quantity and price.
+        ## Total price calculation.
+        ## Shipping address.
+        ## Payment method.
+
+--> Order Status Updates
+    ** Customer : View order status (Pending, Confirmed, Out for Delivery, Delivered, Cancelled).
+    ** Admin : Update order status as the order progresses.
+
+--> Payment Management
+    ** Update paymentStatus (Pending, Paid, Failed).
+    ** Integrate payment gateway (e.g. Razorpay, Stripe).
+
+--> Delivery Tracking
+    ** Store deliveredAt when the order is marked as "Delivered".
+
+5. Wishlist and Cart ( Done )
+
+--> Cart Management
+    ** Add/remove/ products to/from cart.
+    ** Update product quantities in the cart.
+    ** Save cart data for users (persisted on the backend).
+
+--> Wishlist Management
+    ** Add/remove products to/from wishlist.
+    ** Fetch wishlist items for users.
+
+6. Authentication & Authorization ( Done )
+
+--> JWT Token Authentication
+    ** Protect routes using middleware.
+    ** Grant access based on the user roles. 
+
+--> Cookies Management
+    ** Implement token expiry.
+    ** Add logout functionality.
+
+7. Review & Rating System
+
+--> Product Reviews
+    ** Customers can leave reviews and ratings for products.
+    ** Admin can approve or delete inappropriate reviews.
+
+--> Rating Aggregation
+    ** Calculate the average rating for products based on customer feedback.
+
+8. Search & Filtering  ( Done )
+
+--> Search Functionality
+    ** Enable keyword search for products (name, description, category).
+
+--> Filters
+    ** Filter products by price range, category or availability.
+
+9. Notifications
+
+--> Admin Notifications
+    ** Notify admin about new orders, low stock levels or payment failures.
+
+--> Customer Notifications
+    ** Send order confirmation, shipment updates, and delivery status.
+    ** Use email or SMS notifications (e.g. via Twilio, Nodemailor).
+
+10. Analytics & Reports ( For Admin )
+
+--> Sales Analytics
+    ** Total sales, daily/monthly revenue, and popular products.
+
+--> User Analytics
+    ** Numbero of new users registered, most active users.
+
+--> Order Analytics
+    ** Order status (Pending, Delivered, Cancelled).
+
+11. Payment Gateway Integration
+
+----> Integrate Payment Gateway
+    ** Use services like Razorpay, Stripe, or Pgit remote -vayPal.
+    ** Securely handle transactions and payment statuses.
+
+12. Security
+
+--> Validation
+    ** Validate input data for all APIs (e.g. email format, required fields).
+
+--> Rate Limiting
+    ** Prevent brute-force attacks on login and other sensitive endpoints.
+
+--> Sensitive Data Protection
+    ** Avoid storing sensitive data like passwords in plain text.
+
+--> CORS Setup
+    ** Configure CORS for secure cross-origin API access.
+
+13. Error Handling
+
+--> Global Error Handling Middleware
+    ** Standardize error responses for all routes.
+
+--> Customer Error Messages
+    ** Provide meaningful error messages for users and developers.
+
+14. Additional Features
+
+--> Promo Codes/Discounts
+    ** Admin can create promo codes.
+    ** Customers can apply promo codes during checkout.
+
+--> Delivery Charges
+    ** Calculate delivery charges based on location or tatal order value.
+
+15. Testing
+
+--> Unit Testing
+    ** Test individual functions (e.g., order placement, payment status updates).
+
+--> Integration Testing
+    ** Test how diffferent components interact (e.g. user login + placing an order).
+
+--> API Testing
+    ** Test API endpoints using tools like Postman, Insomnia, Thunder Client or automated test suites.
+
+Backend Approach Summary
+1. Start with Models : Define all database schemas.
+2. Build Controllers : Implement core business logic.
+3. Define Routes : Expose RESTful APIs.
+4. Add Middleware : Implement authentication and validation.
+5. Integrate Third-party services : Payment gateway, notifications, and file storage.
+6. Testing : Write an run tests for critical features.
+7. Deployment : Host on platforms like AWS, DigitalOcean or Render.
+
+For Chat GPT : I want 

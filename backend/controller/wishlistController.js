@@ -1,0 +1,72 @@
+const Wishlist = require("../models/wishlist.models.js");
+
+const addToWishList = async (req, res) => {
+  const { productId } = req.body;
+
+  try {
+    let wishlist = await Wishlist.findOne({ user: req.user.id });
+    if (!wishlist) {
+      wishlist = new Wishlist({ user: req.user.id, products: [] });
+    }
+
+    if (!wishlist.products.includes(productId)) {
+      wishlist.products.push(productId);
+      await wishlist.save();
+      return res
+        .status(200)
+        .json({ success: true, message: "Product added to wishlist" });
+    }
+
+    res
+      .status(400)
+      .json({ success: false, message: "Product already in wishlist" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ success: false, message: "Internal Server Error" });
+  }
+};
+
+const removeFromWishList = async (req, res) => {
+  const { productId } = req.params;
+
+  try {
+    const wishlist = await Wishlist.findOne({ user: req.user.id });
+
+    if (!wishlist) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Wishlist not found" });
+    }
+
+    wishlist.products = wishlist.products.filter(
+      (product) => product.toString() !== productId
+    );
+
+    await wishlist.save();
+    res
+      .status(200)
+      .json({ success: true, message: "Product removed from wishlist" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ success: false, message: "Internal Server Error" });
+  }
+};
+
+const getWishlist = async (req, res) => {
+  try {
+    const wishlist = await Wishlist.findOne({ user: req.user.id }).populate(
+      "products"
+    );
+
+    if (!wishlist) {
+      return res.status(200).json({ success: true, products: [] });
+    }
+
+    res.status(200).json({ success: true, products: wishlist.products });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ success: false, message: "Internal Server Error" });
+  }
+};
+
+module.exports = { addToWishList, removeFromWishList, getWishlist };

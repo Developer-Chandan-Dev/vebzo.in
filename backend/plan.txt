@@ -36,6 +36,8 @@ Apana Store Backend
 ----> validator.js
 ----> tokenGenerator.js
 ----> logger.js
+----> asyncHandler.js
+----> errorResponse.js
 
 .env        #   Environment variables
 server.js   #   Entry point for the backend
@@ -58,6 +60,8 @@ Total Steps:
 
 ----> Role-based Access ( Done )
     ** Admin vs. Customer roles for different levels of access to resources.
+
+
 
 2. Product Management 
 
@@ -82,6 +86,8 @@ Total Steps:
     ** Delete Category : Remove a category (ensure cascading removal or warning if products exist).
     ** Get Categories : Retrieve all categories for filtering products on the frontend.
 
+
+
 4. Order Management. ( Done )
 
 --> Order Placement
@@ -103,6 +109,8 @@ Total Steps:
 --> Delivery Tracking
     ** Store deliveredAt when the order is marked as "Delivered".
 
+
+
 5. Wishlist and Cart ( Done )
 
 --> Cart Management
@@ -114,6 +122,8 @@ Total Steps:
     ** Add/remove products to/from wishlist.
     ** Fetch wishlist items for users.
 
+
+
 6. Authentication & Authorization ( Done )
 
 --> JWT Token Authentication
@@ -124,6 +134,8 @@ Total Steps:
     ** Implement token expiry.
     ** Add logout functionality.
 
+
+
 7. Review & Rating System
 
 --> Product Reviews
@@ -133,6 +145,8 @@ Total Steps:
 --> Rating Aggregation
     ** Calculate the average rating for products based on customer feedback.
 
+
+
 8. Search & Filtering  ( Done )
 
 --> Search Functionality
@@ -140,6 +154,8 @@ Total Steps:
 
 --> Filters
     ** Filter products by price range, category or availability.
+
+
 
 9. Notifications
 
@@ -150,16 +166,24 @@ Total Steps:
     ** Send order confirmation, shipment updates, and delivery status.
     ** Use email or SMS notifications (e.g. via Twilio, Nodemailor).
 
+
+
 10. Analytics & Reports ( For Admin )
 
---> Sales Analytics
+--> Sales Analytics [done]
     ** Total sales, daily/monthly revenue, and popular products.
 
---> User Analytics
+--> User Analytics [done]
     ** Numbero of new users registered, most active users.
 
---> Order Analytics
+--> Order Analytics  [done]
     ** Order status (Pending, Delivered, Cancelled).
+
+--> Reports
+    ** PDF Reports (npm install pdfkit)
+    ** Excel/CSV Reports (npm install exceljs)
+
+
 
 11. Payment Gateway Integration
 
@@ -167,27 +191,45 @@ Total Steps:
     ** Use services like Razorpay, Stripe, or Pgit remote -vayPal.
     ** Securely handle transactions and payment statuses.
 
-12. Security
 
---> Validation
+
+12. Security [Authentication, Authorization, Input Validation & Sanitization(Joi), Password Security(Hashed Password), 
+    Secure Communication(HTTPS/CORS), Rate Lmiting]
+
+--> Validation (Joi)
     ** Validate input data for all APIs (e.g. email format, required fields).
 
---> Rate Limiting
+--> Rate Limiting (express-rate-limit)
     ** Prevent brute-force attacks on login and other sensitive endpoints.
 
---> Sensitive Data Protection
+--> Sensitive Data Protection ()
     ** Avoid storing sensitive data like passwords in plain text.
 
 --> CORS Setup
     ** Configure CORS for secure cross-origin API access.
 
-13. Error Handling
+--> Logging & Monitoring
+    ** Winston or Morgan
+
+--> Secure File Uploads
+    ** multer
+
+--> Database Security
+    ** Use Indexes
+
+--> Tools (npm audit, Helmet)
+
+
+
+13. Error Handling (Done)
 
 --> Global Error Handling Middleware
     ** Standardize error responses for all routes.
 
 --> Customer Error Messages
     ** Provide meaningful error messages for users and developers.
+
+
 
 14. Additional Features
 
@@ -197,6 +239,8 @@ Total Steps:
 
 --> Delivery Charges
     ** Calculate delivery charges based on location or tatal order value.
+
+
 
 15. Testing
 
@@ -208,6 +252,7 @@ Total Steps:
 
 --> API Testing
     ** Test API endpoints using tools like Postman, Insomnia, Thunder Client or automated test suites.
+
 
 Backend Approach Summary
 1. Start with Models : Define all database schemas.

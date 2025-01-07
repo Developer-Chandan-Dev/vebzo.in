@@ -1,8 +1,10 @@
 const Order = require("../models/order.model");
 const Product = require("../models/product.model");
+const asyncHandler = require("../utils/asyncHandler");
+const ErrorResponse = require("../utils/errorResponse");
 
 // Total Sales Revenue
-const getTotalSalesRevenue = async (req, res) => {
+const getTotalSalesRevenue = asyncHandler(async (req, res, next) => {
   try {
     const result = await Order.aggregate([
       { $group: { _id: null, totalRevenue: { $sum: "$totalPrice" } } },
@@ -12,23 +14,23 @@ const getTotalSalesRevenue = async (req, res) => {
     res.status(200).json({ success: true, totalRevenue: totalRevenue });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ success: false, message: "Internal Server Error" });
+    return next(new ErrorResponse("Internal Server Error", 500));
   }
-};
+});
 
 // Numbers of Orders
-const getTotalOrders = async (req, res) => {
+const getTotalOrders = asyncHandler(async (req, res, next) => {
   try {
     const totalOrders = await Order.countDocuments();
     res.status(200).json({ success: true, totalOrders: totalOrders });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ success: false, message: "Internal Server Error" });
+    return next(new ErrorResponse("Internal Server Error", 500));
   }
-};
+});
 
 // Top-Selling Products
-const getTopSellingProducts = async (req, res) => {
+const getTopSellingProducts = asyncHandler(async (req, res, next) => {
   try {
     const result = await Order.aggregate([
       { $unwind: "$orderItems" },
@@ -55,12 +57,12 @@ const getTopSellingProducts = async (req, res) => {
     res.status(200).json({ success: true, result: result });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ success: false, message: "Internal Server Error" });
+    return next(new ErrorResponse("Internal Server Error", 500));
   }
-};
+});
 
 // Low Stock Products
-const getLowStockProducts = async (req, res) => {
+const getLowStockProducts = asyncHandler(async (req, res, next) => {
   try {
     const threshold = 5; // Define low stock threshold
     const lowStockProducts = await Product.find({ stock: { $lte: threshold } });
@@ -68,12 +70,12 @@ const getLowStockProducts = async (req, res) => {
     res.status(200).json({ success: true, lowStockProducts: lowStockProducts });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ success: false, message: "Internal Server Error" });
+    return next(new ErrorResponse("Internal Server Error", 500));
   }
-};
+});
 
 // Sales Trends
-const getSalesTrends = async (req, res) => {
+const getSalesTrends = asyncHandler(async (req, res, next) => {
   try {
     const { startDate, endDate } = req.query;
 
@@ -99,12 +101,12 @@ const getSalesTrends = async (req, res) => {
     res.status(200).json({ success: true, result: result });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ success: false, message: "Internal Server Error" });
+    return next(new ErrorResponse("Internal Server Error", 500));
   }
-};
+});
 
 // Payment Method Insights
-const getPaymentMethodInsights = async (req, res) => {
+const getPaymentMethodInsights = asyncHandler(async (req, res, next) => {
   try {
     const result = await Order.aggregate([
       {
@@ -119,12 +121,12 @@ const getPaymentMethodInsights = async (req, res) => {
     res.status(200).json({ success: true, result: result });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ success: false, message: "Internal Server Error" });
+    return next(new ErrorResponse("Internal Server Error", 500));
   }
-};
+});
 
 // Customer Insights
-const getCustomerInsights = async (req, res) => {
+const getCustomerInsights = asyncHandler(async (req, res, next) => {
   try {
     const result = await Order.aggregate([
       {
@@ -155,12 +157,12 @@ const getCustomerInsights = async (req, res) => {
     res.status(200).json({ success: true, result: result });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ success: false, message: "Internal Server Error" });
+    return next(new ErrorResponse("Internal Server Error", 500));
   }
-};
+});
 
 // Retrieve Monthly Order Details
-const getMonthlyOrderDetails = async (req, res) => {
+const getMonthlyOrderDetails = asyncHandler(async (req, res, next) => {
   try {
     const result = await Order.aggregate([
       {
@@ -176,12 +178,12 @@ const getMonthlyOrderDetails = async (req, res) => {
     res.status(200).json({ success: true, result: result });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ success: false, message: "Internal Server Error" });
+    return next(new ErrorResponse("Internal Server Error", 500));
   }
-};
+});
 
 // Retrieve Weekly Order Details
-const getWeeklyOrderDetails = async (req, res) => {
+const getWeeklyOrderDetails = asyncHandler(async (req, res, next) => {
   try {
     const result = await Order.aggregate([
       {
@@ -200,12 +202,12 @@ const getWeeklyOrderDetails = async (req, res) => {
     res.status(200).json({ success: true, result: result });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ success: false, message: "Internal Server Error" });
+    return next(new ErrorResponse("Internal Server Error", 500));
   }
-};
+});
 
 // Retrieve Daily Order Details
-const getDailyOrderDetails = async (req, res) => {
+const getDailyOrderDetails = asyncHandler(async (req, res, next) => {
   try {
     const result = await Order.aggregate([
       {
@@ -221,12 +223,12 @@ const getDailyOrderDetails = async (req, res) => {
     res.status(200).json({ success: true, result: result });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ success: false, message: "Internal Server Error" });
+    return next(new ErrorResponse("Internal Server Error", 500));
   }
-};
+});
 
 // Filter Orders by Date Range
-const getOrdersByDateRange = async (req, res) => {
+const getOrdersByDateRange = asyncHandler(async (req, res, next) => {
   try {
     const { startDate, endDate } = req.query;
 
@@ -250,9 +252,9 @@ const getOrdersByDateRange = async (req, res) => {
     res.status(200).json({ success: true, result: result });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ success: false, message: "Internal Server Error" });
+    return next(new ErrorResponse("Internal Server Error", 500));
   }
-};
+});
 
 module.exports = {
   getTotalSalesRevenue,

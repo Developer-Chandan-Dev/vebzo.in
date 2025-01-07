@@ -1,10 +1,12 @@
 const Product = require("../models/product.model");
+const asyncHandler = require("../utils/asyncHandler");
+const ErrorResponse = require("../utils/errorResponse");
 
 // @desc Create a new product
 // @route PORT /api/v1/products
 // @access Admin
 
-const createProduct = async (req, res) => {
+const createProduct = asyncHandler(async (req, res, next) => {
   try {
     const { name, description, price, stock, category, imageUrl } = req.body;
 
@@ -23,29 +25,29 @@ const createProduct = async (req, res) => {
       .json({ success: true, message: "Product Added", data: product });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ success: false, message: "Internal Server Error" });
+    return next(new ErrorResponse("Internal Server Error", 500));
   }
-};
+});
 
 // @desc Get all products
 // @route GET /api/v1/products
 // @access Public
 
-const getProducts = async (req, res) => {
+const getProducts = asyncHandler(async (req, res, next) => {
   try {
     const products = await Product.find().populate("category", "name");
     res.status(200).json({ success: true, data: products });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ success: false, message: "Internal Server Error" });
+    return next(new ErrorResponse("Internal Server Error", 500));
   }
-};
+});
 
 // @desc Get a single product by ID
 // @route GET /api/v1/products/:ID
 // @access Public
 
-const getProductById = async (req, res) => {
+const getProductById = asyncHandler(async (req, res, next) => {
   try {
     const product = await Product.findById(req.params.id).populate(
       "category",
@@ -53,22 +55,20 @@ const getProductById = async (req, res) => {
     );
 
     if (!product) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Product not found" });
+      return next(new ErrorResponse("Product not found", 404));
     }
 
     res.status(200).json({ success: true, data: product });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ success: false, message: "Internal Server Error" });
+    return next(new ErrorResponse("Internal Server Error", 500));
   }
-};
+});
 
 // @desc Update a product
 // @route PUT /api/v1/products/:id
 // @access Admin
-const updateProduct = async (req, res) => {
+const updateProduct = asyncHandler(async (req, res, next) => {
   try {
     const { name, description, price, stock, category, imageUrl } = req.body;
 
@@ -86,9 +86,7 @@ const updateProduct = async (req, res) => {
     );
 
     if (!product) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Product not found" });
+      return next(new ErrorResponse("Product not found", 404));
     }
 
     res.status(200).json({
@@ -98,21 +96,19 @@ const updateProduct = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ success: false, message: "Internal Server Error" });
+    return next(new ErrorResponse("Internal Server Error", 500));
   }
-};
+});
 
 // @desc Delete a product
 // @route DELETE /api/v1/products/:id
 // @access Admin
-const deleteProduct = async (req, res) => {
+const deleteProduct = asyncHandler(async (req, res, next) => {
   try {
     const product = await Product.findByIdAndDelete(req.params.id);
 
     if (!product) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Product not found" });
+      return next(new ErrorResponse("Product not found", 404));
     }
 
     res
@@ -120,14 +116,14 @@ const deleteProduct = async (req, res) => {
       .json({ success: true, messsage: "Product deleted successfully" });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ success: false, message: " Internal Server Error" });
+    return next(new ErrorResponse("Internal Server Error", 500));
   }
-};
+});
 
 // @desc GET products by category
 // @route DELETE /api/v1/products/:id
 // @access Public
-const productsByCategory = async (req, res) => {
+const productsByCategory = asyncHandler(async (req, res, next) => {
   try {
     const products = await Product.findById(req.params.id).populate(
       "category",
@@ -135,21 +131,19 @@ const productsByCategory = async (req, res) => {
     );
 
     if (!products) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Products not found" });
+      return next(new ErrorResponse("Products not found", 404));
     }
     res.status(200).json({ success: true, data: products });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ success: false, message: " Internal Server Error" });
+    return next(new ErrorResponse("Internal Server Error", 500));
   }
-};
+});
 
 // desc Search functionality
 // @route GET /api/v1/products/search
 // @access Public
-const searchProducts = async (req, res) => {
+const searchProducts = asyncHandler(async (req, res, next) => {
   try {
     const query = req.query.query || "";
     console.log(query);
@@ -163,14 +157,14 @@ const searchProducts = async (req, res) => {
     res.status(200).json({ success: true, data: products });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ success: false, message: "Internal Server Error" });
+    return next(new ErrorResponse("Internal Server Error", 500));
   }
-};
+});
 
 // desc Filter Functionality
 // @route GET /api/v1/products/filter?category=<category>&minPrice=<minPrice>&maxPrice=<maxPrice>&inStock=true
 // access Public
-const filterProducts = async (req, res) => {
+const filterProducts = asyncHandler(async (req, res, next) => {
   try {
     const { category, minPrice, maxPrice, inStock } = req.query;
     const filters = {};
@@ -184,11 +178,11 @@ const filterProducts = async (req, res) => {
     res.status(200).json({ success: true, data: products });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ success: false, message: "Internal Server Error" });
+    return next(new ErrorResponse("Internal Server Error", 500));
   }
-};
+});
 
-const searchAndFilterProducts = async (req, res) => {
+const searchAndFilterProducts = asyncHandler(async (req, res, next) => {
   try {
     const { query, category, minPrice, maxPrice, inStock } = req.query;
 
@@ -212,11 +206,9 @@ const searchAndFilterProducts = async (req, res) => {
     res.status(200).json({ success: true, data: products });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ success: false, message: "Internal Server Error" });
+    return next(new ErrorResponse("Internal Server Error", 500));
   }
-};
-
-
+});
 
 module.exports = {
   createProduct,

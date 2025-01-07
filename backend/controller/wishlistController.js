@@ -1,6 +1,8 @@
 const Wishlist = require("../models/wishlist.models.js");
+const asyncHandler = require("../utils/asyncHandler");
+const ErrorResponse = require("../utils/errorResponse");
 
-const addToWishList = async (req, res) => {
+const addToWishList = asyncHandler(async (req, res, next) => {
   const { productId } = req.body;
 
   try {
@@ -22,20 +24,18 @@ const addToWishList = async (req, res) => {
       .json({ success: false, message: "Product already in wishlist" });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ success: false, message: "Internal Server Error" });
+    return next(new ErrorResponse("Internal Server Error", 500));
   }
-};
+});
 
-const removeFromWishList = async (req, res) => {
+const removeFromWishList = asyncHandler(async (req, res, next) => {
   const { productId } = req.params;
 
   try {
     const wishlist = await Wishlist.findOne({ user: req.user.id });
 
     if (!wishlist) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Wishlist not found" });
+      return next(new ErrorResponse("Wishlist not found", 404));
     }
 
     wishlist.products = wishlist.products.filter(
@@ -48,11 +48,11 @@ const removeFromWishList = async (req, res) => {
       .json({ success: true, message: "Product removed from wishlist" });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ success: false, message: "Internal Server Error" });
+    return next(new ErrorResponse("Internal Server Error", 500));
   }
-};
+});
 
-const getWishlist = async (req, res) => {
+const getWishlist = asyncHandler(async (req, res, next) => {
   try {
     const wishlist = await Wishlist.findOne({ user: req.user.id }).populate(
       "products"
@@ -65,8 +65,8 @@ const getWishlist = async (req, res) => {
     res.status(200).json({ success: true, products: wishlist.products });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ success: false, message: "Internal Server Error" });
+    return next(new ErrorResponse("Internal Server Error", 500));
   }
-};
+});
 
 module.exports = { addToWishList, removeFromWishList, getWishlist };

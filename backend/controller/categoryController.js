@@ -1,9 +1,11 @@
 const Category = require("../models/category.model");
+const asyncHandler = require("../utils/asyncHandler");
+const ErrorResponse = require("../utils/errorResponse");
 
 // @desc Create a new category
 // @route PORT /api/v1/category
 // @access Admin
-const createCategory = async (req, res) => {
+const createCategory = asyncHandler(async (req, res, next) => {
   try {
     const { name, description } = req.body;
 
@@ -23,47 +25,45 @@ const createCategory = async (req, res) => {
     res.status();
   } catch (error) {
     console.log(error);
-    res.status(500).json({ success: false, message: "Internal Server Error" });
+    return next(new ErrorResponse("Internal Server Error", 500));
   }
-};
+});
 
 // @desc Get all categories
 // @route GET /api/v1/categories
 // @access Public
-const getCategories = async (req, res) => {
+const getCategories = asyncHandler(async (req, res, next) => {
   try {
     const category = await Category.find();
     res.status(200).json({ success: true, data: category });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ success: false, message: "Internal Server Error" });
+    return next(new ErrorResponse("Internal Server Error", 500));
   }
-};
+});
 
 // @desc Get a single category by ID
 // @route GET /api/v1/category/:ID
 // @access Public
-const getCategoryById = async (req, res) => {
+const getCategoryById = asyncHandler(async (req, res, next) => {
   try {
     const category = await Category.findById(req.params.id);
 
     if (!category) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Category not found" });
+      return next(new ErrorResponse("Category not found", 404));
     }
 
     res.status(200).json({ success: true, data: category });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ success: false, message: "Internal Server Error" });
+    return next(new ErrorResponse("Internal Server Error", 500));
   }
-};
+});
 
 // @desc Update a Category
 // @route PUT /api/v1/catgory/:id
 // @access Admin
-const updateCategory = async (req, res) => {
+const updateCategory = asyncHandler(async (req, res, next) => {
   try {
     const { name, description } = req.body;
 
@@ -77,9 +77,7 @@ const updateCategory = async (req, res) => {
     );
 
     if (!category) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Category not found" });
+      return next(new ErrorResponse("Category not found", 404));
     }
 
     res.status(200).json({
@@ -89,21 +87,19 @@ const updateCategory = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
-    res.stauts(500).json({ success: false, message: "Internal Server error" });
+    return next(new ErrorResponse("Internal Server Error", 500));
   }
-};
+});
 
 // @desc Delete a category
 // @route DELETE /api/v1/category/:id
 // @access Admin
-const deleteCategory = async (req, res) => {
+const deleteCategory = asyncHandler(async (req, res, next) => {
   try {
     const category = await Category.findByIdAndDelete(req.params.id);
 
     if (!category) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Category not found " });
+      return next(new ErrorResponse("Category not found", 404));
     }
 
     res
@@ -111,9 +107,9 @@ const deleteCategory = async (req, res) => {
       .json({ success: true, message: "Category deleted successfully" });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ success: false, message: " Internal Server Error" });
+    return next(new ErrorResponse("Internal Server Error", 500));
   }
-};
+});
 
 module.exports = {
   createCategory,

@@ -1,7 +1,9 @@
 const Product = require("../models/product.model");
+const asyncHandler = require("../utils/asyncHandler");
+const ErrorResponse = require("../utils/errorResponse");
 
 // Update stock for a product
-const updateStock = async (req, res) => {
+const updateStock = asyncHandler(async (req, res, next) => {
   try {
     const { productId, stock } = req.body;
 
@@ -9,9 +11,7 @@ const updateStock = async (req, res) => {
     const product = await Product.findById(productId);
 
     if (!product) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Product not found" });
+      return next(new ErrorResponse("Product not found", 404));
     }
 
     product.stock = stock; // Update stock value
@@ -22,9 +22,9 @@ const updateStock = async (req, res) => {
       .json({ success: true, message: "Stock updated successfully", product });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ success: false, message: "Internal Server Error" });
+    return next(new ErrorResponse("Internal Server Error", 500));
   }
-};
+});
 
 // Decrease stock and increase sold
 const decreaseStock = async (orderItems) => {
@@ -49,15 +49,13 @@ const validateStock = async (orderItems) => {
   }
 };
 
-const getProductStock = async (req, res) => {
+const getProductStock = asyncHandler(async (req, res, next) => {
   try {
     const productId = req.params.id;
 
     const product = await Product.findById({ _id: productId });
     if (!product) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Product not found" });
+      return next(new ErrorResponse("Product not found", 404));
     }
 
     res.status(200).json({
@@ -68,9 +66,9 @@ const getProductStock = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ success: false, message: "Internal Server Error" });
+    return next(new ErrorResponse("Internal Server Error", 500));
   }
-};
+});
 
 const checkLowStock = async () => {
   const lowStockProducts = await Product.find({ stock: { $lte: 5 } });

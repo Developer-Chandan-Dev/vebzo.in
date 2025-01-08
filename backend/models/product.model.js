@@ -36,6 +36,14 @@ const productSchema = new mongoose.Schema(
     imageUrlPublicId: {
       type: String,
     },
+    averageRating: {
+      type: Number,
+      default: 0, // Average rating of the product
+    },
+    totalRatings: {
+      type: Number,
+      default: 0, // Total number of ratings
+    },
   },
   { timestamps: true }
 );

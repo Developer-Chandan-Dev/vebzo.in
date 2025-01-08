@@ -71,10 +71,10 @@ Total Steps:
     ** Delete Product : Remove a product.
     ** Get Products : Retrieve all products fro listing on the frontend.
 
---> Image Upload ( Not Added)
+--> Image Upload ( Done )
     ** Use a cloud storage service (e.g. Cloudinary, AWS S3) for product image uploads
 
---> Stock Management ( Not Added)
+--> Stock Management ( Done )
     ** Decrease stock when an order is placed.
     ** Prevent orders for out-of-stock items.
 

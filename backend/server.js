@@ -44,6 +44,7 @@ const cartRoutes = require("./routes/cartRoutes.js");
 const wishlistRoutes = require("./routes/wishlistRoutes.js");
 const productStockRoutes = require("./routes/productStockRoutes.js");
 const analyticsRoutes = require("./routes/analyticsRoutes.js");
+const reviewRoutes = require("./routes/reviewRoutes.js");
 
 // Error handling middleware (should be after routes)
 app.use(errorHandler);
@@ -62,6 +63,7 @@ app.use("/api/v1/cart", cartRoutes);
 app.use("/api/v1/wishlist", wishlistRoutes);
 app.use("/api/v1/stock", productStockRoutes);
 app.use("/api/v1/analytics", analyticsRoutes);
+app.use("/api/v1/reviews", reviewRoutes);
 
 // Error Handler Middleware
 app.use((err, req, res, next) => {

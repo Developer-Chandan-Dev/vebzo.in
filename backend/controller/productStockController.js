@@ -72,12 +72,14 @@ const getProductStock = asyncHandler(async (req, res, next) => {
 
 const checkLowStock = async () => {
   const lowStockProducts = await Product.find({ stock: { $lte: 5 } });
+  console.log(lowStockProducts);
 
   if (lowStockProducts.length > 0) {
     console.log(
       "Low stock alert for the following products:",
       lowStockProducts
     );
+
     // You can integrate email/SMS alerts here
   }
 };
@@ -87,4 +89,5 @@ module.exports = {
   decreaseStock,
   validateStock,
   getProductStock,
+  checkLowStock
 };

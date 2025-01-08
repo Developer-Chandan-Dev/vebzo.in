@@ -3,6 +3,7 @@ const bcrypt = require("bcryptjs");
 const generateTokenAndSetCookie = require("../utils/generateToken.js");
 const asyncHandler = require("../utils/asyncHandler");
 const ErrorResponse = require("../utils/errorResponse");
+const { handleImageUpload } = require("../helper/cloudinary.helper.js");
 
 const signup = asyncHandler(async (req, res, next) => {
   try {
@@ -118,11 +119,35 @@ const updateProfile = asyncHandler(async (req, res, next) => {
   try {
     const updates = req.body;
     const userId = req.params.id;
+    const newImagePath = req.file?.path; // Path of the uploaded image
+
+    // Find the existing product by ID
+    const user = await User.findById(userId);
+    if (!user) {
+      return next(new ErrorResponse("User not found", 404));
+    }
+
+    // Handle image upload logic
+    const folderName = "users"; // Specify the folder name
+    const updatedImage = await handleImageUpload(
+      user,
+      newImagePath,
+      updates.username || user.username, // Use the new name if provided; otherwise, use the existing name
+      folderName
+    );
+    console.log(updatedImage);
 
     // Find and update the user
-    const updatedUser = await User.findByIdAndUpdate(userId, updates, {
-      new: true,
-    });
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      {
+        ...updates,
+        imageUrl: updatedImage.imageUrl,
+        imageUrlPublicId: updatedImage.imageUrlPublicId,
+      },
+      { new: true, runValidators: true }
+    ).select("-password");
+
     if (!updatedUser) {
       return next(new ErrorResponse("User not found", 404));
     }

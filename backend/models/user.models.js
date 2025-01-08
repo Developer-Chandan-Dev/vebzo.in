@@ -19,10 +19,10 @@ const userSchema = new mongoose.Schema(
       required: true,
       min: 6,
     },
-    image: {
+    imageUrl: {
       type: String,
     },
-    imagePublicId: {
+    imageUrlPublicId: {
       type: String,
     },
     address: {

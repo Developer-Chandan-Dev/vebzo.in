@@ -134,6 +134,7 @@ const updateOrderStatus = asyncHandler(async (req, res, next) => {
     }
 
     const updatedOrder = await order.save();
+
     res.status(200).json({ success: true, date: updatedOrder });
   } catch (error) {
     console.log(error);

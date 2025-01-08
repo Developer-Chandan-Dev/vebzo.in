@@ -1,30 +1,64 @@
 const Product = require("../models/product.model");
 const asyncHandler = require("../utils/asyncHandler");
 const ErrorResponse = require("../utils/errorResponse");
+const {
+  handleImageUpload,
+  safelyDeleteFromCloudinary,
+} = require("../helper/cloudinary.helper");
+
+const {
+  uploadToCloudinary,
+  deleteFromCloudinary,
+} = require("../service/uploadToCloudinary.service");
 
 // @desc Create a new product
-// @route PORT /api/v1/products
+// @route POST /api/v1/products
 // @access Admin
 
 const createProduct = asyncHandler(async (req, res, next) => {
   try {
-    const { name, description, price, stock, category, imageUrl } = req.body;
+    const { name, description, price, stock, category } = req.body;
 
-    const product = new Product({
+    // Validate required fields
+    if (!name || !price || !stock || !category) {
+      return next(
+        new ErrorResponse("All required fields must be provided", 400)
+      );
+    }
+
+    let imageUrl = null;
+    let imageUrlPublicId = null;
+
+    // Handle image upload if provided
+    if (req.file) {
+      const uploadResult = await uploadToCloudinary(
+        req.file.path, // Path to the uploaded file
+        "products", // Cloudinary folder
+        `products/${name}_${Date.now()}` // Image name
+      );
+      imageUrl = uploadResult.secure_url;
+      imageUrlPublicId = uploadResult.public_id;
+    }
+
+    // Create the product
+    const product = await Product.create({
       name,
       description,
       price,
       stock,
       category,
-      imageUrl,
+      imageUrl: imageUrl || null,
+      imageUrlPublicId: imageUrlPublicId || null,
     });
 
-    const response = await product.save();
-    res
-      .status(201)
-      .json({ success: true, message: "Product Added", data: product });
+    // Return response
+    res.status(201).json({
+      success: true,
+      message: "Product created successfully!",
+      data: product,
+    });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return next(new ErrorResponse("Internal Server Error", 500));
   }
 });
@@ -70,32 +104,50 @@ const getProductById = asyncHandler(async (req, res, next) => {
 // @access Admin
 const updateProduct = asyncHandler(async (req, res, next) => {
   try {
-    const { name, description, price, stock, category, imageUrl } = req.body;
+    const { name, description, price, stock, category } = req.body;
+    const newImagePath = req.file?.path; // Path of the uploaded image
+    const productId = req.params.id;
 
-    const product = await Product.findByIdAndUpdate(
-      req.params.id,
-      {
-        name,
-        description,
-        price,
-        stock,
-        category,
-        imageUrl,
-      },
-      { new: true, runValidators: true }
-    );
-
+    // Find the existing product by ID
+    const product = await Product.findById(productId);
     if (!product) {
       return next(new ErrorResponse("Product not found", 404));
     }
 
+    // Handle image upload logic
+    const folderName = "products"; // Specify the folder name (e.g., "products")
+    const updatedImage = await handleImageUpload(
+      product,
+      newImagePath,
+      name || product.name, // Use the new name if provided; otherwise, use the existing name
+      folderName
+    );
+
+    // Build the update fields dynamically
+    const updatedFields = {
+      ...(name && { name }), // Add name only if provided
+      ...(description && { description }),
+      ...(price && { price }),
+      ...(stock && { stock }),
+      ...(category && { category }),
+      imageUrl: updatedImage.imageUrl, // Always update imageUrl
+      imageUrlPublicId: updatedImage.imageUrlPublicId, // Always update imageUrlPublicId
+    };
+
+    // Update the product with the new fields
+    const updatedProduct = await Product.findByIdAndUpdate(
+      productId,
+      updatedFields,
+      { new: true, runValidators: true }
+    );
+
     res.status(200).json({
       success: true,
-      data: product,
+      data: updatedProduct,
       message: "Product updated successfully!",
     });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return next(new ErrorResponse("Internal Server Error", 500));
   }
 });
@@ -105,17 +157,29 @@ const updateProduct = asyncHandler(async (req, res, next) => {
 // @access Admin
 const deleteProduct = asyncHandler(async (req, res, next) => {
   try {
-    const product = await Product.findByIdAndDelete(req.params.id);
+    // Fetch the product by ID
+    const product = await Product.findById(req.params.id);
 
+    // If the product does not exist, return a 404 error
     if (!product) {
       return next(new ErrorResponse("Product not found", 404));
     }
 
-    res
-      .status(200)
-      .json({ success: true, messsage: "Product deleted successfully" });
+    // Delete the image from Cloudinary if it exists
+    if (product.imageUrlPublicId) {
+      await safelyDeleteFromCloudinary(product.imageUrlPublicId);
+    }
+
+    // Delete the product from the database
+    await product.remove();
+
+    // Respond with a success message
+    res.status(200).json({
+      success: true,
+      message: "Product deleted successfully",
+    });
   } catch (error) {
-    console.log(error);
+    console.error("Error deleting product:", error);
     return next(new ErrorResponse("Internal Server Error", 500));
   }
 });

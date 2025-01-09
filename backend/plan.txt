@@ -136,7 +136,7 @@ Total Steps:
 
 
 
-7. Review & Rating System
+7. Review & Rating System ( Done )
 
 --> Product Reviews
     ** Customers can leave reviews and ratings for products.

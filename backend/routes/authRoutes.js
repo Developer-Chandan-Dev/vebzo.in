@@ -7,9 +7,11 @@ const {
   logout,
   me,
   updateProfile,
+  updateUserByAdmin,
+  updatePassword,
 } = require("../controller/authController");
 
-const { protect } = require("../middlewares/authMiddleware");
+const { protect, admin } = require("../middlewares/authMiddleware");
 const validate = require("../middlewares/validation.middleware");
 const {
   userValidationSchema,
@@ -30,5 +32,9 @@ router.put(
   upload.single("imageUrl"),
   updateProfile
 ); // Route for updating user details
+router.put("/update-password", protect, updatePassword); // Route for updating user password
+
+// Admin-only route for updating user details
+router.put("/user/:id", protect, admin, updateUserByAdmin);
 
 module.exports = router;

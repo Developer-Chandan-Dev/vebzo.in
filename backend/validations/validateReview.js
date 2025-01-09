@@ -6,4 +6,9 @@ const validateReview = Joi.object({
   comment: Joi.string().max(500).optional(),
 });
 
-module.exports = validateReview;
+const validateReviewUpdate = Joi.object({
+  rating: Joi.number().min(1).max(5).optional(), // Rating should be between 1 and 5
+  comment: Joi.string().max(500).optional(), // Comment is optional and max length is 500 characters
+});
+
+module.exports = { validateReview, validateReviewUpdate };

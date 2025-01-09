@@ -6,38 +6,17 @@ const {
   safelyDeleteFromCloudinary,
 } = require("../helper/cloudinary.helper");
 
-const {
-  uploadToCloudinary,
-  deleteFromCloudinary,
-} = require("../service/uploadToCloudinary.service");
-
-// @desc Create a new product
-// @route POST /api/v1/products
-// @access Admin
-
+// @desc Create a new product (POST - /api/v1/products/, [Admin])
 const createProduct = asyncHandler(async (req, res, next) => {
   try {
     const { name, description, price, stock, category } = req.body;
+    console.log(name, description, price, stock, category);
 
     // Validate required fields
     if (!name || !price || !stock || !category) {
       return next(
         new ErrorResponse("All required fields must be provided", 400)
       );
-    }
-
-    let imageUrl = null;
-    let imageUrlPublicId = null;
-
-    // Handle image upload if provided
-    if (req.file) {
-      const uploadResult = await uploadToCloudinary(
-        req.file.path, // Path to the uploaded file
-        "products", // Cloudinary folder
-        `products/${name}_${Date.now()}` // Image name
-      );
-      imageUrl = uploadResult.secure_url;
-      imageUrlPublicId = uploadResult.public_id;
     }
 
     // Create the product
@@ -47,8 +26,6 @@ const createProduct = asyncHandler(async (req, res, next) => {
       price,
       stock,
       category,
-      imageUrl: imageUrl || null,
-      imageUrlPublicId: imageUrlPublicId || null,
     });
 
     // Return response
@@ -63,10 +40,49 @@ const createProduct = asyncHandler(async (req, res, next) => {
   }
 });
 
-// @desc Get all products
-// @route GET /api/v1/products
-// @access Public
+// @desc Update all products (PUT - /api/v1/products/productId/image, [Admin])
+const productImageUpload = asyncHandler(async (req, res, next) => {
+  try {
+    const productId = req.params.productId; // Get product ID from route parameters
+    const newImagePath = req.file?.path; // Path of the uploaded image from Multer
+    console.log(newImagePath, req.file);
+    // Find the product in the database
+    const product = await Product.findById(productId);
+    if (!product) {
+      return next(new ErrorResponse("Product not found", 404));
+    }
 
+    // If a new image is provided, upload it to Cloudinary
+    let uploadResult = await handleImageUpload(
+      product,
+      newImagePath, // Path to the uploaded file
+      product.name,
+      "products" // Cloudinary folder
+    );
+
+    console.log(uploadResult, "77");
+    // Update the product with new image details
+    if (uploadResult) {
+      product.imageUrl = uploadResult.imageUrl; // New image URL
+      product.imageUrlPublicId = uploadResult.imageUrlPublicId; // New image public ID
+    }
+
+    // Save the updated product in the database
+    await product.save();
+
+    // Respond with the updated product
+    res.status(200).json({
+      success: true,
+      message: "Product image uploaded successfully",
+      data: product,
+    });
+  } catch (error) {
+    console.error(error);
+    return next(new ErrorResponse("Failed to upload product image", 500));
+  }
+});
+
+// @desc Get all products (GET - /api/v1/products/, [Public])
 const getProducts = asyncHandler(async (req, res, next) => {
   try {
     const products = await Product.find().populate("category", "name");
@@ -77,10 +93,7 @@ const getProducts = asyncHandler(async (req, res, next) => {
   }
 });
 
-// @desc Get a single product by ID
-// @route GET /api/v1/products/:ID
-// @access Public
-
+// @desc Get a product by Id (GET - /api/v1/products/:id, [Public])
 const getProductById = asyncHandler(async (req, res, next) => {
   try {
     const product = await Product.findById(req.params.id).populate(
@@ -99,13 +112,10 @@ const getProductById = asyncHandler(async (req, res, next) => {
   }
 });
 
-// @desc Update a product
-// @route PUT /api/v1/products/:id
-// @access Admin
+// @desc Update a product (PUT - /api/v1/products/:id, [Admin])
 const updateProduct = asyncHandler(async (req, res, next) => {
   try {
     const { name, description, price, stock, category } = req.body;
-    const newImagePath = req.file?.path; // Path of the uploaded image
     const productId = req.params.id;
 
     // Find the existing product by ID
@@ -114,15 +124,6 @@ const updateProduct = asyncHandler(async (req, res, next) => {
       return next(new ErrorResponse("Product not found", 404));
     }
 
-    // Handle image upload logic
-    const folderName = "products"; // Specify the folder name (e.g., "products")
-    const updatedImage = await handleImageUpload(
-      product,
-      newImagePath,
-      name || product.name, // Use the new name if provided; otherwise, use the existing name
-      folderName
-    );
-
     // Build the update fields dynamically
     const updatedFields = {
       ...(name && { name }), // Add name only if provided
@@ -130,8 +131,6 @@ const updateProduct = asyncHandler(async (req, res, next) => {
       ...(price && { price }),
       ...(stock && { stock }),
       ...(category && { category }),
-      imageUrl: updatedImage.imageUrl, // Always update imageUrl
-      imageUrlPublicId: updatedImage.imageUrlPublicId, // Always update imageUrlPublicId
     };
 
     // Update the product with the new fields
@@ -152,9 +151,7 @@ const updateProduct = asyncHandler(async (req, res, next) => {
   }
 });
 
-// @desc Delete a product
-// @route DELETE /api/v1/products/:id
-// @access Admin
+// @desc Delete a product (DELETE - /api/v1/products/:id, [Admin])
 const deleteProduct = asyncHandler(async (req, res, next) => {
   try {
     // Fetch the product by ID
@@ -171,7 +168,7 @@ const deleteProduct = asyncHandler(async (req, res, next) => {
     }
 
     // Delete the product from the database
-    await product.remove();
+    await Product.findByIdAndDelete(req.params.id); // Use findByIdAndDelete to delete the product
 
     // Respond with a success message
     res.status(200).json({
@@ -184,12 +181,12 @@ const deleteProduct = asyncHandler(async (req, res, next) => {
   }
 });
 
-// @desc GET products by category
-// @route DELETE /api/v1/products/:id
-// @access Public
+// @desc GET products by category (GET - /api/v1/products/:id, [Public])
 const productsByCategory = asyncHandler(async (req, res, next) => {
   try {
-    const products = await Product.findById(req.params.id).populate(
+    const categoryId = req.params.categoryId;
+
+    const products = await Product.find({ category: categoryId }).populate(
       "category",
       "name description"
     );
@@ -204,9 +201,7 @@ const productsByCategory = asyncHandler(async (req, res, next) => {
   }
 });
 
-// desc Search functionality
-// @route GET /api/v1/products/search
-// @access Public
+// desc Search functionality (GET - /api/v1/products/search [Public])
 const searchProducts = asyncHandler(async (req, res, next) => {
   try {
     const query = req.query.query || "";
@@ -282,5 +277,7 @@ module.exports = {
   deleteProduct,
   searchAndFilterProducts,
   searchProducts,
+  productImageUpload,
   filterProducts,
+  productsByCategory,
 };

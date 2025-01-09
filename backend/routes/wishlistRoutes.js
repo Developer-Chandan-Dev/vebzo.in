@@ -8,8 +8,11 @@ const {
 } = require("../controller/wishlistController");
 const { protect, admin } = require("../middlewares/authMiddleware");
 
+const validate = require("../middlewares/validation.middleware");
+const { wishlistValidationSchema } = require("../validations/validateWishList");
+
 // Wishlist Routes
-router.post("/", protect, addToWishList); // Add a product to the user's wishlist
+router.post("/", protect, validate(wishlistValidationSchema), addToWishList); // Add a product to the user's wishlist
 router.delete("/:productId", protect, removeFromWishList); // Removes a product from teh user's wishlist
 router.get("/", protect, getWishlist); // Fetches all products in the user's wishlist
 

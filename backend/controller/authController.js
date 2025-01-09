@@ -56,7 +56,6 @@ const login = asyncHandler(async (req, res, next) => {
     if (!user) {
       return next(new ErrorResponse("User not found", 400));
     }
-
     // Compare password
     const comparePassword = await bcrypt.compare(
       password,
@@ -118,8 +117,23 @@ const me = asyncHandler(async (req, res, next) => {
 const updateProfile = asyncHandler(async (req, res, next) => {
   try {
     const updates = req.body;
-    const userId = req.params.id;
+    const userId = req.params.id; // ID from the route parameter
+    const loggedInUserId = req.user.id; // Logged-in user ID from authentication middleware
     const newImagePath = req.file?.path; // Path of the uploaded image
+
+    // Ensure the logged-in user can only update their own profile
+    if (userId !== loggedInUserId) {
+      return next(
+        new ErrorResponse("You are not authorized to update this user", 403)
+      );
+    }
+
+    // Whitelist of fields that can be updated
+    const allowedUpdates = ["username", "email", "address", "phone"];
+    const filteredUpdates = Object.keys(updates).reduce((obj, key) => {
+      if (allowedUpdates.includes(key)) obj[key] = updates[key];
+      return obj;
+    }, {});
 
     // Find the existing product by ID
     const user = await User.findById(userId);
@@ -127,29 +141,35 @@ const updateProfile = asyncHandler(async (req, res, next) => {
       return next(new ErrorResponse("User not found", 404));
     }
 
-    // Handle image upload logic
-    const folderName = "users"; // Specify the folder name
-    const updatedImage = await handleImageUpload(
-      user,
-      newImagePath,
-      updates.username || user.username, // Use the new name if provided; otherwise, use the existing name
-      folderName
-    );
-    console.log(updatedImage);
+    // Handle image upload if a new image is provided
+    let updatedImage = {};
+    if (newImagePath) {
+      const folderName = "users"; // Specify the folder name for image uploads
+      updatedImage = await handleImageUpload(
+        user,
+        newImagePath,
+        updates.username || user.username, // Use the new username if provided; otherwise, use the existing one
+        folderName
+      );
+    }
 
-    // Find and update the user
-    const updatedUser = await User.findByIdAndUpdate(
-      userId,
-      {
-        ...updates,
-        imageUrl: updatedImage.imageUrl,
+    // Merge the filtered updates and image updates
+    const updatePayload = {
+      ...filteredUpdates,
+      ...(updatedImage.imageUrl && { imageUrl: updatedImage.imageUrl }),
+      ...(updatedImage.imageUrlPublicId && {
         imageUrlPublicId: updatedImage.imageUrlPublicId,
-      },
-      { new: true, runValidators: true }
-    ).select("-password");
+      }),
+    };
+
+    // Update the user in the database
+    const updatedUser = await User.findByIdAndUpdate(userId, updatePayload, {
+      new: true,
+      runValidators: true,
+    }).select("-password");
 
     if (!updatedUser) {
-      return next(new ErrorResponse("User not found", 404));
+      return next(new ErrorResponse("Failed to update user", 400));
     }
 
     res.status(200).json({
@@ -163,4 +183,91 @@ const updateProfile = asyncHandler(async (req, res, next) => {
   }
 });
 
-module.exports = { signup, login, logout, me, updateProfile };
+const updateUserByAdmin = asyncHandler(async (req, res, next) => {
+  try {
+    const { id: userId } = req.params; // ID of the user to be updated
+    const updates = req.body; // Fields to be updated
+
+    // Ensure the admin is making the request
+    if (req.user.role !== "admin") {
+      return next(
+        new ErrorResponse("You are not authorized to perform this action", 403)
+      );
+    }
+
+    // Whitelist of fields that admin can update
+    const allowedUpdates = ["role", "blocked"];
+    const filteredUpdates = Object.keys(updates).reduce((obj, key) => {
+      if (allowedUpdates.includes(key)) obj[key] = updates[key];
+      return obj;
+    }, {});
+
+    if (Object.keys(filteredUpdates).length === 0) {
+      return next(new ErrorResponse("No valid fields to update", 400));
+    }
+
+    // Find and update the user
+    const updatedUser = await User.findByIdAndUpdate(userId, filteredUpdates, {
+      new: true,
+      runValidators: true,
+    }).select("-password");
+
+    if (!updatedUser) {
+      return next(new ErrorResponse("User not found", 404));
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "User details updated successfully",
+      user: updatedUser,
+    });
+  } catch (error) {
+    console.error(error);
+    return next(new ErrorResponse("Internal Server Error", 500));
+  }
+});
+
+const updatePassword = asyncHandler(async (req, res, next) => {
+  const { username, email, oldPassword, newPassword } = req.body;
+
+  try {
+    // Check if all required fields are provided
+    if (!username || !email || !oldPassword || !newPassword) {
+      return next(new ErrorResponse("All fields are required", 400));
+    }
+
+    // Find the user by username and email
+    const user = await User.findOne({ username, email });
+    if (!user) {
+      return next(new ErrorResponse("Invalid username or email", 404));
+    }
+
+    // Check if the old password matches
+    const isMatch = await user.comparePassword(oldPassword);
+    if (!isMatch) {
+      return next(new ErrorResponse("Old password is incorrect", 401));
+    }
+
+    // Update the password (no manual hashing required, pre-save will handle it)
+    user.password = newPassword;
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Password updated successfully",
+    });
+  } catch (error) {
+    console.error(error);
+    return next(new ErrorResponse("Internal Server Error", 500));
+  }
+});
+
+module.exports = {
+  signup,
+  login,
+  logout,
+  me,
+  updateProfile,
+  updateUserByAdmin,
+  updatePassword,
+};

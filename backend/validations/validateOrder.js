@@ -1,0 +1,36 @@
+const Joi = require("joi");
+
+const orderValidationSchema = Joi.object({
+  user: Joi.string().required(), // ObjectId of the user
+  orderItems: Joi.array()
+    .items(
+      Joi.object({
+        product: Joi.string().required(), // ObjectId of the product
+        quantity: Joi.number().integer().min(1).required(),
+        price: Joi.number().positive().required(),
+      })
+    )
+    .min(1)
+    .required(),
+  shippingAddress: Joi.object({
+    address: Joi.string().required(),
+    village: Joi.string()
+      .valid("Bhogwara", "Udagi", "Savdih", "Belhabandh (Kwajgi patti)")
+      .required(),
+    city: Joi.string().valid("Prayagraj").required(),
+    phone: Joi.string()
+      .pattern(/^[0-9]{10}$/)
+      .required(),
+  }).required(),
+  totalPrice: Joi.number().positive().required(),
+  status: Joi.string()
+    .valid("Pending", "Confirmed", "Out for Delivery", "Delivered", "Cancelled")
+    .default("Pending"),
+  paymentMethod: Joi.string().valid("COD", "Online").required(),
+  paymentStatus: Joi.string()
+    .valid("Pending", "Paid", "Failed")
+    .default("Pending"),
+  deliveredAt: Joi.date().optional(), // Optional as delivery might not happen yet
+});
+
+module.exports = { orderValidationSchema };

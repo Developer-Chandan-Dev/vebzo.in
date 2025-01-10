@@ -6,6 +6,18 @@ const addToCart = asyncHandler(async (req, res, next) => {
   const { productId, quantity } = req.body;
 
   try {
+    if ((productId, quantity)) {
+      return next(
+        new ErrorResponse("Please provide Product name and quantity", 400)
+      );
+    }
+
+    if (quantity < 1) {
+      return next(
+        new ErrorResponse("Please choose product quantity minimume (1)", 400)
+      );
+    }
+
     let cart = await Cart.findOne({ user: req.user.id });
 
     if (!cart) {
@@ -21,7 +33,7 @@ const addToCart = asyncHandler(async (req, res, next) => {
     } else {
       cart.cartItems.push({ product: productId, quantity });
     }
-
+    console.log(cart);
     await cart.save();
     res
       .status(200)

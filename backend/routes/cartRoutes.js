@@ -17,9 +17,9 @@ const {
 } = require("../validations/validateCart");
 
 // Cart Routes
-router.post("/", protect, validate(cartValidationSchema), addToCart); // Adds a product to the cart or updates its quantity.
+router.post("/", protect, addToCart); // Adds a product to the cart or updates its quantity.
 router.delete("/:productId", protect, removeFromCart); // Remove a product from the cart.
-router.put("/", protect, validate(updateCartValidationSchema), updateCartItem); // Updates the quantity of a product in the cart.
+router.put("/", protect, updateCartItem); // Updates the quantity of a product in the cart.
 router.get("/", protect, getCart); // Fetches all items in the user's cart.
 
 module.exports = router;

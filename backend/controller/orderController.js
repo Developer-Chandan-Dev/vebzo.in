@@ -35,7 +35,7 @@ const createOrder = asyncHandler(async (req, res, next) => {
     res.status(201).json({ success: true, data: createdOrder });
   } catch (error) {
     console.log(error);
-    return next(new ErrorResponse("Internal Server Error", 500));
+    return next(new ErrorResponse(error, 500));
   }
 });
 

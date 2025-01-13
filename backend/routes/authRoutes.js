@@ -25,13 +25,7 @@ router.post("/register", validate(userValidationSchema), signup); // Register wi
 router.post("/login", validate(loginValidationSchema), login); // Login with existing account
 router.post("/logout", logout); // Logout from current account
 router.get("/me", protect, me); // Logout from current account
-router.put(
-  "/me/:id",
-  validate(userUpdateValidationSchema),
-  protect,
-  upload.single("imageUrl"),
-  updateProfile
-); // Route for updating user details
+router.put("/me/:id", validate(userUpdateValidationSchema), protect, upload.single("imageUrl"), updateProfile); // Route for updating user details
 router.put("/update-password", protect, updatePassword); // Route for updating user password
 
 // Admin-only route for updating user details

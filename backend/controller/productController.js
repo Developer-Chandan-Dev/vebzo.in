@@ -96,10 +96,14 @@ const getProducts = asyncHandler(async (req, res, next) => {
 // @desc Get a product by Id (GET - /api/v1/products/:id, [Public])
 const getProductById = asyncHandler(async (req, res, next) => {
   try {
-    const product = await Product.findById(req.params.id).populate(
-      "category",
-      "name"
-    );
+    const productId = req.params.id;
+
+    // Find the product and increment the views
+    const product = await Product.findByIdAndUpdate(
+      productId,
+      { $inc: { views: 1 } }, // Increment the views by 1
+      { new: true } // Return the updated product
+    ).populate("category", "name");
 
     if (!product) {
       return next(new ErrorResponse("Product not found", 404));
@@ -201,7 +205,7 @@ const productsByCategory = asyncHandler(async (req, res, next) => {
   }
 });
 
-// desc Search functionality (GET - /api/v1/products/search [Public])
+// desc Search functionality (GET - /api/products/search?query=<search-term> [Public])
 const searchProducts = asyncHandler(async (req, res, next) => {
   try {
     const query = req.query.query || "";
@@ -269,6 +273,24 @@ const searchAndFilterProducts = asyncHandler(async (req, res, next) => {
   }
 });
 
+// Most viewed products
+const getMostViewedProduct = asyncHandler(async (req, res, next) => {
+  try {
+    const mostViewedProduct = await Product.find({})
+      .sort({ views: -1 }) // Sort by views in descending order
+      .limit(1) // Get the top product
+      .select("name views"); // Only fetch the required fields
+
+    res.status(200).json({
+      success: true,
+      data: mostViewedProduct[0] || { name: "N/A", views: 0 },
+    });
+  } catch (error) {
+    console.error(error);
+    return next(new ErrorResponse("Failed to fetch most-viewed product", 500));
+  }
+});
+
 module.exports = {
   createProduct,
   getProducts,
@@ -280,4 +302,5 @@ module.exports = {
   productImageUpload,
   filterProducts,
   productsByCategory,
+  getMostViewedProduct,
 };

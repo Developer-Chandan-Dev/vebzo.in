@@ -29,6 +29,10 @@ const productSchema = new mongoose.Schema(
       ref: "Category",
       required: true,
     },
+    isFeatured: {
+      type: Boolean,
+      default: false,
+    },
     imageUrl: {
       type: String,
       required: true,
@@ -44,6 +48,8 @@ const productSchema = new mongoose.Schema(
       type: Number,
       default: 0, // Total number of ratings
     },
+    views: { type: Number, default: 0 }, // New field for tracking views
+  // Add other fields as required
   },
   { timestamps: true }
 );

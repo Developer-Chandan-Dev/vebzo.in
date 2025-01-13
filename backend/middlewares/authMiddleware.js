@@ -26,4 +26,14 @@ const admin = (req, res, next) => {
   }
 };
 
-module.exports = { protect, admin };
+const checkRole = (...allowedRoles) => {
+  return (req, res, next) => {
+    if (!allowedRoles.includes(req.user.role)) {
+      return res.status(403).json({ message: "Access Denied" });
+    }
+    next();
+  };
+};
+
+
+module.exports = { protect, admin, checkRole };

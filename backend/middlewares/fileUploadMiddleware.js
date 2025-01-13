@@ -1,6 +1,4 @@
 const multer = require("multer");
-const path = require("path");
-const fs = require("fs");
 
 // Configure multer for file storage temporarily
 const storage = multer.diskStorage({

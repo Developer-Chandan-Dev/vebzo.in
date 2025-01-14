@@ -26,7 +26,7 @@ const userValidationSchema = Joi.object({
     .pattern(/^[0-9]{10}$/) // Ensure the phone number is 10 digits
     .optional(),
   role: Joi.string().valid("user", "admin").default("user"),
-  blocked: Joi.boolean().default(false),
+  isBlocked: Joi.boolean().default(false),
 });
 
 // Validation schema for user updates
@@ -55,7 +55,7 @@ const userUpdateValidationSchema = Joi.object({
     .pattern(/^[0-9]{10}$/)
     .optional(),
   role: Joi.string().valid("user", "admin").optional(),
-  blocked: Joi.boolean().optional(),
+  isBlocked: Joi.boolean().optional(),
 });
 
 module.exports = { userValidationSchema, userUpdateValidationSchema };

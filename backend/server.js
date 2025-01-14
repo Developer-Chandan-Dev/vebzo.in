@@ -12,6 +12,7 @@ const errorHandler = require("./middlewares/errorHandler");
 
 // <============== Route Imports ==============>
 const authRoutes = require("./routes/authRoutes.js");
+const userRoutes = require("./routes/userRoutes.js");
 const productRoutes = require("./routes/productRoutes.js");
 const categoryRoutes = require("./routes/categoryRoutes.js");
 const orderRoutes = require("./routes/orderRoutes");
@@ -70,6 +71,7 @@ app.get("/", (req, res) => {
 });
 // Route Definitions
 app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/products", productRoutes);
 app.use("/api/v1/category", categoryRoutes);
 app.use("/api/v1/orders", orderRoutes);

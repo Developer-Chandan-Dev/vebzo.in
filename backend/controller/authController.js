@@ -67,7 +67,7 @@ const login = asyncHandler(async (req, res, next) => {
     }
 
     // Check if the user is blocked
-    if (user.blocked) {
+    if (user.isBlocked) {
       return res
         .status(403)
         .json({ message: "Your account is blocked. Please contact support." });
@@ -196,7 +196,7 @@ const updateUserByAdmin = asyncHandler(async (req, res, next) => {
     }
 
     // Whitelist of fields that admin can update
-    const allowedUpdates = ["role", "blocked"];
+    const allowedUpdates = ["role", "isBlocked"];
     const filteredUpdates = Object.keys(updates).reduce((obj, key) => {
       if (allowedUpdates.includes(key)) obj[key] = updates[key];
       return obj;

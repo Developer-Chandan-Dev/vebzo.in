@@ -48,74 +48,74 @@ const {
   analyticsCardData,
 } = require("../controller/cardSectionController");
 
-const { protect, admin } = require("../middlewares/authMiddleware");
+const { protect, admin, checkRole } = require("../middlewares/authMiddleware");
 
 // Overview Page
-router.get("/overview-cards", protect, admin, getOverview);
-router.get("/chart/monthly-sales", protect, admin, getMonthlySales); // Analytics route for monthly sales
-router.get("/chart/top-selling-products", protect,admin, topSellingProducts) // Analytics route for top selling products
-router.get("/chart/order-status-breakdown", protect,admin, orderStatusBreakdown) // Analytics route for getting order status breakdown
-router.get("/chart/low-stock-products", protect,admin, lowStockProducts) // Analytics route for top low stock products
+router.get("/overview-cards", protect, checkRole("admin", "manager"), getOverview);
+router.get("/chart/monthly-sales", protect, checkRole("admin", "manager"), getMonthlySales); // Analytics route for monthly sales
+router.get("/chart/top-selling-products", protect, checkRole("admin", "manager"), topSellingProducts) // Analytics route for top selling products
+router.get("/chart/order-status-breakdown", protect, checkRole("admin", "manager"), orderStatusBreakdown) // Analytics route for getting order status breakdown
+router.get("/chart/low-stock-products", protect, checkRole("admin", "manager"), lowStockProducts) // Analytics route for top low stock products
 // Most active village card
 
 // Orders Page
-router.get("/order-cards", protect, admin, orderCardData);
+router.get("/order-cards", protect, checkRole("admin", "manager"), orderCardData);
 
 
 // Data
 // Sales & Revenue routes
-router.get("/total-sales", protect, admin, getTotalSales);
-router.get("/sales-by-date", protect, admin, getSalesByDate); // Analytics route for sales by date
-router.get("/top-customers", protect, admin, getTopCustomers); // Analytics route for sales by date
-router.get("/revenue-by-category", protect, admin, getRevenueByCategory); // Analytics route for sales by date
+router.get("/total-sales", protect, checkRole("admin", "manager"), getTotalSales);
+router.get("/sales-by-date", protect, checkRole("admin", "manager"), getSalesByDate); // Analytics route for sales by date
+router.get("/top-customers", protect, checkRole("admin", "manager"), getTopCustomers); // Analytics route for sales by date
+router.get("/revenue-by-category", protect, checkRole("admin", "manager"), getRevenueByCategory); // Analytics route for sales by date
 
 // Product & Inventory routes
-router.get("/top-selling-products", protect, admin, getTopSellingProducts);
+router.get("/top-selling-products", protect, checkRole("admin", "manager"), getTopSellingProducts);
 
 // <============== Users routes ================>
-router.get("/users-growth", protect, admin, getUserGrowth);
+router.get("/users-growth", protect, checkRole("admin", "manager"), getUserGrowth);
 
 // <============== Order & Cart Analytics ===============>
-router.get("/order-status", protect, admin, getOrderStatusCounts);
-router.get("/order-trends", protect, admin, getOrderTrends);
+router.get("/order-status", protect, checkRole("admin", "manager"), getOrderStatusCounts);
+router.get("/order-trends", protect, checkRole("admin", "manager"), getOrderTrends);
 
-router.get("/total-orders", protect, admin, getTotalOrders);
-router.get("/low-stock", protect, admin, getLowStockProducts);
-router.get("/sales-trends", protect, admin, getSalesTrends);
-router.get("/payment-methods", protect, admin, getPaymentMethodInsights);
-router.get("/customers", protect, admin, getCustomerInsights);
-router.get("/orders/monthly", protect, admin, getMonthlyOrderDetails);
-router.get("/orders/weekly", protect, admin, getWeeklyOrderDetails);
-router.get("/orders/daily", protect, admin, getDailyOrderDetails);
-router.get("/orders/date-range", protect, admin, getOrdersByDateRange);
+router.get("/total-orders", protect, checkRole("admin", "manager"), getTotalOrders);
+router.get("/low-stock", protect, checkRole("admin", "manager"), getLowStockProducts);
+router.get("/sales-trends", protect, checkRole("admin", "manager"), getSalesTrends);
+router.get("/payment-methods", protect, checkRole("admin", "manager"), getPaymentMethodInsights);
+router.get("/customers", protect, checkRole("admin", "manager"), getCustomerInsights);
+router.get("/orders/monthly", protect, checkRole("admin", "manager"), getMonthlyOrderDetails);
+router.get("/orders/weekly", protect, checkRole("admin", "manager"), getWeeklyOrderDetails);
+router.get("/orders/daily", protect, checkRole("admin", "manager"), getDailyOrderDetails);
+router.get("/orders/date-range", protect, checkRole("admin", "manager"), getOrdersByDateRange);
 
 // $$$$$=============> Charts <=============$$$$$
 // <========= Sales Charts ==========>
-router.get("/chart/monthly-sales", protect, admin, getMonthlySales); // Analytics route for monthly sales
-router.get("/chart/category-sales", protect, admin, salesByCategory); // Analytics route for getting sales by category
-router.get("/chart/sales-performance", protect, admin, salesPerformance); // Analytics route for checking sales performance
+router.get("/chart/monthly-sales", protect, checkRole("admin", "manager"), getMonthlySales); // Analytics route for monthly sales
+router.get("/chart/category-sales", protect, checkRole("admin", "manager"), salesByCategory); // Analytics route for getting sales by category
+router.get("/chart/sales-performance", protect, checkRole("admin", "manager"), salesPerformance); // Analytics route for checking sales performance
 
 // <============ Product & Inventory Analytics ===========>
-router.get("/chart/top-selling-products", protect,admin, topSellingProducts) // Analytics route for top selling products
-router.get("/chart/low-stock-products", protect,admin, lowStockProducts) // Analytics route for top low stock products
-router.get("/chart/stock-value-by-category", protect,admin, stockValueByCategory) // Analytics route for getting stock value by category
+router.get("/chart/top-selling-products", protect, checkRole("admin", "manager"), topSellingProducts) // Analytics route for top selling products
+router.get("/chart/low-stock-products", protect, checkRole("admin", "manager"), lowStockProducts) // Analytics route for top low stock products
+router.get("/chart/stock-value-by-category", protect, checkRole("admin", "manager"), stockValueByCategory) // Analytics route for getting stock value by category
 
 // <============= Order & Cart Analytics ==============>
-router.get("/chart/order-status-breakdown", protect,admin, orderStatusBreakdown) // Analytics route for getting order status breakdown
-router.get("/chart/order-volume-overtime", protect,admin, orderVolumeOverTime) // Analytics route for getting order status breakdown
-router.get("/chart/average-order-value", protect, admin, averageOrderValue); 
+router.get("/chart/order-status-breakdown", protect, checkRole("admin", "manager"), orderStatusBreakdown) // Analytics route for getting order status breakdown
+router.get("/chart/order-volume-overtime", protect, checkRole("admin", "manager"), orderVolumeOverTime) // Analytics route for getting order status breakdown
+router.get("/chart/average-order-value", protect, checkRole("admin", "manager"), averageOrderValue); 
 
 // <============= Customer Analytics ============>
-router.get("/chart/new-vs-returning-customers", protect, admin, newVsReturningCustomers); 
+router.get("/chart/new-vs-returning-customers", protect, checkRole("admin", "manager"), newVsReturningCustomers); 
 
 
 
 
 // Card Section routes
 
-router.get("/sales-cards", protect, admin, salesCardData);
-router.get("/user-cards", protect, admin, userCardData);
-router.get("/product-cards", protect, admin, productCardData);
-router.get("/analytics-cards", protect, admin, analyticsCardData);
+router.get("/sales-cards", protect, checkRole("admin", "manager"), salesCardData);
+router.get("/user-cards", protect, checkRole("admin", "manager"), userCardData);
+router.get("/product-cards", protect, checkRole("admin", "manager"), productCardData);
+router.get("/analytics-cards", protect, checkRole("admin", "manager"), analyticsCardData);
 
 module.exports = router;

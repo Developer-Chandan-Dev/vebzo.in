@@ -35,7 +35,7 @@ router.put("/:productId/image", protect, admin, upload.single("imageUrl"), produ
 router.get("/", getProducts); 
 
 // Get a product by ID (Public)
-router.get("/:id", getProductById); 
+router.get("/details/:id", getProductById); 
 
 // Update product details (Admin)
 router.put("/:id", protect, admin, validate(updateProductValidationSchema), updateProduct);

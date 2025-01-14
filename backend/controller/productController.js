@@ -85,8 +85,36 @@ const productImageUpload = asyncHandler(async (req, res, next) => {
 // @desc Get all products (GET - /api/v1/products/, [Public])
 const getProducts = asyncHandler(async (req, res, next) => {
   try {
-    const products = await Product.find().populate("category", "name");
-    res.status(200).json({ success: true, data: products });
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 8;
+    // const searchQuery = req.query.search || "";
+    const { query, category, minPrice, maxPrice, inStock } = req.query;
+
+    const filters = {};
+
+    if (query) {
+      filters.$or = [
+        { name: { $regex: query, $options: "i" } },
+        { description: { $regex: query, $options: "i" } },
+      ];
+    }
+
+    if (minPrice) filters.price = { ...filters.price, $gte: minPrice };
+    if (maxPrice) filters.price = { ...filters.price, $lte: maxPrice };
+    if (inStock === "true") filters.stock = { $gt: 0 };
+
+    const totalProducts = await Product.countDocuments(filters);
+    const totalPages = Math.ceil(totalProducts / limit);
+
+    // Fetch paginated and filtered data
+    const products = await Product.find(filters)
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .populate("category", "name");
+
+    res
+      .status(200)
+      .json({ success: true, data: products, totalPages, totalProducts });
   } catch (error) {
     console.log(error);
     return next(new ErrorResponse("Internal Server Error", 500));

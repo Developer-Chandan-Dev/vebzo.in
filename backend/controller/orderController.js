@@ -44,10 +44,31 @@ const createOrder = asyncHandler(async (req, res, next) => {
 // @access Admin
 const getOrders = asyncHandler(async (req, res, next) => {
   try {
-    const orders = await Order.find()
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 8;
+    const { status, paymentMethod, paymentStatus } = req.query;
+
+    const filters = {};
+
+    if (status) filters.status = { ...filters.status, $eq: status };
+    if (paymentMethod)
+      filters.paymentMethod = { ...filters.paymentMethod, $eq: paymentMethod };
+    if (paymentStatus)
+      filters.paymentStatus = { ...filters.paymentStatus, $eq: paymentStatus };
+
+    const totalOrders = await Order.countDocuments(filters);
+    const totalPages = Math.ceil(totalOrders / limit);
+
+    // Fetch paginated and filtered data
+    const orders = await Order.find(filters)
+      .skip((page - 1) * limit)
+      .limit(limit)
       .populate("user", "username email")
       .populate("orderItems.product", "name");
-    res.status(200).json({ success: true, data: orders });
+
+    res
+      .status(200)
+      .json({ success: true, data: orders, totalPages, totalOrders });
   } catch (error) {
     console.log(error);
     return next(new ErrorResponse("Internal Server Error", 500));

@@ -7,7 +7,11 @@
   cursor: default;
 }
 
-.head-line-1{
-  font-family : Amiri Quran;
+.head-line-1 {
+  font-family: Amiri Quran;
   font-weight: 700;
+}
+
+.amiri-quarn {
+  font-family: Amiri Quran;
 }

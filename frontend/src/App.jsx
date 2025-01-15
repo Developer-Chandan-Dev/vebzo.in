@@ -1,4 +1,5 @@
 import "./App.css";
+import AboutPage from "./pages/client/AboutPage";
 
 // Route Imports
 import HomePage from "./pages/client/HomePage";
@@ -7,7 +8,8 @@ function App() {
   return (
     <>
       {/* <HomePage /> */}
-      <ShopPage />
+      {/* <ShopPage /> */}
+      <AboutPage />
     </>
   );
 }

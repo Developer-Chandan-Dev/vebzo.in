@@ -4,7 +4,6 @@ import Header from "../../components/client/Header";
 import HeroSection from "../../components/client/home/HeroSection";
 import BestSellingProducts from "../../components/client/home/BestSellingProducts";
 import TrendingProducts from "../../components/client/home/TrendingProducts";
-import { Car, CarTaxiFront } from "lucide-react";
 import LeafSection from "../../components/client/home/LeafSection";
 import Footer from "../../components/client/Footer";
 

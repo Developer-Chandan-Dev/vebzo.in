@@ -1,13 +1,15 @@
-import './App.css'
+import "./App.css";
 
+// Route Imports
+import HomePage from "./pages/client/HomePage";
+import ShopPage from "./pages/client/ShopPage";
 function App() {
-
-
   return (
     <>
-      <h1 className="text-green-300">Home Page </h1>
+      {/* <HomePage /> */}
+      <ShopPage />
     </>
-  )
+  );
 }
 
-export default App
+export default App;

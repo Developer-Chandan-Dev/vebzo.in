@@ -1,3 +1,25 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.root{
+  --e-global-color0: #8bc34a;
+  --e-global-color1: #6a9739;
+  --e-global-color2: #111111;
+  --e-global-color3: #333333;
+  --e-global-color4: #f8f6f3;
+  --e-global-color5: #ffffff;
+  --e-global-color6: #001524;
+  --e-global-color7: #f8f6f3;
+  --e-global-color8: #000000;
+}
+
+@layer utilities {
+  .flex-center {
+    @apply flex items-center justify-center;
+  }
+  .flex-between {
+    @apply flex items-center justify-between;
+  }
+  
+}

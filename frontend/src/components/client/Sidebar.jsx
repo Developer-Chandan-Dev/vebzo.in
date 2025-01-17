@@ -3,7 +3,7 @@ import React from "react";
 
 const Sidebar = () => {
   return (
-    <div className="w-80 h-96 border-r">
+    <div className="w-80 h-auto border-r sticky top-40">
       <div className="flex items-center  px-3 gap-2">
         <input
           type="text"

@@ -13,8 +13,8 @@ const HomePage = () => {
       <Header />
       <HeroSection />
       <div className="w-full py-12 px-4 bg-black text-white flex-center">
-        <div className="flex items-center flex-wrap gap-5">
-          <div className="w-72 h-32 rounded bg-[#333333] flex items-center px-6">
+        <div className="flex-center flex-wrap gap-5">
+          <div className="w-11/12 sm:w-72 h-32 rounded bg-[#333333] flex items-center px-6">
             <div className="flex items-center gap-x-5">
               <svg
                 aria-hidden="true"
@@ -30,7 +30,7 @@ const HomePage = () => {
               </div>
             </div>
           </div>
-          <div className="w-72 h-32 rounded bg-[#333333] flex items-center px-6">
+          <div className="w-11/12 sm:w-72 h-32 rounded bg-[#333333] flex items-center px-6">
             <div className="flex items-center gap-x-5">
               <svg
                 aria-hidden="true"
@@ -46,7 +46,7 @@ const HomePage = () => {
               </div>
             </div>
           </div>
-          <div className="w-72 h-32 rounded bg-[#333333] flex items-center px-6">
+          <div className="w-11/12 sm:w-72 h-32 rounded bg-[#333333] flex items-center px-6">
             <div className="flex items-center gap-x-5">
               <svg
                 aria-hidden="true"
@@ -62,7 +62,7 @@ const HomePage = () => {
               </div>
             </div>
           </div>
-          <div className="w-72 h-32 rounded bg-[#333333] flex items-center px-6">
+          <div className="w-11/12 sm:w-72 h-32 rounded bg-[#333333] flex items-center px-6">
             <div className="flex items-center gap-x-5">
               <svg
                 aria-hidden="true"

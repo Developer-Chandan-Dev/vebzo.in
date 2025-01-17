@@ -1,15 +1,17 @@
 import "./App.css";
-import AboutPage from "./pages/client/AboutPage";
+import { BrowserRouter as Router } from "react-router-dom";
 
 // Route Imports
-import HomePage from "./pages/client/HomePage";
-import ShopPage from "./pages/client/ShopPage";
+import ClientRoutes from "./routes/ClientRoutes";
+import DashboardRoutes from "./routes/DashboardRoutes";
+
 function App() {
   return (
     <>
-      {/* <HomePage /> */}
-      {/* <ShopPage /> */}
-      <AboutPage />
+      <Router>
+        <ClientRoutes />
+        <DashboardRoutes />
+      </Router>
     </>
   );
 }

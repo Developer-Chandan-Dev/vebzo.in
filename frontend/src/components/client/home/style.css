@@ -1,14 +1,14 @@
-.root{
-    --e-global-color0: #8bc34a;
-    --e-global-color1: #6a9739;
-    --e-global-color2: #111111;
-    --e-global-color3: #333333;
-    --e-global-color4: #f8f6f3;
-    --e-global-color5: #ffffff;
-    --e-global-color6: #001524;
-    --e-global-color7: #f8f6f3;
-    --e-global-color8: #000000;
-  }
+.root {
+  --e-global-color0: #8bc34a;
+  --e-global-color1: #6a9739;
+  --e-global-color2: #111111;
+  --e-global-color3: #333333;
+  --e-global-color4: #f8f6f3;
+  --e-global-color5: #ffffff;
+  --e-global-color6: #001524;
+  --e-global-color7: #f8f6f3;
+  --e-global-color8: #000000;
+}
 
 .hero-section {
   position: relative;
@@ -26,4 +26,32 @@
   opacity: 0.3;
   right: 0;
   bottom: 0;
+}
+@media (max-width: 768px) {
+  .hero-section .mainBox {
+    flex-direction: column-reverse;
+    text-align: center !important;
+  }
+  .hero-section .mainBox button {
+    margin: 20px auto;
+  }
+  .hero-section .mainBox .leaf{
+    margin: 20px auto;
+  }
+  .hero-section .mainBox .imageBox{
+    width: auto;
+    margin-top: 20px;
+    z-index: 10;
+  }
+
+}
+
+@media (max-width: 400px){
+  .productBox{
+    width: 100%;
+  }
+  .productBox div{
+    width: 100%;
+    height: auto;
+  }
 }

@@ -7,7 +7,7 @@ const ShopPage = () => {
   return (
     <div>
       <Header />
-      <div className="flex max-w-7xl items-start justify-center gap-10 px-10 py-10">
+      <div className="flex max-w-7xl items-start justify-center gap-10 px-4 sm:px-5 md:px-7 lg:px-10 py-10">
         <Sidebar />
         <Container />
       </div>

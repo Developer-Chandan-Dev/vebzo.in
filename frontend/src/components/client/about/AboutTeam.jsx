@@ -1,6 +1,6 @@
 const AboutTeam = () => {
   return (
-    <div className="px-10 py-10 text-base">
+    <div className="px-3 sm:px-8 lg:px-10 py-10 text-base">
       <h1 className="text-3xl font-semibold py-4">Our Team</h1>
       <p className=" lg:w-[50%] mx-auto py-2">
         Lorem ipsum, dolor sit amet consectetur adipisicing elit. Totam impedit,

@@ -1,24 +1,29 @@
-import './style.css'
+import "./style.css";
 import { ShoppingCart } from "lucide-react";
 import Button from "../../utility/Button";
+import { Link } from "react-router-dom";
 
 const HeroSection = () => {
   return (
     <div className="w-full h-auto hero-section bg-[#f8f6f3]">
-      <div className="mx-auto max-w-7xl flex-center py-20 gap-x-20 ">
-        <div className="">
+      <div className="mx-auto w-full lg:w-11/12 max-w-7xl flex-center px-4 mainBox py-14 sm:py-20 lg:gap-x-14 xl:gap-x-20 ">
+        <div className="imageBox w-[60%] lg:w-1/2 ">
           <img
             src="/public/images/organic-products-hero.png"
-            className="w-auto"
+            className="w-11/12 xl:w-full"
             alt="hero section image"
           />
         </div>
-        <div className="w-[500px] hero-section-leftBox text-left">
-          <img src="/public/images/logo-leaf-new.png" alt="Leaf" className="pb-5" />
-          <h5 className=" text-lg font-semibold text-gray-700">
+        <div className="w-full sm:w-[500px] hero-section-leftBox md:text-left">
+          <img
+            src="/public/images/logo-leaf-new.png"
+            alt="Leaf"
+            className="pb-5 leaf"
+          />
+          <h5 className="text-base lg:text-md xl:text-lg font-semibold text-gray-700">
             Best Quality Products
           </h5>
-          <h1 className="text-6xl head-line-1 leading-[70px] text-gray-700">
+          <h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl head-line-1 leading-[50px] lg:leading-[60px] xl:leading-[70px] text-gray-700">
             Join The Organic Movement!
           </h1>
           <p className="mt-7 text-gray-600 text-base">
@@ -27,7 +32,9 @@ const HeroSection = () => {
             voluptatem laboriosam suscipit ullam velit quod minima nam,
             laudantium placeat excepturi numquam autem debitis?
           </p>
-          <Button label="SHOP NOW" LeftIcon={ShoppingCart} className="mt-5" />
+          <Link to="/shop">
+            <Button label="SHOP NOW" LeftIcon={ShoppingCart} className="mt-5" />
+          </Link>
         </div>
       </div>
     </div>

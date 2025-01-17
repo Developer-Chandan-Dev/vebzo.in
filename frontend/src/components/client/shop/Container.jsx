@@ -1,8 +1,76 @@
-import { MoveLeft, MoveRight, Star } from "lucide-react";
+import { MoveRight, Star } from "lucide-react";
 import { useState } from "react";
+import ItemBox from "./ItemBox";
 
 const Container = () => {
   const [active, setActive] = useState(1);
+
+  const products = [
+    {
+      _id: 1,
+      name: "Potato",
+      category: "Vegitables",
+      price: 20,
+      imageUrl: "/public/images/potato-1.webp",
+      rating: 4,
+    },
+    {
+      _id: 2,
+      name: "Cauliflower",
+      category: "Vegitables",
+      price: 35,
+      imageUrl: "/public/images/cauliflower-1.webp",
+      rating: 4,
+    },
+    {
+      _id: 3,
+      name: "Green capsicum",
+      category: "Vegitables",
+      price: 40,
+      imageUrl: "/public/images/green-capsicum-1.webp",
+      rating: 4,
+    },
+    {
+      _id: 4,
+      name: "Coriander bunch",
+      category: "Vegitables",
+      price: 50,
+      imageUrl: "/public/images/coriander-bunch-1.webp",
+      rating: 4,
+    },
+    {
+      _id: 5,
+      name: "Sweet potato",
+      category: "Vegitables",
+      price: 25,
+      imageUrl: "/public/images/sweet-potato-1.webp",
+      rating: 4,
+    },
+    {
+      _id: 6,
+      name: "Onion",
+      category: "Vegitables",
+      price: 25,
+      imageUrl: "/public/images/onion-1.webp",
+      rating: 4,
+    },
+    {
+      _id: 7,
+      name: "Brinjial",
+      category: "Vegitables",
+      price: 25,
+      imageUrl: "/public/images/brinjal-black-1.webp",
+      rating: 4,
+    },
+    {
+      _id: 8,
+      name: "Tomato",
+      category: "Vegitables",
+      price: 25,
+      imageUrl: "/public/images/tomato-country-1.webp",
+      rating: 4,
+    },
+  ];
 
   return (
     <div className="w-[800px] h-auto text-left">
@@ -24,7 +92,7 @@ const Container = () => {
       </div>
 
       <div className="flex items-center flex-wrap gap-5 my-14 ">
-        <div className="w-60 h-auto">
+        {/* <div className="w-60 h-auto">
           <div className=" w-60 h-60 border mx-auto overflow-hidden">
             <img
               src="/public/images/cauliflower-1.webp"
@@ -44,154 +112,22 @@ const Container = () => {
             </div>
             <p className="mt-1">Rs. 35.00</p>
           </div>
-        </div>
-        <div className="w-60 h-auto ">
-          <div className=" w-60 h-60 border mx-auto overflow-hidden">
-            <img
-              src="/public/images/tomato-country-1.webp"
-              className="w-full h-full object-fit"
-              alt="Product Image"
-            />
-          </div>
-          <div className="flex-center flex-col py-5">
-            <p>Vagitables</p>
-            <h4 className="text-lg font-semibold py-1">Tomato</h4>
-            <div className="flex-center">
-              <Star className="text-yellow-500 fill-yellow-300" size="18" />
-              <Star className="text-yellow-500 fill-yellow-300" size="18" />
-              <Star className="text-yellow-500 fill-yellow-300" size="18" />
-              <Star className="text-yellow-500 fill-yellow-300" size="18" />
-              <Star className="text-yellow-500 " size="18" />
-            </div>
-            <p className="mt-1">Rs. 35.00</p>
-          </div>
-        </div>
-        <div className="w-60 h-auto ">
-          <div className=" w-60 h-60 border mx-auto overflow-hidden">
-            <img
-              src="/public/images/green-capsicum-1.webp"
-              className="w-full h-full object-fit"
-              alt="Product Image"
-            />
-          </div>
-          <div className="flex-center flex-col py-5">
-            <p>Vagitables</p>
-            <h4 className="text-lg font-semibold py-1">Green Capsicum</h4>
-            <div className="flex-center">
-              <Star className="text-yellow-500 fill-yellow-300" size="18" />
-              <Star className="text-yellow-500 fill-yellow-300" size="18" />
-              <Star className="text-yellow-500 fill-yellow-300" size="18" />
-              <Star className="text-yellow-500 " size="18" />
-              <Star className="text-yellow-500 " size="18" />
-            </div>
-            <p className="mt-1">Rs. 35.00</p>
-          </div>
-        </div>
-        <div className="w-60 h-auto ">
-          <div className=" w-60 h-60 border mx-auto overflow-hidden">
-            <img
-              src="/public/images/coriander-bunch-1.webp"
-              className="w-full h-full object-fit"
-              alt="Product Image"
-            />
-          </div>
-          <div className="flex-center flex-col py-5">
-            <p>Vagitables</p>
-            <h4 className="text-lg font-semibold py-1">Coriander Bunch</h4>
-            <div className="flex-center">
-              <Star className="text-yellow-500 fill-yellow-300" size="18" />
-              <Star className="text-yellow-500 fill-yellow-300" size="18" />
-              <Star className="text-yellow-500 fill-yellow-300" size="18" />
-              <Star className="text-yellow-500 fill-yellow-300" size="18" />
-              <Star className="text-yellow-500 fill-yellow-300" size="18" />
-            </div>
-            <p className="mt-1">Rs. 35.00</p>
-          </div>
-        </div>
-        <div className="w-60 h-auto ">
-          <div className=" w-60 h-60 border mx-auto overflow-hidden">
-            <img
-              src="/public/images/potato-1.webp"
-              className="w-full h-full object-fit"
-              alt="Product Image"
-            />
-          </div>
-          <div className="flex-center flex-col py-5">
-            <p>Vagitables</p>
-            <h4 className="text-lg font-semibold py-1">Potato</h4>
-            <div className="flex-center">
-              <Star className="text-yellow-500 fill-yellow-300" size="18" />
-              <Star className="text-yellow-500 fill-yellow-300" size="18" />
-              <Star className="text-yellow-500 fill-yellow-300" size="18" />
-              <Star className="text-yellow-500 fill-yellow-300" size="18" />
-              <Star className="text-yellow-500 fill-yellow-300" size="18" />
-            </div>
-            <p className="mt-1">Rs. 35.00</p>
-          </div>
-        </div>
-        <div className="w-60 h-auto ">
-          <div className=" w-60 h-60 border mx-auto overflow-hidden">
-            <img
-              src="/public/images/sweet-potato-1.webp"
-              className="w-full h-full object-fit"
-              alt="Product Image"
-            />
-          </div>
-          <div className="flex-center flex-col py-5">
-            <p>Vagitables</p>
-            <h4 className="text-lg font-semibold py-1">Sweet Potato</h4>
-            <div className="flex-center">
-              <Star className="text-yellow-500 fill-yellow-300" size="18" />
-              <Star className="text-yellow-500 fill-yellow-300" size="18" />
-              <Star className="text-yellow-500 fill-yellow-300" size="18" />
-              <Star className="text-yellow-500 fill-yellow-300" size="18" />
-              <Star className="text-yellow-500 " size="18" />
-            </div>
-            <p className="mt-1">Rs. 35.00</p>
-          </div>
-        </div>
-        <div className="w-60 h-auto ">
-          <div className=" w-60 h-60 border mx-auto overflow-hidden">
-            <img
-              src="/public/images/onion-1.webp"
-              className="w-full h-full object-fit"
-              alt="Product Image"
-            />
-          </div>
-          <div className="flex-center flex-col py-5">
-            <p>Vagitables</p>
-            <h4 className="text-lg font-semibold py-1">Onion</h4>
-            <div className="flex-center">
-              <Star className="text-yellow-500 fill-yellow-300" size="18" />
-              <Star className="text-yellow-500 fill-yellow-300" size="18" />
-              <Star className="text-yellow-500 fill-yellow-300" size="18" />
-              <Star className="text-yellow-500 " size="18" />
-              <Star className="text-yellow-500 " size="18" />
-            </div>
-            <p className="mt-1">Rs. 35.00</p>
-          </div>
-        </div>
-        <div className="w-60 h-auto ">
-          <div className=" w-60 h-60 border mx-auto overflow-hidden">
-            <img
-              src="/public/images/brinjal-black-1.webp"
-              className="w-full h-full object-fit"
-              alt="Product Image"
-            />
-          </div>
-          <div className="flex-center flex-col py-5">
-            <p>Vagitables</p>
-            <h4 className="text-lg font-semibold py-1">Brinjal</h4>
-            <div className="flex-center">
-              <Star className="text-yellow-500 fill-yellow-300" size="18" />
-              <Star className="text-yellow-500 fill-yellow-300" size="18" />
-              <Star className="text-yellow-500 fill-yellow-300" size="18" />
-              <Star className="text-yellow-500 fill-yellow-300" size="18" />
-              <Star className="text-yellow-500 fill-yellow-300" size="18" />
-            </div>
-            <p className="mt-1">Rs. 35.00</p>
-          </div>
-        </div>
+        </div> */}
+
+
+        {products.length > 0 && products !== null
+          ? products.map((item, index) => (
+              <ItemBox
+                key={index}
+                _id={item._id}
+                name={item.name}
+                category={item.category}
+                price={item.price}
+                imageUrl={item.imageUrl}
+                rating={item.rating}
+              />
+            ))
+          : ""}
       </div>
       <div className="flex items-center gap-3">
         <button

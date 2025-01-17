@@ -1,6 +1,6 @@
 const Insights = () => {
   return (
-    <div className="flex items-center px-16 text-base text-white bg-black py-16 justify-between flex-wrap gap-10">
+    <div className="flex-center px-5 sm:px-10 lg:px-16 text-base text-white bg-black py-16 justify-between flex-wrap gap-10">
       <h4 className="">Numbers Speak For Themselves!</h4>
       <div>
         <h3 className="text-4xl font-bold py-2">5,000+</h3>

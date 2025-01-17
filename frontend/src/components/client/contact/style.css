@@ -1,0 +1,17 @@
+.accordianBlock {
+  position: relative;
+}
+
+.accordianBlock::before {
+  content: "";
+  position: absolute;
+  width: 400px;
+  height: 350px;
+  display: block;
+  background-image: url(/public/images/leaves-free-img.png);
+  background-repeat: no-repeat;
+  background-size: contain;
+  opacity: 0.1;
+  right: 0;
+  bottom: 0;
+}

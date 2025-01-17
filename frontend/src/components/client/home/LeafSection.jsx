@@ -13,7 +13,7 @@ const LeafSection = () => {
         />
       </div>
 
-      <div className="flex items-center flex-wrap gap-8 py-10 px-10 justify-center">
+      <div className="flex items-center flex-wrap gap-8 py-10 px-5 sm:px-10 justify-center">
         <div className="w-96 h-96 rounded-lg bg-white shadow-lg shadow-gray-200 relative">
           <img
             src="/public/images/product11-free-img.jpg"

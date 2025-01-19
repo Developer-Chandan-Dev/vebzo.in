@@ -6,12 +6,14 @@ import { Menu, ShoppingCart, User } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 
 const Header = ({ bg = "bg-white" }) => {
-  const [authUser, setAuthUser] = useState(true);
+  const [authUser, setAuthUser] = useState(false);
 
   const location = useLocation();
 
   return (
-    <header className={`py-5 px-4 sm:px-7 lg:px-10 w-full z-50 sticky top-0 ${bg}`}>
+    <header
+      className={`py-5 px-4 sm:px-7 lg:px-10 w-full z-50 sticky top-0 ${bg}`}
+    >
       <nav className="hidden md:flex-between gap-x-7 lg:gap-x-10 max-w-7xl mx-auto lg:px-5 xl:px-10">
         <div className="logo text-2xl font-bold text-slate-500">
           <Link to="/">
@@ -90,8 +92,8 @@ const Header = ({ bg = "bg-white" }) => {
         ) : (
           <>
             <div className="flex items-center gap-x-2">
-              <Button label="SIGNUP" />
-              <Button label="LOGIN" />
+              <Button md={true} label="SIGNUP" className="hidden lg:block" />
+              <Button md={true} label="LOGIN" />
             </div>
           </>
         )}
@@ -109,21 +111,29 @@ const Header = ({ bg = "bg-white" }) => {
         </div>
 
         <div className="flex items-center relative">
-          <p className="text-base font-semibold text-[#8bc34a] drop-shadow-sm mr-1 sm:mr-3">
-            Rs. 100
-          </p>
-          <Link to="/cart">
-            <ShoppingCart
-              className="text-[#8bc34a] cursor-pointer mr-4 sm:mr-6"
-              size="22"
-            />
-            <span className="w-5 h-5 flex-center text-xs right-12 -top-1 text-white absolute font-serif rounded-full bg-[#8bc34a]">
-              1
-            </span>
-          </Link>
-          <button className="w-10 flex-center h-10 bg-[#6a9739]">
-            <Menu className="text-white" />
-          </button>
+          {authUser ? (
+            <>
+              <p className="text-base font-semibold text-[#8bc34a] drop-shadow-sm mr-1 sm:mr-3">
+                Rs. 100
+              </p>
+              <Link to="/cart">
+                <ShoppingCart
+                  className="text-[#8bc34a] cursor-pointer mr-4 sm:mr-6"
+                  size="22"
+                />
+                <span className="w-5 h-5 flex-center text-xs right-12 -top-1 text-white absolute font-serif rounded-full bg-[#8bc34a]">
+                  1
+                </span>
+              </Link>
+              <button className="w-10 flex-center h-10 bg-[#6a9739]">
+                <Menu className="text-white" />
+              </button>
+            </>
+          ) : (
+            <div className="flex items-center gap-x-2">
+              <Button sm={true} label="LOGIN" />
+            </div>
+          )}
         </div>
       </nav>
     </header>

@@ -1,5 +1,5 @@
 import "./App.css";
-import { BrowserRouter as Router } from "react-router-dom";
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 
 // Route Imports
 import ClientRoutes from "./routes/ClientRoutes";
@@ -9,8 +9,11 @@ function App() {
   return (
     <>
       <Router>
-        <ClientRoutes />
-        <DashboardRoutes />
+        <Routes>
+          <Route path="/*" element={<ClientRoutes />}  />
+          <Route path="/*" element={<DashboardRoutes />}  />
+          <Route path="*" element="" />
+        </Routes>
       </Router>
     </>
   );

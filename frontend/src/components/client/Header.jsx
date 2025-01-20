@@ -1,18 +1,18 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Button from "../utility/Button";
-import { Menu, ShoppingCart, User } from "lucide-react";
+import { Menu, ShoppingCart, User, X } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 
 const Header = ({ bg = "bg-white" }) => {
-  const [authUser, setAuthUser] = useState(false);
-
+  const [authUser, setAuthUser] = useState(true);
+  const [toggleMenu, setToggleMenu] = useState(false);
   const location = useLocation();
 
   return (
     <header
-      className={`py-5 px-4 sm:px-7 lg:px-10 w-full z-50 sticky top-0 ${bg}`}
+      className={`py-5 px-4 sm:px-7 lg:px-10 w-full z-50 sticky top-0 ${bg} relative`}
     >
       <nav className="hidden md:flex-between gap-x-7 lg:gap-x-10 max-w-7xl mx-auto lg:px-5 xl:px-10">
         <div className="logo text-2xl font-bold text-slate-500">
@@ -86,20 +86,26 @@ const Header = ({ bg = "bg-white" }) => {
                   1
                 </span>
               </Link>
-              <User size="20" className="cursor-pointer" />
+              <Link to="/profile">
+                <User size="20" className="cursor-pointer" />
+              </Link>
             </div>
           </>
         ) : (
           <>
             <div className="flex items-center gap-x-2">
-              <Button md={true} label="SIGNUP" className="hidden lg:block" />
-              <Button md={true} label="LOGIN" />
+              <Link to="/signup">
+                <Button md={true} label="SIGNUP" className="hidden lg:block" />
+              </Link>
+              <Link to="/login">
+                <Button md={true} label="LOGIN" />
+              </Link>
             </div>
           </>
         )}
       </nav>
 
-      <nav className="flex-between md:hidden">
+      <nav className="flex-between md:hidden relative">
         <div className="logo text-2xl font-bold text-slate-500">
           <Link to="/">
             <img
@@ -125,19 +131,102 @@ const Header = ({ bg = "bg-white" }) => {
                   1
                 </span>
               </Link>
-              <button className="w-10 flex-center h-10 bg-[#6a9739]">
+              <button
+                className="w-10 flex-center h-10 bg-[#6a9739]"
+                onClick={() => setToggleMenu(!toggleMenu)}
+              >
                 <Menu className="text-white" />
               </button>
             </>
           ) : (
             <div className="flex items-center gap-x-2">
-              <Button sm={true} label="LOGIN" />
+              <Link to="/login">
+                {" "}
+                <Button sm={true} label="LOGIN" />
+              </Link>
             </div>
           )}
         </div>
       </nav>
+      <SideMenu toggleMenu={toggleMenu} setToggleMenu={setToggleMenu} />
     </header>
   );
 };
 
 export default Header;
+
+const SideMenu = ({ toggleMenu, setToggleMenu }) => {
+  const sideMenuRef = useRef();
+
+  return (
+    <div
+      className={`w-full md:hidden absolute h-[450px] pb-4 -top-1 -right-7 ${
+        toggleMenu ? "flex" : "hidden"
+      } items-start justify-center bg-slate-50`}
+      style={{ boxShadow: "0px 25px 50px silver" }}
+      ref={sideMenuRef}
+    >
+      <div className="w-11/12 h-full bg-white">
+        <div className="flex-between py-4 px-5">
+          <Link to="/profile">
+            <div className="w-9 h-9 rounded-full border flex-center">
+              <User className="size-5" />
+            </div>
+          </Link>
+          <div
+            className="w-10 h-10 rounded-lg flex-center transition-all text-gray-800 opacity-50 hover:opacity-100 hover:shadow cursor-pointer hover:border "
+            onClick={() => setToggleMenu(false)}
+          >
+            <X className="" />
+          </div>
+        </div>
+        <ul className="text-left px-2">
+          <Link to="/">
+            <li
+              className={`py-4 px-3 border-b ${
+                location.pathname === "/"
+                  ? "border-red-200 text-gray-700"
+                  : "border-transparent text-gray-400 "
+              }  transition-all hover:text-gray-700 cursor-pointer hover:border-red-200`}
+            >
+              HOME
+            </li>
+          </Link>
+          <Link to="/shop">
+            <li
+              className={`py-4 px-3 border-b ${
+                location.pathname === "/shop"
+                  ? "border-red-200 text-gray-700"
+                  : "border-transparent text-gray-400 "
+              }  transition-all hover:text-gray-700 cursor-pointer hover:border-red-200`}
+            >
+              SHOP
+            </li>
+          </Link>
+          <Link to="/about">
+            <li
+              className={`py-4 px-3 border-b ${
+                location.pathname === "/about"
+                  ? "border-red-200 text-gray-700"
+                  : "border-transparent text-gray-400 "
+              }  transition-all hover:text-gray-700 cursor-pointer hover:border-red-200`}
+            >
+              ABOUT US
+            </li>
+          </Link>
+          <Link to="/contact">
+            <li
+              className={`py-4 px-3 border-b ${
+                location.pathname === "/contact"
+                  ? "border-red-200 text-gray-700"
+                  : "border-transparent text-gray-400 "
+              }  transition-all hover:text-gray-700 cursor-pointer hover:border-red-200`}
+            >
+              CONTACT US
+            </li>
+          </Link>
+        </ul>
+      </div>
+    </div>
+  );
+};

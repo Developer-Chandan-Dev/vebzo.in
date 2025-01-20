@@ -1,6 +1,7 @@
 // import { Link } from "react-router-dom";
 
 import { Facebook, Instagram, Twitter } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
@@ -22,41 +23,45 @@ const Footer = () => {
         <div className="text-left">
           <h3 className=" mb-7 text-lg font-semibold">Quick Links</h3>
           <ul>
-            {/* <Link to="/"> */}
-            <li className="my-2 text-gray-300 transition hover:text-white">
-              Home
-            </li>
-            {/* </Link> */}
-            {/* <Link to="/products"> */}
-            <li className="my-2 text-gray-300 transition hover:text-white">
-              Products
-            </li>
-            {/* </Link> */}
-            {/* <Link to="/about"> */}
-            <li className="my-2 text-gray-300 transition hover:text-white">
-              About
-            </li>
-            {/* </Link> */}
-            {/* <Link  to="/contact"> */}{" "}
-            <li className="my-2 text-gray-300 transition hover:text-white">
-              Contact
-            </li>
-            {/* </Link> */}
-            {/* <Link  to="/contact"> */}{" "}
-            <li className="my-2 text-gray-300 transition hover:text-white">
-              Cart
-            </li>
-            {/* </Link> */}
-            {/* <Link  to="/contact"> */}{" "}
-            <li className="my-2 text-gray-300 transition hover:text-white">
-              CheckOut
-            </li>
-            {/* </Link> */}
-            {/* <Link  to="/contact"> */}{" "}
-            <li className="my-2 text-gray-300 transition hover:text-white">
-              My Account
-            </li>
-            {/* </Link> */}
+            <Link to="/">
+              <li className="my-2 text-gray-300 transition hover:text-white">
+                Home
+              </li>
+            </Link>
+            <Link to="/shop">
+              <li className="my-2 text-gray-300 transition hover:text-white">
+                Shop
+              </li>
+            </Link>
+            <Link to="/about">
+              <li className="my-2 text-gray-300 transition hover:text-white">
+                About
+              </li>
+            </Link>
+            <Link to="/contact">
+              {" "}
+              <li className="my-2 text-gray-300 transition hover:text-white">
+                Contact
+              </li>
+            </Link>
+            <Link to="/cart">
+              {" "}
+              <li className="my-2 text-gray-300 transition hover:text-white">
+                Cart
+              </li>
+            </Link>
+            <Link to="/checkout">
+              {" "}
+              <li className="my-2 text-gray-300 transition hover:text-white">
+                CheckOut
+              </li>
+            </Link>
+            <Link to="/my-account">
+              {" "}
+              <li className="my-2 text-gray-300 transition hover:text-white">
+                My Account
+              </li>
+            </Link>
           </ul>
         </div>
         <div className="text-left">

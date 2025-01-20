@@ -1,0 +1,10 @@
+@media (max-width: 768px) {
+  .searchFilterMainBox {
+    box-shadow: 0 25px 50px silver;
+    padding-top: 10px;
+    border-radius: 10px;
+    left: 5px;
+    top: 50px;
+    /* width: 50%; */
+  }
+}

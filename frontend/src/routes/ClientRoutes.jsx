@@ -10,6 +10,7 @@ import CheckoutPage from "../pages/client/CheckoutPage";
 import ProductPage from "../pages/client/ProductPage";
 import SignupPage from "../pages/client/SignupPage";
 import LoginPage from "../pages/client/LoginPage";
+import UserProfilePage from "../pages/client/UserProfilePage";
 
 const ClientRoutes = () => {
   return (
@@ -23,6 +24,7 @@ const ClientRoutes = () => {
       <Route path="/product-page" element={<ProductPage />} />
       <Route path="/signup" element={<SignupPage />} />
       <Route path="/login" element={<LoginPage />} />
+      <Route path="/profile" element={<UserProfilePage />} />
     </Routes>
   );
 };

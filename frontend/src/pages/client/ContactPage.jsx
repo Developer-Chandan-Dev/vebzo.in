@@ -11,7 +11,7 @@ const ContactPage = () => {
         <h1 className="text-6xl font-bold amiri-quarn mt-5">Get In Touch</h1>
       </div>
 
-      <div className="w-full px-10 py-20 h-auto bg-white accordianBlock">
+      <div className="w-full px-5 sm:px-10 py-20 h-auto bg-white accordianBlock">
         <ContactInfoBox />
         <FrequentlyAskedQuestions />
       </div>

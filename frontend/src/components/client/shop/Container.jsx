@@ -1,8 +1,10 @@
-import { MoveRight, Star } from "lucide-react";
+/* eslint-disable no-unused-vars */
+/* eslint-disable react/prop-types */
+import { Filter, MoveRight, Search, Star } from "lucide-react";
 import { useState } from "react";
 import ItemBox from "./ItemBox";
 
-const Container = () => {
+const Container = ({ toggleSidebar, setToggleSidebar }) => {
   const [active, setActive] = useState(1);
 
   const products = [
@@ -72,9 +74,21 @@ const Container = () => {
     },
   ];
 
+
+
   return (
-    <div className="w-[800px] h-auto text-left">
-      <h1 className="text-4xl font-semibold py-3 text-[#8bc34a]">Shop</h1>
+    <div className="w-full md:w-[800px] h-auto text-left">
+      <div className="flex-between">
+        <h1 className="text-4xl font-semibold py-3 text-[#8bc34a]">Shop</h1>
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 rounded-md border flex-center cursor-pointer text-gray-500 opacity-50 hover:opacity-100" onClick={()=> setToggleSidebar(!toggleSidebar)}>
+            <Search size={20} />
+          </div>
+          <div className="w-9 h-9 rounded-md border flex-center cursor-pointer text-gray-500  opacity-50 hover:opacity-100" onClick={()=> setToggleSidebar(!toggleSidebar)}>
+            <Filter size={20} />
+          </div>
+        </div>
+      </div>
       <div className="flex items-center justify-between gap-2 flex-wrap">
         <p>Showing 1 - 9 of 14 results</p>
         <select
@@ -113,7 +127,6 @@ const Container = () => {
             <p className="mt-1">Rs. 35.00</p>
           </div>
         </div> */}
-
 
         {products.length > 0 && products !== null
           ? products.map((item, index) => (

@@ -1,0 +1,16 @@
+@media (max-width: 430px) {
+  .itemBox {
+    width: 18rem;
+    margin:auto;
+  }
+  .itemImgBox {
+    width: 100%;
+    height: auto;
+  }
+}
+
+@media (max-width: 350px){
+    .searchFilterMainBox{
+        width: 90%;
+    }
+}

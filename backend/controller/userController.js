@@ -27,6 +27,7 @@ const getAllUsers = asyncHandler(async (req, res, next) => {
 
     // Fetch paginated and filtered data
     const users = await User.find(filters)
+      .select("-password")
       .skip((page - 1) * limit)
       .limit(limit);
 

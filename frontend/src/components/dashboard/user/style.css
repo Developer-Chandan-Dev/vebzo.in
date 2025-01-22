@@ -1,0 +1,16 @@
+.mainImageBox .editButton {
+    opacity: 0;
+    transition: all ease 0.1s;
+  }
+  
+  .mainImageBox:hover .editButton {
+    opacity: 1;
+  }
+  
+  .table-container {
+    cursor: grab;
+  }
+  .table-container:active {
+    cursor: grabbing;
+  }
+  

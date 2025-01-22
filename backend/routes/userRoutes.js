@@ -6,7 +6,9 @@ const {
   updateUserByAdmin,
 } = require("../controller/userController");
 
-router.get("/", getAllUsers);
-router.put("/update/:id", updateUserByAdmin);
+const { protect, admin, checkRole } = require("../middlewares/authMiddleware");
+
+router.get("/", protect, checkRole("admin"), getAllUsers);
+router.put("/update/:id", protect, checkRole("admin"), updateUserByAdmin);
 
 module.exports = router;

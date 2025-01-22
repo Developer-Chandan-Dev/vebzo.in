@@ -12,7 +12,7 @@ const Header = ({ bg = "bg-white" }) => {
 
   return (
     <header
-      className={`py-5 px-4 sm:px-7 lg:px-10 w-full z-50 sticky top-0 ${bg} relative`}
+      className={`py-3 px-4 sm:px-7 lg:px-10 w-full z-50 sticky top-0 ${bg} relative`}
     >
       <nav className="hidden md:flex-between gap-x-7 lg:gap-x-10 max-w-7xl mx-auto lg:px-5 xl:px-10">
         <div className="logo text-2xl font-bold text-slate-500">

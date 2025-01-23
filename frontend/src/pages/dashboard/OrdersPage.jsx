@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { CheckCircle, Clock, DollarSign, ShoppingBag } from "lucide-react";
 import StatCard from "../../components/dashboard/common/StatCard";
@@ -5,6 +6,7 @@ import OrderTable from "../../components/dashboard/orders/OrderTable";
 import Header from "../../components/dashboard/Header";
 import DailyOrders from "../../components/dashboard/orders/DailyOrders";
 import OrderDistribution from "../../components/dashboard/orders/OrderDistribution";
+import AddUpdateOrdersPopup from "../../components/dashboard/orders/AddUpdateOrdersPopup";
 
 const orderStats = {
   totalOrders: "1,234",
@@ -15,6 +17,19 @@ const orderStats = {
 
 const OrdersPage = () => {
   document.title = "Admin Dashboard - Orders";
+
+  const [isPopupActive, setIsPopupActive] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState(null);
+
+  const handleEditClick = (order) => {
+    console.log(order);
+    setSelectedOrder(order); // Set the selected order details
+    setIsPopupActive(true); // Activate the popup
+  };
+
+  const handlePopupModelClose = () => {
+    setIsPopupActive(false);
+  };
 
   return (
     <div className="flex-1 overflow-y-auto relative z-10 pb-6 text-left">
@@ -60,7 +75,14 @@ const OrdersPage = () => {
           <OrderDistribution />
         </div>
 
-        <OrderTable />
+        <OrderTable onEditClick={handleEditClick} />
+
+        {isPopupActive && (
+          <AddUpdateOrdersPopup
+            product={selectedOrder}
+            onClose={handlePopupModelClose}
+          />
+        )}
       </main>
     </div>
   );

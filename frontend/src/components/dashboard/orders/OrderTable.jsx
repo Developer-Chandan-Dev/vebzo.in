@@ -1,69 +1,82 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { Search, Eye } from "lucide-react";
+import { Search } from "lucide-react";
+import OrderTr from "./OrderTr";
+import OrderList from "./OrderList";
 
 const orderData = [
   {
-    id: "ORD001",
+    _id: 1,
+    orderId: "ORD001",
     customer: "John Doe",
-    total: 235.4,
-    status: "Delivered",
-    date: "2023-07-01",
-  },
-  {
-    id: "ORD002",
-    customer: "Jane Smith",
-    total: 412.0,
-    status: "Processing",
-    date: "2023-07-02",
-  },
-  {
-    id: "ORD003",
-    customer: "Bob Johnson",
-    total: 162.5,
-    status: "Shipped",
-    date: "2023-07-03",
-  },
-  {
-    id: "ORD004",
-    customer: "Alice Brown",
-    total: 750.2,
+    firstname: "John",
+    lastname: "Doe",
+    orderItems: [
+      {
+        product: "Potato",
+        quantity: 1,
+        price: 20,
+      },
+      {
+        product: "Tomato",
+        quantity: 1,
+        price: 20,
+      },
+    ],
+    shippingAddress: {
+      address: "Bhogwara, Ugrasenpur, Prayagraj",
+      village: "Bhogwara",
+      city: "Prayagraj",
+      phone: "0123456789",
+    },
+    totalPrice: 40,
     status: "Pending",
-    date: "2023-07-04",
+    paymentMethod: "COD",
+    paymentStatus: "Pending",
+    deliveredAt: "10/10/2024",
+    total: 235.4,
+    createdAt: "2024-06-01",
+    updatedAt: "2024-06-01",
   },
   {
-    id: "ORD005",
-    customer: "Charlie Wilson",
-    total: 95.8,
-    status: "Delivered",
-    date: "2023-07-05",
-  },
-  {
-    id: "ORD006",
-    customer: "Eva Martinez",
-    total: 310.75,
-    status: "Processing",
-    date: "2023-07-06",
-  },
-  {
-    id: "ORD007",
-    customer: "David Lee",
-    total: 528.9,
-    status: "Shipped",
-    date: "2023-07-07",
-  },
-  {
-    id: "ORD008",
-    customer: "Grace Taylor",
-    total: 189.6,
-    status: "Delivered",
-    date: "2023-07-08",
+    _id: 2,
+    orderId: "ORD002",
+    customer: "Shiva Kumar",
+    firstname: "Shiva",
+    lastname: "Kumar",
+    orderItems: [
+      {
+        product: "Potato",
+        quantity: 2,
+        price: 20,
+      },
+      {
+        product: "Tomato",
+        quantity: 2,
+        price: 20,
+      },
+    ],
+    shippingAddress: {
+      address: "Bhogwara, Ugrasenpur, Prayagraj",
+      village: "Bhogwara",
+      city: "Prayagraj",
+      phone: "0123456789",
+    },
+    totalPrice: 80,
+    status: "Pending",
+    paymentMethod: "COD",
+    paymentStatus: "Pending",
+    deliveredAt: "10/10/2024",
+    total: 235.4,
+    createdAt: "2024-06-01",
+    updatedAt: "2024-06-01",
   },
 ];
 
-const OrderTable = () => {
+const OrderTable = ({ onEditClick }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredOrders, setFilteredOrders] = useState(orderData);
+  const [activeList, setActiveList] = useState(true);
 
   const handleSearch = (e) => {
     const term = e.target.value.toLowerCase();
@@ -84,8 +97,28 @@ const OrderTable = () => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.2 }}
     >
+      <div className="w-full pt-2 pb-4 flex-center gap-2">
+        <button
+          className={`px-4 py-2 border transition-all hover:bg-gray-600 border-gray-600 rounded-md ${
+            !activeList && "bg-gray-600"
+          } `}
+          onClick={() => setActiveList(false)}
+        >
+          Order Table
+        </button>
+        <button
+          className={`px-4 py-2 border transition-all hover:bg-gray-600 border-gray-600 rounded-md ${
+            activeList && "bg-gray-600"
+          } `}
+          onClick={() => setActiveList(true)}
+        >
+          Order List
+        </button>
+      </div>
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl font-semibold text-gray-100">Order List</h2>
+        <h2 className="text-xl font-semibold text-gray-100">
+          {activeList ? "Order List" : "Order Table"}
+        </h2>
         <div className="relative">
           <input
             type="text"
@@ -98,75 +131,77 @@ const OrderTable = () => {
         </div>
       </div>
 
-      <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-700">
-          <thead>
-            <tr>
-              <th className="px-6 py-3 text-left font-medium text-gray-400 uppercase tracking-wider">
-                Order Id
-              </th>
-              <th className="px-6 py-3 text-left font-medium text-gray-400 uppercase tracking-wider">
-                Customer
-              </th>
-              <th className="px-6 py-3 text-left font-medium text-gray-400 uppercase tracking-wider">
-                Total
-              </th>
-              <th className="px-6 py-3 text-left font-medium text-gray-400 uppercase tracking-wider">
-                Status
-              </th>
-              <th className="px-6 py-3 text-left font-medium text-gray-400 uppercase tracking-wider">
-                Date
-              </th>
-              <th className="px-6 py-3 text-left font-medium text-gray-400 uppercase tracking-wider">
-                Actions
-              </th>
-            </tr>
-          </thead>
+      <div className="overflow-x-auto gap-5 flex-center flex-col">
+        {!activeList && (
+          <table className="min-w-full divide-y divide-gray-700">
+            <thead>
+              <tr>
+                <th className="px-6 py-3 text-left font-medium text-gray-400 uppercase tracking-wider">
+                  Order Id
+                </th>
+                <th className="px-6 py-3 text-left font-medium text-gray-400 uppercase tracking-wider">
+                  Customer Name
+                </th>
+                <th className="px-6 py-3 text-left font-medium text-gray-400 uppercase tracking-wider">
+                  Total
+                </th>
+                <th className="px-6 py-3 text-left font-medium text-gray-400 uppercase tracking-wider">
+                  Status
+                </th>
+                <th className="px-6 py-3 text-left font-medium text-gray-400 uppercase tracking-wider">
+                  Order Date
+                </th>
+                <th className="px-6 py-3 text-left font-medium text-gray-400 uppercase tracking-wider">
+                  Actions
+                </th>
+              </tr>
+            </thead>
 
-          <tbody className="divide-y divide-gray-700">
-            {filteredOrders.map((order) => (
-              <motion.tr
-                key={order.id}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.3 }}
-              >
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
-                  {order.id}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
-                  {order.customer}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
-                  {order.total}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
-                  <span
-                    className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                      order.status === "Delivered"
-                        ? "bg-green-100 text-green-800"
-                        : order.status === "Processing"
-                        ? "bg-yellow-100 text-yellow-800"
-                        : order.status === "Shipped"
-                        ? "bg-blue-100 text-blue-800"
-                        : "bg-red-100 text-red-800"
-                    }`}
-                  >
-                    {order.status}
-                  </span>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
-                  {order.date}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
-                  <button className="text-indigo-400 hover:text-indigo-300 mr-2">
-                    <Eye size={18} />
-                  </button>
-                </td>
-              </motion.tr>
-            ))}
-          </tbody>
-        </table>
+            <tbody className="divide-y divide-gray-700">
+              {filteredOrders.length > 0
+                ? filteredOrders.map((order) => (
+                    <OrderTr
+                      key={order._id}
+                      _id={order._id}
+                      orderId={order.orderId}
+                      firstname={order.firstname}
+                      lastname={order.lastname}
+                      orderItems={order.orderItems}
+                      shippingAddress={order.shippingAddress}
+                      totalPrice={order.totalPrice}
+                      paymentMethod={order.paymentMethod}
+                      paymentStatus={order.paymentStatus}
+                      deliveredAt={order.deliveredAt}
+                      status={order.status}
+                      createdAt={order.createdAt}
+                      onEditClick={onEditClick}
+                    />
+                  ))
+                : "Nothing found"}
+            </tbody>
+          </table>
+        )}
+
+        {activeList && filteredOrders.length > 0
+          ? filteredOrders.map((order) => (
+              <OrderList
+                key={order._id}
+                _id={order._id}
+                orderId={order.orderId}
+                firstname={order.firstname}
+                lastname={order.lastname}
+                orderItems={order.orderItems}
+                shippingAddress={order.shippingAddress}
+                totalPrice={order.totalPrice}
+                paymentMethod={order.paymentMethod}
+                paymentStatus={order.paymentStatus}
+                deliveredAt={order.deliveredAt}
+                status={order.status}
+                createdAt={order.createdAt}
+                onEditClick={onEditClick}
+              />
+            ))
+          : ""}
       </div>
     </motion.div>
   );

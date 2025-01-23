@@ -9,7 +9,7 @@ const USER_DATA = [
     username: "John Doe",
     imageUrl: "/public/images/potato-1.webp",
     email: "john@example.com",
-    role: "Customer",
+    role: "user",
     isBlocked: false,
     createdAt: "12/01/2024",
   },
@@ -18,7 +18,7 @@ const USER_DATA = [
     username: "Jane Smith",
     imageUrl: "/public/images/potato-1.webp",
     email: "jane@example.com",
-    role: "Admin",
+    role: "admin",
     isBlocked: false,
     createdAt: "12/01/2024",
   },
@@ -75,7 +75,7 @@ const UsersTable = ({ onEditClick }) => {
       transition={{ delay: 0.2 }}
     >
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl font-semibold text-gray-100">Product List</h2>
+        <h2 className="text-xl font-semibold text-gray-100">Users List</h2>
         <div className="relative">
           <input
             type="text"

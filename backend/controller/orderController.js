@@ -6,6 +6,16 @@ const {
 const asyncHandler = require("../utils/asyncHandler");
 const ErrorResponse = require("../utils/errorResponse");
 
+const generateOrderNumber = () => {
+  const date = new Date();
+  return `ORD-${date.getFullYear()}${(date.getMonth() + 1)
+    .toString()
+    .padStart(2, "0")}${date
+    .getDate()
+    .toString()
+    .padStart(2, "0")}-${Math.floor(1000 + Math.randon() * 9000)}`;
+};
+
 // @desc Create a new order
 // @route POST /api/v1/orders
 // @access Private
@@ -22,6 +32,7 @@ const createOrder = asyncHandler(async (req, res, next) => {
 
     const order = new Order({
       user: req.user.id,
+      orderId: generateOrderNumber(),
       orderItems,
       shippingAddress,
       totalPrice,

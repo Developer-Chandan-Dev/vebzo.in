@@ -16,7 +16,6 @@ const UserTr = ({
   return (
     <>
       <motion.tr
-        key={_id}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.3 }}
@@ -35,7 +34,13 @@ const UserTr = ({
         </td>
         <td className="px-6 py-4 whitespace-nowrap ">
           <span className="px-3 py-[3px] inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-800 text-blue-100">
-            {role}
+            {role === "admin"
+              ? "Admin"
+              : role === "manager"
+              ? "Manager"
+              : role === "user"
+              ? "User"
+              : "User"}
           </span>
         </td>
         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">

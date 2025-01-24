@@ -22,6 +22,7 @@ const OrderList = ({
     paymentStatus || "Pending"
   );
 
+  console.log(orderId, firstname, lastname);
   return (
     <>
       <div className="w-full h-auto p-5 border border-gray-600 rounded-md flex items-start flex-wrap gap-5 justify-between relative">

@@ -6,7 +6,7 @@ import { Menu, ShoppingCart, User, X } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 
 const Header = ({ bg = "bg-white" }) => {
-  const [authUser, setAuthUser] = useState(true);
+  const [authUser, setAuthUser] = useState(false);
   const [toggleMenu, setToggleMenu] = useState(false);
   const location = useLocation();
 

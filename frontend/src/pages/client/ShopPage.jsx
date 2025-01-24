@@ -6,6 +6,10 @@ import Container from "../../components/client/shop/Container";
 
 const ShopPage = () => {
   const [toggleSidebar, setToggleSidebar] = useState(false);
+  const [searchText, setSearchText] = useState("");
+  const [minPrice, setMinPrice] = useState(20);
+  const [maxPrice, setMaxPrice] = useState(50);
+  const [toggleFilter, setToggleFilter] = useState(false);
 
   return (
     <div>
@@ -14,10 +18,26 @@ const ShopPage = () => {
         <Sidebar
           toggleSidebar={toggleSidebar}
           setToggleSidebar={setToggleSidebar}
+          searchText={searchText}
+          setSearchText={setSearchText}
+          minPrice={minPrice}
+          maxPrice={maxPrice}
+          setMinPrice={setMinPrice}
+          setMaxPrice={setMaxPrice}
+          toggleFilter={toggleFilter}
+          setToggleFilter={setToggleFilter}
         />
         <Container
           toggleSidebar={toggleSidebar}
           setToggleSidebar={setToggleSidebar}
+          searchText={searchText}
+          setSearchText={setSearchText}
+          minPrice={minPrice}
+          maxPrice={maxPrice}
+          setMinPrice={setMinPrice}
+          setMaxPrice={setMaxPrice}
+          toggleFilter={toggleFilter}
+          setToggleFilter={setToggleFilter}
         />
       </div>
 

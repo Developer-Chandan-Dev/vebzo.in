@@ -18,6 +18,8 @@ const AddUpdateOrdersPopup = ({ order, onClose }) => {
     e.preventDefault();
   };
 
+  console.log(firstname, lastname, order);
+
   return (
     <motion.div
       className="fixed flex-center left-0 top-0 w-full h-full z-10 drop-shadow text-slate-500 backdrop-filter backdrop-blur-sm bg-opacity-5 "
@@ -38,6 +40,9 @@ const AddUpdateOrdersPopup = ({ order, onClose }) => {
           className="px-1 py-2 sm:p-5 text-slate-100"
           onSubmit={handleSubmit}
         >
+          <div>
+            <h3 className="ml-1 mb-2 text-lg">Order ID : <span className="text-red-400">{order?.orderId}</span></h3>
+          </div>
           <div className="flex items-center gap-2">
             <div>
               <label htmlFor="name" className="ml-1">
@@ -49,8 +54,8 @@ const AddUpdateOrdersPopup = ({ order, onClose }) => {
                   type="text"
                   id="name"
                   required
-                  // value={name}
-                  // onChange={(e) => setName(e.target.value)}
+                  value={firstname}
+                  onChange={(e) => setFirstname(e.target.value)}
                   className="w-full sm:w-60 h-9 py-1 px-[10px] border rounded-md border-slate-500 outline-slate-500 my-2 bg-gray-700"
                   placeholder="Enter Product Name"
                 />
@@ -66,9 +71,9 @@ const AddUpdateOrdersPopup = ({ order, onClose }) => {
                   type="text"
                   id="name"
                   required
-                  // value={name}
-                  // onChange={(e) => setName(e.target.value)}
-                  className="w-full sm:w-80 h-9 py-1 px-[10px] border rounded-md border-slate-500 outline-slate-500 my-2 bg-gray-700"
+                  value={lastname}
+                  onChange={(e) => setLastname(e.target.value)}
+                  className="w-full sm:w-60 h-9 py-1 px-[10px] border rounded-md border-slate-500 outline-slate-500 my-2 bg-gray-700"
                   placeholder="Enter Product Name"
                 />
               </div>

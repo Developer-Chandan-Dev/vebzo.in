@@ -1,8 +1,32 @@
 /* eslint-disable react/prop-types */
+import { useState } from "react";
 import "./style.css";
 import { Search, X } from "lucide-react";
+import ToggleSwitch from "../utility/ToggleSwitch";
 
-const Sidebar = ({ toggleSidebar, setToggleSidebar }) => {
+const Sidebar = ({
+  toggleSidebar,
+  setToggleSidebar,
+  searchText = "",
+  setSearchText,
+  minPrice,
+  maxPrice,
+  setMinPrice,
+  setMaxPrice,
+  toggleFilter,
+  setToggleFilter,
+}) => {
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const handleSetSearchText = () => {
+    setSearchText(searchTerm.trim());
+  };
+
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter") {
+      handleSetSearchText(); // Trigger the search function when Eter is pressed
+    }
+  };
   return (
     <div
       className={`${
@@ -21,23 +45,36 @@ const Sidebar = ({ toggleSidebar, setToggleSidebar }) => {
           type="text"
           className="py-2 px-3 w-full sm:w-60 outline-gray-300 border rounded"
           placeholder="Search Products"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          onKeyDown={handleKeyPress}
         />
         <div className="w-8 flex-center h-9 py-1 border-2 cursor-pointer border-[#8bc34a] hover:border-[#6a9739] bg-[#8bc34a] hover:bg-[#6a9739] rounded text-white">
-          <Search size="18" />
+          <Search size="18" onClick={handleSetSearchText} />
         </div>
       </div>
 
       <div className="py-7 px-3">
-        <h3 className="text-left text-xl text-[#111111] font-semibold">
-          Filter by price
-        </h3>
+        <div className="flex-between gap-2">
+          <h3 className="text-left text-xl text-[#111111] font-semibold">
+            Filter by price
+          </h3>
+          <ToggleSwitch
+            isOn={toggleFilter}
+            onToggle={() => setToggleFilter(!toggleFilter)}
+          />
+        </div>
         <div className="flex items-center gap-x-2 justify-end pr-7 py-5">
           <input
             type="number"
+            value={minPrice}
+            onChange={(e) => setMinPrice(toggleFilter && e.target.value)}
             className="border rounded text-base py-3 outline-gray-200 w-20 px-2"
           />
           <input
             type="number"
+            value={maxPrice}
+            onChange={(e) => setMaxPrice(toggleFilter && e.target.value)}
             className="border rounded text-base py-3 outline-gray-200 w-20 px-2"
           />
         </div>

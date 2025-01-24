@@ -8,9 +8,6 @@ const {
   getProductById,
   updateProduct,
   deleteProduct,
-  searchAndFilterProducts,
-  searchProducts,
-  filterProducts,
   productImageUpload,
   productsByCategory
 } = require("../controller/productController");
@@ -46,10 +43,5 @@ router.delete("/:id", protect, admin, deleteProduct);
 // Get products by category
 router.get("/category/:categoryId", productsByCategory)
 
-// Search products ( Public )
-router.get("/search/search", searchProducts);
-
-// Filter products ( Public )
-router.get("/filter/filter", filterProducts);
 
 module.exports = router;

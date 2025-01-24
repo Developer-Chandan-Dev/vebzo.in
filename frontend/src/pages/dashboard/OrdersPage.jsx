@@ -79,7 +79,7 @@ const OrdersPage = () => {
 
         {isPopupActive && (
           <AddUpdateOrdersPopup
-            product={selectedOrder}
+            order={selectedOrder}
             onClose={handlePopupModelClose}
           />
         )}

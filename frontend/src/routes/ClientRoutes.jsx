@@ -21,7 +21,7 @@ const ClientRoutes = () => {
       <Route path="/cart" element={<CartPage />} />
       <Route path="/checkout" element={<CheckoutPage />} />
       <Route path="/shop" element={<ShopPage />} />
-      <Route path="/product-page" element={<ProductPage />} />
+      <Route path="/shop/:id" element={<ProductPage />} />
       <Route path="/signup" element={<SignupPage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/profile" element={<UserProfilePage />} />

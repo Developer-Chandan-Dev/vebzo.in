@@ -8,6 +8,7 @@ const { handleImageUpload } = require("../helper/cloudinary.helper.js");
 const signup = asyncHandler(async (req, res, next) => {
   try {
     const { username, email, password } = req.body;
+    console.log(username, email, password);
 
     if (!username || !email || !password) {
       return next(new ErrorResponse("Please fill in all fields", 400));

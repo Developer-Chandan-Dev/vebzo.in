@@ -19,12 +19,13 @@ const useHandleSendingRequest = (initialState, method) => {
     setError(null);
     console.log(url);
 
-    console.log(formData);
+    console.log(method, url, formData);
     try {
       const response = await axios({
         method: method, // 'POST' or 'PUT'
         url: url, // The API endpoint
         data: formData, //
+        withCredentials: true,
         headers: {
           "Content-Type": "application/json",
         },

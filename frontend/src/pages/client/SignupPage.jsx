@@ -1,7 +1,43 @@
-import './style.css'
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import "./style.css";
+import { Link, useNavigate } from "react-router-dom";
+import authService from "../../features/auth";
+import SmallSpinner from "../../components/utility/SmallSpinner";
 
 const SignupPage = () => {
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    setLoading(true);
+    e.preventDefault();
+
+    if (!username || !email || !password) {
+      setLoading(false);
+      return setError("Please fill all the fields");
+    }
+
+    if (password.length < 6) {
+      setLoading(false);
+      return setError("Password must be 6 characters at least.");
+    }
+
+    const res = await authService.createAccount(username, email, password);
+
+    if (res.data.success === true) {
+      setLoading(false);
+      navigate("/login");
+    } else {
+      setLoading(false);
+      setError(res.data.error);
+    }
+    console.log(res);
+  };
   return (
     <div className="w-full h-screen flex-center ">
       <div
@@ -21,12 +57,14 @@ const SignupPage = () => {
             <h1 className="text-6xl py-3 font-semibold ">Hi there!</h1>
             <p>Welcome to Apna Organic Store Registration.</p>
 
-            <form className="py-6">
+            <form className="py-6" onSubmit={handleSubmit}>
               <div>
                 <input
                   type="text"
                   className="inputBox px-3 w-80 py-3 rounded-lg border"
                   placeholder="Your Name"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
                   required
                 />
               </div>
@@ -35,6 +73,8 @@ const SignupPage = () => {
                   type="email"
                   className="inputBox px-3 w-80 py-3 rounded-lg border mt-4"
                   placeholder="Your email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   required
                 />
               </div>
@@ -44,13 +84,16 @@ const SignupPage = () => {
                   className="inputBox px-3 w-80 py-3 rounded-lg border my-4"
                   placeholder="Your password"
                   required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  minLength={6}
                 />
               </div>
               <button
                 type="submit"
                 className="inputBox w-80 py-[10px] my-4 border rounded-3xl bg-black text-white font-semibold"
               >
-                Register
+                {loading ? <SmallSpinner /> : "Register"}
               </button>
 
               <p>
@@ -65,7 +108,7 @@ const SignupPage = () => {
             </form>
           </div>
         </div>
-        <div className="hidden lg:block w-1/2 h-full bg-slate-500"></div>
+        <div className="hidden lg:block w-1/2 h-full banner-image"></div>
       </div>
     </div>
   );

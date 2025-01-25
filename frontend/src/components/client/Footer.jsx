@@ -1,9 +1,12 @@
 // import { Link } from "react-router-dom";
 
 import { Facebook, Instagram, Twitter } from "lucide-react";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 const Footer = () => {
+  const authUser = useSelector((state) => state.user.user);
+
   return (
     <div className="w-full py-10 bg-black text-white">
       <div className="flex items-start justify-between flex-wrap gap-4 px-10 py-5">
@@ -44,24 +47,28 @@ const Footer = () => {
                 Contact
               </li>
             </Link>
-            <Link to="/cart">
-              {" "}
-              <li className="my-2 text-gray-300 transition hover:text-white">
-                Cart
-              </li>
-            </Link>
-            <Link to="/checkout">
-              {" "}
-              <li className="my-2 text-gray-300 transition hover:text-white">
-                CheckOut
-              </li>
-            </Link>
-            <Link to="/my-account">
-              {" "}
-              <li className="my-2 text-gray-300 transition hover:text-white">
-                My Account
-              </li>
-            </Link>
+            {authUser && (
+              <>
+                <Link to="/cart">
+                  {" "}
+                  <li className="my-2 text-gray-300 transition hover:text-white">
+                    Cart
+                  </li>
+                </Link>
+                <Link to="/checkout">
+                  {" "}
+                  <li className="my-2 text-gray-300 transition hover:text-white">
+                    CheckOut
+                  </li>
+                </Link>
+                <Link to="/my-account">
+                  {" "}
+                  <li className="my-2 text-gray-300 transition hover:text-white">
+                    My Account
+                  </li>
+                </Link>
+              </>
+            )}
           </ul>
         </div>
         <div className="text-left">

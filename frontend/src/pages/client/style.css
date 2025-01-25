@@ -1,3 +1,9 @@
+.banner-image{
+    background-image: url('/public/images/organic-products-hero.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
 
 @media(max-width: 390px){
     .signup-mainBox{

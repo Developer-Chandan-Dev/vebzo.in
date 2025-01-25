@@ -4,9 +4,15 @@ import Header from "../../components/client/Header";
 import Button from "../../components/utility/Button";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import useFetchData from "../../hooks/useFetchData";
 
+const VITE_API_URL = import.meta.env.VITE_API_URL;
 const CartPage = () => {
   const [updateButtonEnable, setUpdateButtonEnable] = useState(true);
+
+  const { data, loading, error } = useFetchData(`${VITE_API_URL}/api/v1/cart`);
+
+  console.log(data, loading, error);
 
   return (
     <div className="w-full h-auto">
@@ -26,6 +32,39 @@ const CartPage = () => {
               </tr>
             </thead>
             <tbody>
+              {data?.data.length > 0 && data?.data !== null
+                ? data?.data.map((product) => (
+                    <tr className="border-b" key={product._id}>
+                      <td className="py-3 px-5" colSpan={2}>
+                        <div className="flex items-center justify-around">
+                          <XCircle className="text-gray-400 transition-all cursor-pointer hover:text-gray-600" />
+                          <img
+                            src={
+                              product.product.imageUrl
+                                ? product.product.imageUrl
+                                : "/public/images/potato-1.webp"
+                            }
+                            className="size-20"
+                            alt="potato"
+                          />
+                        </div>
+                      </td>
+                      <td className="py-3">{product.product.name}</td>
+                      <td className="py-3">{product.product.price}</td>
+                      <td className="py-3">
+                        <input
+                          type="number"
+                          value={product.quantity}
+                          className="w-16 h-10 pl-4 border outline-none "
+                        />
+                      </td>
+                      <td className="py-3">
+                        {parseInt(product.quantity) *
+                          parseInt(product.product.price)}
+                      </td>
+                    </tr>
+                  ))
+                : ""}
               <tr className="border-b">
                 <td className="py-3 px-5" colSpan={2}>
                   <div className="flex items-center justify-around">
@@ -42,7 +81,6 @@ const CartPage = () => {
                 <td className="py-3">
                   <input
                     type="number"
-                    defaultValue={1}
                     className="w-16 h-10 pl-4 border outline-none "
                   />
                 </td>

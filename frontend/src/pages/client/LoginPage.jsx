@@ -1,6 +1,52 @@
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import authService from "../../features/auth";
+import { login } from "../../store/features/userSlice";
+import SmallSpinner from "../../components/utility/SmallSpinner";
 
 const LoginPage = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    if (!email || !password) {
+      return setError("Please fill in all fields");
+    }
+
+    if (password.length < 6) {
+      setLoading(false);
+      return setError("Password must be atleast 6 characters");
+    }
+
+    const res = await authService.login(email, password);
+    console.log(res);
+    if (res.data.success === true) {
+      // Dispatch the login action
+      dispatch(login(res.data.user));
+      setEmail("");
+      setPassword("");
+      setLoading(false);
+      setError(null);
+      navigate("/");
+    } else if (res.data.success === false) {
+      setError(res.data.error);
+      setLoading(false);
+    } else {
+      console.log(res);
+      setError("Something went wrong");
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="w-full h-screen flex-center">
       <div
@@ -20,13 +66,15 @@ const LoginPage = () => {
             <h1 className="text-6xl py-3 font-semibold ">Hi there!</h1>
             <p>Welcome to Apna Organic Store Login.</p>
 
-            <form className="py-6">
+            <form className="py-6" onSubmit={handleSubmit}>
               <div>
                 <input
                   type="email"
                   className="inputBox px-3 w-80 py-3 rounded-lg border"
                   placeholder="Your email"
                   required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
               <div>
@@ -35,13 +83,16 @@ const LoginPage = () => {
                   className="inputBox px-3 w-80 py-3 rounded-lg border my-4"
                   placeholder="Your password"
                   required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  minLength={6}
                 />
               </div>
               <button
                 type="submit"
                 className="inputBox w-80 py-[10px] my-4 border rounded-3xl bg-black text-white font-semibold"
               >
-                Log In
+                {loading ? <SmallSpinner /> : "Log In"}
               </button>
 
               <p>
@@ -56,7 +107,7 @@ const LoginPage = () => {
             </form>
           </div>
         </div>
-        <div className="hidden lg:block w-1/2 h-full bg-slate-500"></div>
+        <div className="hidden lg:block w-1/2 h-full banner-image"></div>
       </div>
     </div>
   );

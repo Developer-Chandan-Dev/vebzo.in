@@ -2,7 +2,7 @@ const Joi = require("joi");
 
 // Validation schema for user registration
 const userValidationSchema = Joi.object({
-  username: Joi.string().alphanum().min(3).max(30).required().trim().messages({
+  username: Joi.string().min(3).max(30).required().trim().messages({
     "string.base": "Username must be a string",
     "string.min": "Username must be at least 3 characters long",
     "any.required": "Username is required",

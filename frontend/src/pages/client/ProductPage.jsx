@@ -1,17 +1,36 @@
+import { useEffect, useState } from "react";
 import { Star } from "lucide-react";
+import { useParams } from "react-router-dom";
 import Footer from "../../components/client/Footer";
 import Header from "../../components/client/Header";
 import useFetchData from "../../hooks/useFetchData";
-import { useParams } from "react-router-dom";
+import useHandleSendingRequest from "../../hooks/useHandleSendingRequest";
 
+const VITE_API_URL = import.meta.env.VITE_API_URL;
 const ProductPage = () => {
-  const VITE_API_URL = import.meta.env.VITE_API_URL;
   const { id } = useParams();
-  console.log(id);
   const { data, error, loading } = useFetchData(
     `${VITE_API_URL}/api/v1/products/details/${id}`
   );
-  console.log(data, error, loading);
+
+  console.log(data?.data?._id);
+  const [quantity, setQuantity] = useState(1);
+  const [productId, setProductId] = useState("");
+
+  useEffect(() => {
+    setProductId(data?.data?._id);
+  }, [data?.data?._id]);
+
+  const { handleSubmit } = useHandleSendingRequest();
+
+  const onSubmit = async () => {
+    const response = await handleSubmit("POST", `${VITE_API_URL}/api/v1/cart`, {
+      productId,
+      quantity,
+    });
+
+    console.log(response);
+  };
 
   return (
     <div className="w-full h-auto text-left">
@@ -50,9 +69,14 @@ const ProductPage = () => {
             <div className="flex items-center gap-2 py-4 border-b">
               <input
                 type="number"
+                value={quantity}
+                onChange={(e) => setQuantity(e.target.value)}
                 className="w-16 pl-4 pr-1 py-2 border outline-none"
               />
-              <button className="w-60 py-2 px-3 bg-[#6a9739] text-white text-semibold text-[14px] rounded-lg">
+              <button
+                className="w-60 py-2 px-3 bg-[#6a9739] text-white text-semibold text-[14px] rounded-lg"
+                onClick={onSubmit}
+              >
                 ADD TO CART
               </button>
             </div>

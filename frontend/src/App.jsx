@@ -5,6 +5,7 @@ import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import ClientRoutes from "./routes/ClientRoutes";
 import DashboardRoutes from "./routes/DashboardRoutes";
 import NotFound from "./pages/NotFound";
+import RoleProtectedRoute from "./components/utility/RoleProtectedRoute";
 
 function App() {
   return (
@@ -12,10 +13,18 @@ function App() {
       <Routes>
         {/* Client Routes */}
         <Route path="/*" element={<ClientRoutes />} />
-        
+
         {/* Dashboard Routes */}
-        <Route path="/dashboard/*" element={<DashboardRoutes />} />
-        
+        <Route
+          path="/dashboard/*"
+          element={
+            <RoleProtectedRoute allowedRoles={["admin", "manager"]}>
+              {" "}
+              <DashboardRoutes />
+            </RoleProtectedRoute>
+          }
+        />
+
         {/* Fallback for Undefined Routes */}
         <Route path="*" element={<NotFound />} />
       </Routes>
@@ -25,7 +34,7 @@ function App() {
 
 export default App;
 
-// Tum Aa Gaye Ho Noor Aa Gaya 
+// Tum Aa Gaye Ho Noor Aa Gaya
 // Aanewal Pal Janewal Hai
 // Yara Seeli Seeli
 // Dil Dhundta Hai

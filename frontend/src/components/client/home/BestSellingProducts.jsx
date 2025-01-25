@@ -1,4 +1,4 @@
-import { Star } from "lucide-react";
+import { Heart, ShoppingCart, Star } from "lucide-react";
 import { Link } from "react-router-dom";
 import useFetchData from "../../../hooks/useFetchData";
 
@@ -25,7 +25,7 @@ const BestSellingProducts = () => {
           ? data?.data.map((product) => (
               <div className="w-72 h-auto productBox" key={product._id}>
                 <Link to={`/shop/${product?._id}`}>
-                  <div className=" w-72 h-72 border mx-auto overflow-hidden">
+                  <div className=" w-72 h-72 border mx-auto overflow-hidden relative">
                     <img
                       src={
                         product?.imageUrl
@@ -35,6 +35,10 @@ const BestSellingProducts = () => {
                       className="w-full h-full object-fit"
                       alt="Product Image"
                     />
+                    <div className="absolute w-auto h-10 top-2 right-2 flex items-center gap-3 px-3">
+                      <Heart className="text-white drop-shadow" />
+                      <ShoppingCart className="text-white drop-shadow" />
+                    </div>
                   </div>
                 </Link>
                 <div className="flex-center flex-col py-5">

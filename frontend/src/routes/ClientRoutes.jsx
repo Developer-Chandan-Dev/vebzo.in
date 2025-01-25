@@ -1,4 +1,5 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 // Route Imports
 import HomePage from "../pages/client/HomePage";
@@ -11,20 +12,44 @@ import ProductPage from "../pages/client/ProductPage";
 import SignupPage from "../pages/client/SignupPage";
 import LoginPage from "../pages/client/LoginPage";
 import UserProfilePage from "../pages/client/UserProfilePage";
+import MyProfile from "../components/client/profile/MyProfile";
+import WishList from "../components/client/profile/WishList";
 
 const ClientRoutes = () => {
+  // Retrive authenticated user information from Redux state
+  const authUser = useSelector((state) => state.user.user);
+  console.log(authUser);
+
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
       <Route path="/about" element={<AboutPage />} />
       <Route path="/contact" element={<ContactPage />} />
-      <Route path="/cart" element={<CartPage />} />
-      <Route path="/checkout" element={<CheckoutPage />} />
+      <Route
+        path="/cart"
+        element={authUser ? <CartPage /> : <Navigate to="/" />}
+      />
+      <Route
+        path="/checkout"
+        element={authUser ? <CheckoutPage /> : <Navigate to="/" />}
+      />
       <Route path="/shop" element={<ShopPage />} />
       <Route path="/shop/:id" element={<ProductPage />} />
-      <Route path="/signup" element={<SignupPage />} />
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/profile" element={<UserProfilePage />} />
+      <Route
+        path="/signup"
+        element={authUser ? <Navigate to="/" /> : <SignupPage />}
+      />
+      <Route
+        path="/login"
+        element={authUser ? <Navigate to="/" /> : <LoginPage />}
+      />
+      <Route
+        path="/profile"
+        element={authUser ? <UserProfilePage /> : <Navigate to="/" />}
+      >
+        <Route path="" element={<MyProfile />} />
+        <Route path="wishlist" element={<WishList />} />
+      </Route>
     </Routes>
   );
 };

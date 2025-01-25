@@ -4,9 +4,9 @@ const ErrorResponse = require("../utils/errorResponse");
 
 const addToCart = asyncHandler(async (req, res, next) => {
   const { productId, quantity } = req.body;
-
+  
   try {
-    if ((productId, quantity)) {
+    if ((!productId || !quantity)) {
       return next(
         new ErrorResponse("Please provide Product name and quantity", 400)
       );
@@ -33,7 +33,7 @@ const addToCart = asyncHandler(async (req, res, next) => {
     } else {
       cart.cartItems.push({ product: productId, quantity });
     }
-    console.log(cart);
+    
     await cart.save();
     res
       .status(200)

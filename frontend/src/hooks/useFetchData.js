@@ -21,7 +21,9 @@ const useFetchData = (url) => {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(url); // Waiting for get requests
+      const response = await axios.get(url, {
+        withCredentials: true,
+      }); // Waiting for get requests
       const resData = response.data;
 
       setData(resData); // Set fetched data in state

@@ -29,7 +29,7 @@ const Container = ({
     toggleFilter ? minPrice : "",
     toggleFilter ? maxPrice : ""
   );
-  console.log(minPrice, maxPrice);
+  
 
   // Function to handle page change
   const handlePageClick = (page) => {
@@ -41,12 +41,12 @@ const Container = ({
   for (let i = 1; i <= data?.totalPages; i++) {
     pageNumbers.push(i);
   }
-  console.log(sortBy);
+  
   return (
     <div className="w-full md:w-[800px] h-auto text-left">
       <div className="flex-between">
         <h1 className="text-4xl font-semibold py-3 text-[#8bc34a]">Shop</h1>
-        <div className="flex items-center gap-3">
+        <div className="flex md:hidden items-center gap-3">
           <div
             className="w-9 h-9 rounded-md border flex-center cursor-pointer text-gray-500 opacity-50 hover:opacity-100"
             onClick={() => setToggleSidebar(!toggleSidebar)}

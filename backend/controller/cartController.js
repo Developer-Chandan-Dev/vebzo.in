@@ -4,9 +4,9 @@ const ErrorResponse = require("../utils/errorResponse");
 
 const addToCart = asyncHandler(async (req, res, next) => {
   const { productId, quantity } = req.body;
-  
+
   try {
-    if ((!productId || !quantity)) {
+    if (!productId || !quantity) {
       return next(
         new ErrorResponse("Please provide Product name and quantity", 400)
       );
@@ -18,7 +18,10 @@ const addToCart = asyncHandler(async (req, res, next) => {
       );
     }
 
-    let cart = await Cart.findOne({ user: req.user.id });
+    let cart = await Cart.findOne({ user: req.user.id }).populate({
+      path: "cartItems.product", // Populate the `product` field inside `cartItems`
+      select: "name price category imageUrl", // Spcifiy the fields you want from the Product model
+    });
 
     if (!cart) {
       cart = new Cart({ user: req.user.id, cartItems: [] });
@@ -33,11 +36,11 @@ const addToCart = asyncHandler(async (req, res, next) => {
     } else {
       cart.cartItems.push({ product: productId, quantity });
     }
-    
+
+    console.log(cart);
+
     await cart.save();
-    res
-      .status(200)
-      .json({ success: true, message: "Product added/updated in cart" });
+    res.status(200).json(cart);
   } catch (error) {
     console.log(error);
     return next(new ErrorResponse("Internal Server Error", 500));
@@ -99,15 +102,17 @@ const updateCartItem = asyncHandler(async (req, res, next) => {
 
 const getCart = asyncHandler(async (req, res, next) => {
   try {
-    const cart = await Cart.findOne({ user: req.user.id }).populate(
-      "cartItems.product"
-    );
-
+    const cart = await Cart.findOne({ user: req.user.id }).populate({
+      path: "cartItems.product", // Populate the `product` field inside `cartItems`
+      select: "name price category imageUrl", // Spcifiy the fields you want from the Product model
+    });
+    console.log(cart);
     if (!cart) {
       return res.status(200).json({ success: true, cartItems: [] });
     }
+    console.log(cart);
 
-    res.status(200).json({ success: true, data: cart.cartItems });
+    res.status(200).json(cart.cartItems);
   } catch (error) {
     console.log(error);
     return next(new ErrorResponse("Internal Server Error", 500));

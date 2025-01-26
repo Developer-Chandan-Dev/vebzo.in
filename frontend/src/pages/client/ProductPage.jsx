@@ -1,35 +1,36 @@
+/* eslint-disable no-unused-vars */
 import { useEffect, useState } from "react";
 import { Star } from "lucide-react";
 import { useParams } from "react-router-dom";
 import Footer from "../../components/client/Footer";
 import Header from "../../components/client/Header";
 import useFetchData from "../../hooks/useFetchData";
-import useHandleSendingRequest from "../../hooks/useHandleSendingRequest";
+import { useDispatch, useSelector } from "react-redux";
+import { addToCart, fetchCartItems } from "../../store/features/cartSlice";
 
 const VITE_API_URL = import.meta.env.VITE_API_URL;
 const ProductPage = () => {
-  const { id } = useParams();
-  const { data, error, loading } = useFetchData(
-    `${VITE_API_URL}/api/v1/products/details/${id}`
-  );
-
-  console.log(data?.data?._id);
   const [quantity, setQuantity] = useState(1);
   const [productId, setProductId] = useState("");
+
+  const { id } = useParams();
+  const { data, loading } = useFetchData(
+    `${VITE_API_URL}/api/v1/products/details/${id}`
+  );
 
   useEffect(() => {
     setProductId(data?.data?._id);
   }, [data?.data?._id]);
 
-  const { handleSubmit } = useHandleSendingRequest();
+  const dispatch = useDispatch();
+  // const { cartItems, status, error } = useSelector((state) => state.cart);
 
-  const onSubmit = async () => {
-    const response = await handleSubmit("POST", `${VITE_API_URL}/api/v1/cart`, {
-      productId,
-      quantity,
-    });
+  useEffect(() => {
+    dispatch(fetchCartItems());
+  }, [dispatch]);
 
-    console.log(response);
+  const handleAddToCart = () => {
+    dispatch(addToCart({ productId, quantity }));
   };
 
   return (
@@ -75,7 +76,7 @@ const ProductPage = () => {
               />
               <button
                 className="w-60 py-2 px-3 bg-[#6a9739] text-white text-semibold text-[14px] rounded-lg"
-                onClick={onSubmit}
+                onClick={handleAddToCart}
               >
                 ADD TO CART
               </button>

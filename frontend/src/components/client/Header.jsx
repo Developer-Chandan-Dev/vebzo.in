@@ -11,6 +11,7 @@ const Header = ({ bg = "bg-white" }) => {
   const location = useLocation();
 
   const authUser = useSelector((state) => state.user.user);
+  const { cartItems } = useSelector((state) => state.cart);
 
   return (
     <header
@@ -84,8 +85,8 @@ const Header = ({ bg = "bg-white" }) => {
                   className="text-[#8bc34a] cursor-pointer"
                   size="20"
                 />
-                <span className="w-5 h-5 flex-center text-xs right-5 -top-3 text-white absolute font-serif rounded-full bg-[#8bc34a]">
-                  1
+                <span className="flex-center text-xs px-1 py-[2px] right-5 -top-3 text-white absolute font-serif rounded-full bg-[#8bc34a]">
+                  {cartItems?.length}
                 </span>
               </Link>
               <Link to="/profile">
@@ -129,8 +130,8 @@ const Header = ({ bg = "bg-white" }) => {
                   className="text-[#8bc34a] cursor-pointer mr-4 sm:mr-6"
                   size="22"
                 />
-                <span className="w-5 h-5 flex-center text-xs right-12 -top-1 text-white absolute font-serif rounded-full bg-[#8bc34a]">
-                  1
+                <span className="px-1 py-[2px] flex-center text-xs right-12 -top-1 text-white absolute font-serif rounded-full bg-[#8bc34a]">
+                {cartItems?.length}
                 </span>
               </Link>
               <button

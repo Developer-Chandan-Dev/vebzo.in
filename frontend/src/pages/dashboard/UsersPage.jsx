@@ -8,6 +8,7 @@ import UserActivityHeartmap from "../../components/dashboard/user/UserActivityHe
 import UserDemograpichsChart from "../../components/dashboard/user/UserDemograpichsChart";
 import UserGrowChart from "../../components/dashboard/user/UserGrowChart";
 import ChangeUserDetailsPopup from "../../components/dashboard/user/ChangeUsersDetailsPopup";
+import useFetchData from "../../hooks/useFetchData";
 
 const userStats = {
   totalUsers: 152845,
@@ -16,12 +17,18 @@ const userStats = {
   churnRate: "2.4%",
 };
 
+const VITE_API_URL = import.meta.env.VITE_API_URL;
 const UsersPage = () => {
   document.title = "Admin Dashboard - Users";
 
   const [isPopupActive, setIsPopupActive] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
 
+  const { data, loading, error } = useFetchData(
+    `${VITE_API_URL}/api/v1/analytics/user-cards`
+  );
+
+  console.log(data, loading, error);
   const handleEditClick = (user) => {
     setSelectedUser(user); // Set the selected user details
     setIsPopupActive(true); // Activate the popup
@@ -46,25 +53,31 @@ const UsersPage = () => {
           <StatCard
             name="Total Users"
             icon={UsersIcon}
-            value={userStats.totalUsers.toLocaleString()}
+            value={
+              loading ? "Loading..." : data?.data?.totalUsers.toLocaleString()
+            }
             color="#6366F1"
           />
           <StatCard
             name="New Users Today"
             icon={UserPlus}
-            value={userStats.newUsersToday.toLocaleString()}
+            value={loading ? "Loading" : data?.data?.newUsers.toLocaleString()}
             color="#108981"
           />
           <StatCard
             name="Active Users"
             icon={UserCheck}
-            value={userStats.activeUsers.toLocaleString()}
+            value={
+              loading ? "Loading" : data?.data?.activeUsers.toLocaleString()
+            }
             color="#F59E08"
           />
           <StatCard
             name="Churn Rate"
             icon={UserX}
-            value={userStats.churnRate}
+            value={
+              loading ? "Loading" : data?.data?.inactiveUsers.toLocaleString()
+            }
             color="#EF4444"
           />
         </motion.div>

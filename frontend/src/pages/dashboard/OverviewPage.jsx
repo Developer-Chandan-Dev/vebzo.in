@@ -5,9 +5,16 @@ import StatCard from "../../components/dashboard/common/StatCard";
 import { BarChart2, ShoppingBag, Users, Zap } from "lucide-react";
 import SalesOverviewChart from "../../components/dashboard/overview/SalesOverviewChart";
 import CategoryDistributionChart from "../../components/dashboard/overview/CategoryDistributionChart";
+import useFetchData from "../../hooks/useFetchData";
+import TopSellingProducts from "../../components/dashboard/overview/TopSellingProducts";
+import OrderStatusBreakDown from "../../components/dashboard/overview/OrderStatusBreakDown";
 
-
+const VITE_API_URL = import.meta.env.VITE_API_URL;
 const OverviewPage = () => {
+  const { data, loading } = useFetchData(
+    `${VITE_API_URL}/api/v1/analytics/overview-cards`
+  );
+
   document.title = "Admin Dashboard - Overview";
   return (
     <div className="flex-1 overflow-y-auto relative z-10 pb-6 text-left">
@@ -24,25 +31,27 @@ const OverviewPage = () => {
           <StatCard
             name="Total Sales"
             icon={Zap}
-            value="$12,345"
+            value={
+              loading ? "Loaidng..." : parseInt(data?.data?.totaSales) || 0
+            }
             color="#6366F1"
           />
           <StatCard
             name="New Users"
             icon={Users}
-            value="1,234"
+            value={loading ? "Loaidng..." : parseInt(data?.data?.newUsers)}
             color="#885CF6"
           />
           <StatCard
             name="Total Products"
             icon={ShoppingBag}
-            value="567"
+            value={loading ? "Loaidng..." : parseInt(data?.data?.totalProducts)}
             color="#EC4899"
           />
           <StatCard
             name="Pending Orders"
             icon={BarChart2}
-            value="10"
+            value={loading ? "Loaidng..." : parseInt(data?.data?.pendingOrders)}
             color="#108981"
           />
         </motion.div>
@@ -51,6 +60,10 @@ const OverviewPage = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <SalesOverviewChart />
+          <OrderStatusBreakDown />
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-7">
+          <TopSellingProducts />
           <CategoryDistributionChart />
         </div>
       </main>

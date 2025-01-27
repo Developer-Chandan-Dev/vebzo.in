@@ -9,12 +9,13 @@ import {
 } from "recharts";
 import useFetchData from "../../../hooks/useFetchData";
 
-const COLORS = ["#F59E08", "#6366F1", "#885CF6", "#FC4899", "#108981"];
 
 const VITE_API_URL = import.meta.env.VITE_API_URL;
-const CategoryDistributionChart = () => {
+
+const COLORS = ["#FC4899", "#108981", "#6366F1", "#885CF6", "#F59E08"];
+const OrderStatusBreakDown = () => {
   const { data } = useFetchData(
-    `${VITE_API_URL}/api/v1/analytics/chart/category-sales`
+    `${VITE_API_URL}/api/v1/analytics/chart/order-status-breakdown`
   );
 
   return (
@@ -25,7 +26,7 @@ const CategoryDistributionChart = () => {
       transition={{ delay: 0.3 }}
     >
       <h2 className="text-lg font-medium mb-4 text-gray-100">
-        Category Destribution
+        Order Status Break Down
       </h2>
 
       <div className="h-80">
@@ -38,10 +39,8 @@ const CategoryDistributionChart = () => {
               labelLine={false}
               outerRadius={80}
               fill="#8884d8"
-              dataKey="totalRevenue"
-              label={({ name, percent }) =>
-                `${name} ${(percent * 100).toFixed(0)}%`
-              }
+              dataKey="count"
+              label={({ name, percentage }) => `${name} ${percentage}%`}
             >
               {data?.data.map((entry, index) => (
                 <Cell
@@ -65,5 +64,4 @@ const CategoryDistributionChart = () => {
   );
 };
 
-export default CategoryDistributionChart;
-// Thoda thoda pyaar yahi asama pe isase hai teri yaar aayi
+export default OrderStatusBreakDown;

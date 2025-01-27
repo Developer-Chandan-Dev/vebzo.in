@@ -9,16 +9,12 @@ import {
   YAxis,
 } from "recharts";
 import { motion } from "framer-motion";
+import useFetchData from "../../../hooks/useFetchData";
 
-const productPerformanceData = [
-  { name: "Product A", sales: 4000, revenue: 2400, profit: 2400 },
-  { name: "Product B", sales: 3000, revenue: 1298, profit: 2210 },
-  { name: "Product C", sales: 2000, revenue: 9800, profit: 2290 },
-  { name: "Product D", sales: 2700, revenue: 3900, profit: 2000 },
-  { name: "Product E", sales: 1890, revenue: 4800, profit: 2181 },
-];
+const VITE_API_URL = import.meta.env.VITE_API_URL;
+const TopSellingProducts = () => {
+  const { data } = useFetchData(`${VITE_API_URL}/api/v1/analytics/chart/top-selling-products`);
 
-const ProductPerformance = () => {
   return (
     <motion.div
       className="bg-gray-800 bg-opacity-80 backdrop-blur-md shadow-lg rounded-xl p-6 border border-gray-700"
@@ -27,14 +23,14 @@ const ProductPerformance = () => {
       transition={{ delay: 0.4 }}
     >
       <h2 className="text-lg font-medium mb-4 text-gray-100">
-        User Activity Heatmap
+        Top Selling Products
       </h2>
 
       <div className="h-80 ">
         <ResponsiveContainer>
-          <BarChart data={productPerformanceData}>
+          <BarChart data={data?.data}>
             <CartesianGrid strokeDasharray="3 3" stroke="#485563" />
-            <XAxis dataKey={"name"} stroke="#9ca3af" />
+            <XAxis dataKey={"productName"} stroke="#9ca3af" />
             <YAxis stroke="#9ca3af" />
 
             <Tooltip
@@ -46,9 +42,9 @@ const ProductPerformance = () => {
             />
 
             <Legend />
-            <Bar dataKey="sales" fill="#885CF6" />
-            <Bar dataKey="revenue" fill="#108981" />
-            <Bar dataKey="profit" fill="#F59E08" />
+            <Bar dataKey="totalQuantity" fill="#885CF6" />
+            <Bar dataKey="totalRevenue" fill="#108981" />
+            {/* <Bar dataKey="profit" fill="#F59E08" /> */}
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -56,4 +52,4 @@ const ProductPerformance = () => {
   );
 };
 
-export default ProductPerformance;
+export default TopSellingProducts;

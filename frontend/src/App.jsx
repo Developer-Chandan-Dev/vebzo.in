@@ -1,4 +1,6 @@
 import "./App.css";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 
 // Route Imports
@@ -6,8 +8,15 @@ import ClientRoutes from "./routes/ClientRoutes";
 import DashboardRoutes from "./routes/DashboardRoutes";
 import NotFound from "./pages/NotFound";
 import RoleProtectedRoute from "./components/utility/RoleProtectedRoute";
+import { fetchCartItems } from "./store/features/cartSlice";
 
 function App() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchCartItems());
+  }, [dispatch]);
+
   return (
     <Router>
       <Routes>

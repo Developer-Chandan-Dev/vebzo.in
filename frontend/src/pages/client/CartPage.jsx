@@ -7,14 +7,13 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCartItems } from "../../store/features/cartSlice";
 
-
 const CartPage = () => {
   const dispatch = useDispatch();
-  
+
   useEffect(() => {
     dispatch(fetchCartItems());
   }, [dispatch]);
-  
+
   const { cartItems, status, error } = useSelector((state) => state.cart);
   console.log(cartItems, status, error);
 
@@ -44,8 +43,8 @@ const CartPage = () => {
                           <XCircle className="text-gray-400 transition-all cursor-pointer hover:text-gray-600" />
                           <img
                             src={
-                              product?.imageUrl
-                                ? product?.imageUrl
+                              product?.product?.imageUrl
+                                ? product?.product?.imageUrl
                                 : "/public/images/potato-1.webp"
                             }
                             className="size-20"
@@ -53,7 +52,12 @@ const CartPage = () => {
                           />
                         </div>
                       </td>
-                      <td className="py-3">{product?.product?.name}</td>
+
+                      <td className="py-3">
+                        <Link to={`/shop/${product?.product?._id}`}>
+                          {product?.product?.name}
+                        </Link>
+                      </td>
                       <td className="py-3">{product?.product?.price}</td>
                       <td className="py-3">
                         <input
@@ -63,7 +67,8 @@ const CartPage = () => {
                         />
                       </td>
                       <td className="py-3">
-                        {parseInt(product?.quantity) * parseInt(product?.product?.price)}
+                        {parseInt(product?.quantity) *
+                          parseInt(product?.product?.price)}
                       </td>
                     </tr>
                   ))

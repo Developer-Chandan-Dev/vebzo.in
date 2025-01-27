@@ -1,9 +1,14 @@
 import { motion } from "framer-motion";
-import { CreditCard, DollarSign, ShoppingCart, TrendingUp } from "lucide-react";
+import {
+  CreditCard,
+  IndianRupee,
+  TrendingUp,
+} from "lucide-react";
 import SalesOverviewChart from "../../components/dashboard/sales/SalesOverviewChart";
 import DailySalesTrend from "../../components/dashboard/sales/DailySalesTrend";
 import StatCard from "../../components/dashboard/common/StatCard";
 import Header from "../../components/dashboard/Header";
+import useFetchData from "../../hooks/useFetchData";
 
 const salesStats = {
   totalRevenue: "$1,234,567",
@@ -12,7 +17,13 @@ const salesStats = {
   salesGrowth: "12.3%",
 };
 
+const VITE_API_URL = import.meta.env.VITE_API_URL;
 const SalesPage = () => {
+  const { data, loading, error } = useFetchData(
+    `${VITE_API_URL}/api/v1/analytics/sales-cards`
+  );
+  // console.log(data, loading, error);
+
   return (
     <div className="flex-1 overflow-y-auto relative z-10 pb-6">
       <Header title="Sales Dashboard" />
@@ -27,14 +38,22 @@ const SalesPage = () => {
         >
           <StatCard
             name="Total Revenue"
-            icon={DollarSign}
-            value={salesStats.totalRevenue}
+            icon={IndianRupee}
+            value={
+              loading
+                ? "Loading..."
+                : `Rs. ${data?.data?.totalRevenue.toLocaleString()}`
+            }
             color="#6366F1"
           />
           <StatCard
-            name="Avg. Order Value"
-            icon={ShoppingCart}
-            value={salesStats.averageOrderValue}
+            name="Monthly Revenue"
+            icon={IndianRupee}
+            value={
+              loading
+                ? "Loading..."
+                : `Rs. ${data?.data?.monthlyRevenue.toLocaleString()}`
+            }
             color="#108981"
           />
           <StatCard

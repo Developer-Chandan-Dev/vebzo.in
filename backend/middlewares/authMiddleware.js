@@ -3,7 +3,6 @@ const ErrorResponse = require("../utils/errorResponse");
 
 const protect = (req, res, next) => {
   const token = req.cookies.apna_store_jwt;
-  console.log(token);
 
   if (!token) {
     return next(new ErrorResponse("Not authrorized , no token", 401));

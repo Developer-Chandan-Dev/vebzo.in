@@ -28,11 +28,12 @@ const addToCart = asyncHandler(async (req, res, next) => {
     }
 
     const existingItem = cart.cartItems.find(
-      (item) => item.product.toString() === productId
+      (item) => item.product._id.toString() === productId
     );
 
     if (existingItem) {
-      existingItem.quantity += quantity;
+      existingItem.quantity =
+        parseInt(existingItem.quantity) + parseInt(quantity);
     } else {
       cart.cartItems.push({ product: productId, quantity });
     }
@@ -40,6 +41,20 @@ const addToCart = asyncHandler(async (req, res, next) => {
     console.log(cart);
 
     await cart.save();
+
+    let newAddedItem = await Cart.findOne({
+      user: req.user.id,
+      "cartItems.product": productId,
+    }).populate({
+      path: "cartItems.product", // Populate the `product` field inside `cartItems`
+      select: "name price category imageUrl", // Spcifiy the fields you want from the Product model
+    });
+    // let newAddedItem = await Cart.findOne({ cartItems : productId }).populate({
+    //   path: "cartItems.product", // Populate the `product` field inside `cartItems`
+    //   select: "name price category imageUrl", // Spcifiy the fields you want from the Product model
+    // });
+    console.log(newAddedItem, "49");
+
     res.status(200).json(cart);
   } catch (error) {
     console.log(error);

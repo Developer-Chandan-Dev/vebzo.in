@@ -8,23 +8,13 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { motion } from "framer-motion";
+import useFetchData from "../../../hooks/useFetchData";
 
-const salesData = [
-  { name: "Jul", sales: 4200 },
-  { name: "Aug", sales: 3800 },
-  { name: "Sep", sales: 6300 },
-  { name: "Oct", sales: 5100 },
-  { name: "Nov", sales: 4600 },
-  { name: "Dec", sales: 5400 },
-  { name: "Jan", sales: 7200 },
-  { name: "Feb", sales: 6100 },
-  { name: "Mar", sales: 5900 },
-  { name: "Apr", sales: 6300 },
-  { name: "May", sales: 7100 },
-  { name: "Jun", sales: 7500 },
-];
+const VITE_API_URL = import.meta.env.VITE_API_URL;
 
 const SalesOverviewChart = () => {
+  const { data }= useFetchData(`${VITE_API_URL}/api/v1/analytics/chart/monthly-sales`)
+
   return (
     <motion.div
       className="bg-gray-800 bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-6 border border-gray-700"
@@ -36,9 +26,9 @@ const SalesOverviewChart = () => {
 
       <div className="h-80">
         <ResponsiveContainer width={"100%"} height={"100%"}>
-          <LineChart data={salesData}>
+          <LineChart data={data?.data}>
             <CartesianGrid strokeDasharray="3 3" stroke="#485563" />
-            <XAxis dataKey={"name"} stroke="#9ca3af" />
+            <XAxis dataKey={"month"} stroke="#9ca3af" />
             <YAxis stroke="#9ca3af" />
             <Tooltip
               contentStyle={{
@@ -49,10 +39,26 @@ const SalesOverviewChart = () => {
             />
             <Line
               type="monotone"
-              dataKey="sales"
+              dataKey="totalRevenue"
+              stroke="#ec4899"
+              strokeWidth={3}
+              dot={{ fill: "#ec4899", strokeWidth: 2, r: 6 }}
+              activeDot={{ r: 8, strokeWidth: 2 }}
+            />
+            <Line
+              type="monotone"
+              dataKey="averageOrderValue"
               stroke="#6366F1"
               strokeWidth={3}
               dot={{ fill: "#6366F1", strokeWidth: 2, r: 6 }}
+              activeDot={{ r: 8, strokeWidth: 2 }}
+            />
+            <Line
+              type="monotone"
+              dataKey="totalSales"
+              stroke="#108981"
+              strokeWidth={3}
+              dot={{ fill: "#108981", strokeWidth: 2, r: 6 }}
               activeDot={{ r: 8, strokeWidth: 2 }}
             />
           </LineChart>

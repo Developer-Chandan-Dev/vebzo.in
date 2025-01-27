@@ -7,6 +7,8 @@ import axios from "axios";
  * @param {string} url The url from which to fetch the data
  * @returns {object} An object with the state variables and functions to set them
  */
+
+
 const useFetchData = (url) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);

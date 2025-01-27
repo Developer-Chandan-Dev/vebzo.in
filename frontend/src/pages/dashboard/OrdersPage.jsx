@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { CheckCircle, Clock, DollarSign, ShoppingBag } from "lucide-react";
+import { CheckCircle, Clock, DollarSign, NutOff, ShoppingBag } from "lucide-react";
 import StatCard from "../../components/dashboard/common/StatCard";
 import OrderTable from "../../components/dashboard/orders/OrderTable";
 import Header from "../../components/dashboard/Header";
 import DailyOrders from "../../components/dashboard/orders/DailyOrders";
 import OrderDistribution from "../../components/dashboard/orders/OrderDistribution";
 import AddUpdateOrdersPopup from "../../components/dashboard/orders/AddUpdateOrdersPopup";
+import useFetchData from "../../hooks/useFetchData";
 
 const orderStats = {
   totalOrders: "1,234",
@@ -15,11 +16,15 @@ const orderStats = {
   totalRevenue: "$98,765",
 };
 
+const VITE_API_URL = import.meta.env.VITE_API_URL;
 const OrdersPage = () => {
   document.title = "Admin Dashboard - Orders";
 
   const [isPopupActive, setIsPopupActive] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
+
+  const {data, loading, error} = useFetchData(`${VITE_API_URL}/api/v1/analytics/order-cards`)
+  console.log(data, loading)
 
   const handleEditClick = (order) => {
     console.log(order);
@@ -46,25 +51,25 @@ const OrdersPage = () => {
           <StatCard
             name="Total Orders"
             icon={ShoppingBag}
-            value={orderStats.totalOrders}
+            value={loading? "Loading..." : data?.data?.totalOrders}
             color="#6366F1"
           />
           <StatCard
             name="Pending Orders"
             icon={Clock}
-            value={orderStats.pendingOrders}
+            value={loading? "Loading..." : data?.data?.pendingOrders}
             color="#F59E08"
           />
           <StatCard
             name="Completed Orders"
             icon={CheckCircle}
-            value={orderStats.completeOrders}
+            value={loading? "Loading..." : data?.data?.deliveredOrders}
             color="#108981"
-          />
+            />
           <StatCard
-            name="Total Revenue"
-            icon={DollarSign}
-            value={orderStats.totalRevenue}
+            name="Cancelled Orders"
+            icon={NutOff}
+            value={loading? "Loading..." : data?.data?.cancelledOrders}
             color="#EF4444"
           />
         </motion.div>

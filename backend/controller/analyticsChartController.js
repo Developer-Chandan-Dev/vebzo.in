@@ -79,23 +79,33 @@ const getMonthlySales = asyncHandler(async (req, res, next) => {
 const salesByCategory = asyncHandler(async (req, res, next) => {
   try {
     const categorySales = await Order.aggregate([
-      { $unwind: "$items" }, // Decompose items array into individual items
+      { $unwind: "$orderItems" }, // Decompose items array into individual items
       {
         $lookup: {
           from: "products", // Join with Product collection
-          localField: "items.productId",
+          localField: "orderItems.product",
           foreignField: "_id",
           as: "productInfo",
         },
       },
       { $unwind: "$productInfo" }, // Unwind product info
       {
+        $lookup: {
+          from: "categories", // Join with category collection
+          localField: "productInfo.category", // Reference category in Product collection
+          foreignField: "_id", // Match with _id field in Category collection
+          as: "categoryInfo",
+        },
+      },
+      { $unwind: "$categoryInfo" }, // Unwind categoryInfo array for easy access
+      {
         $group: {
-          _id: "$productInfo.category", // Group by category
+          _id: "$categoryInfo._id", // Group by category ID
+          name: { $first: "$categoryInfo.name" }, // Get the category name
           totalRevenue: {
-            $sum: { $multiply: ["$items.quantity", "$items.price"] },
+            $sum: { $multiply: ["$orderItems.quantity", "$orderItems.price"] },
           },
-          totalSalesVolume: { $sum: "$items.quantity" },
+          totalSalesVolume: { $sum: "$orderItems.quantity" },
         },
       },
       { $sort: { totalRevenue: -1 } }, // Sort by revenue (optional)
@@ -154,9 +164,18 @@ const topSellingProducts = asyncHandler(async (req, res, next) => {
     const productData = await Order.aggregate([
       { $unwind: "$orderItems" }, // Deconstruct the orderItems array
       {
+        $lookup: {
+          from: "products",
+          localField: "orderItems.product",
+          foreignField: "_id",
+          as: "productInfo",
+        },
+      },
+      { $unwind: "$productInfo" },
+      {
         $group: {
           _id: "$orderItems.product", // Group by product ID
-          productName: { $first: "$orderItems.name" }, // Get product name
+          productName: { $first: "$productInfo.name" }, // Get product name
           totalQuantity: { $sum: "$orderItems.quantity" }, // Total quantity sold
           totalRevenue: {
             $sum: { $multiply: ["$orderItems.quantity", "$orderItems.price"] },
@@ -253,7 +272,7 @@ const orderStatusBreakdown = asyncHandler(async (req, res, next) => {
     // Calculate total orders to get percentages
     const totalOrders = result.reduce((sum, status) => sum + status.count, 0);
     const breakdown = result.map((item) => ({
-      status: item._id,
+      name: item._id,
       count: item.count,
       percentage: ((item.count / totalOrders) * 100).toFixed(2), // Calculate percentage
     }));

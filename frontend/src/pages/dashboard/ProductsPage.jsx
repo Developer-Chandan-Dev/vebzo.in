@@ -10,7 +10,9 @@ import AddUpdateProductsPopup from "../../components/dashboard/products/AddUpdat
 import CategoriesTable from "../../components/dashboard/products/CategoriesTable";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import AddUpdateCategoriesPopup from "../../components/dashboard/products/AddUpdateCategoriesPopup";
+import useFetchData from "../../hooks/useFetchData";
 
+const VITE_API_URL = import.meta.env.VITE_API_URL;
 const ProductsPage = () => {
   document.title = "Admin Dashboard - Products";
 
@@ -21,6 +23,11 @@ const ProductsPage = () => {
   const [selectedCategory, setSelectedCategory] = useState(null);
 
   const location = useLocation();
+
+  const { data, loading, error } = useFetchData(
+    `${VITE_API_URL}/api/v1/analytics/product-cards`
+  );
+  console.log(data, loading, error);
 
   const handleEditClick = (product) => {
     console.log(product);
@@ -57,25 +64,35 @@ const ProductsPage = () => {
           <StatCard
             name="Total Products"
             icon={Package}
-            value="1234"
+            value={
+              loading ? "Loaidng..." : parseInt(data?.data?.totalProducts) || 0
+            }
             color="#6366F1"
           />
           <StatCard
-            name="Top Selling"
+            name="Featured Products"
             icon={TrendingUp}
-            value="89"
+            value={
+              loading
+                ? "Loaidng..."
+                : parseInt(data?.data?.featuredProducts) || 0
+            }
             color="#108981"
           />
           <StatCard
             name="Low Stock"
             icon={AlertTriangle}
-            value="23"
+            value={
+              loading
+                ? "Loaidng..."
+                : parseInt(data?.data?.outOfStockProducts) || 0
+            }
             color="#F59E08"
           />
           <StatCard
-            name="Total Revenue"
+            name="Most Viwed Product"
             icon={DollarSign}
-            value="$543,210"
+            value={loading ? "Loaidng..." : data?.data?.mostViewedProduct?.name}
             color="#EF4444"
           />
         </motion.div>
@@ -104,8 +121,8 @@ const ProductsPage = () => {
           </Link>
         </div>
         {/* <Outlet> */}
-          <ProductsTable onEditClick={handleEditClick} />
-          <CategoriesTable onEditClick={handleEditCategoryClick} />
+        <ProductsTable onEditClick={handleEditClick} />
+        <CategoriesTable onEditClick={handleEditCategoryClick} />
         {/* </Outlet> */}
 
         {/* CHARTS */}

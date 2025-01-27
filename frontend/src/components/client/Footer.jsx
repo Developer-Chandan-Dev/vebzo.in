@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 
 const Footer = () => {
   const authUser = useSelector((state) => state.user.user);
+  console.log(authUser);
 
   return (
     <div className="w-full py-10 bg-black text-white">
@@ -61,7 +62,7 @@ const Footer = () => {
                     CheckOut
                   </li>
                 </Link>
-                <Link to="/my-account">
+                <Link to="/profile">
                   {" "}
                   <li className="my-2 text-gray-300 transition hover:text-white">
                     My Account
@@ -82,6 +83,15 @@ const Footer = () => {
             </li>
             <li className="my-2 text-gray-300 transition hover:text-white">
               Term & Conditions
+            </li>
+            <li
+              className={`${
+                authUser?.role === "admin" || authUser?.role === "manager"
+                  ? ""
+                  : "hidden"
+              } my-2 text-gray-300 transition hover:text-white`}
+            >
+              <Link to="/dashboard">Admin Panel</Link>
             </li>
           </ul>
         </div>

@@ -13,7 +13,7 @@ const ChangeUserDetailsPopup = ({ user, onClose }) => {
   const [image, setImage] = useState(user.profilePic || null);
   const [filePreview, setFilePreview] = useState(null);
 
-  console.log(role, blocked, user);
+  // console.log(role, blocked, user);
 
   const fileInputRef = useRef(null);
 

@@ -1,71 +1,47 @@
+/* eslint-disable react/prop-types */
 import { motion } from "framer-motion";
-import { Search, Edit, Trash2 } from "lucide-react";
+import { MoveLeft, MoveRight, Search, X } from "lucide-react";
 import { useState } from "react";
 import UserTr from "./UserTr";
+import useFetchDataWithPagination from "../../../hooks/useFetchDataWithPagination";
 
-const USER_DATA = [
-  {
-    _id: 1,
-    username: "John Doe",
-    imageUrl: "/public/images/potato-1.webp",
-    email: "john@example.com",
-    role: "user",
-    isBlocked: false,
-    createdAt: "12/01/2024",
-  },
-  {
-    _id: 2,
-    username: "Jane Smith",
-    imageUrl: "/public/images/potato-1.webp",
-    email: "jane@example.com",
-    role: "admin",
-    isBlocked: false,
-    createdAt: "12/01/2024",
-  },
-  {
-    _id: 3,
-    username: "Bob Johnson",
-    imageUrl: "/public/images/potato-1.webp",
-    email: "bob@example.com",
-    role: "user",
-    isBlocked: false,
-    createdAt: "12/01/2024",
-  },
-  {
-    _id: 4,
-    username: "Alice Brown",
-    imageUrl: "/public/images/potato-1.webp",
-    email: "alice@example.com",
-    role: "user",
-    isBlocked: false,
-    createdAt: "12/01/2024",
-  },
-  {
-    _id: 5,
-    username: "Charlie Wilson",
-    imageUrl: "/public/images/potato-1.webp",
-    email: "charli@example.com",
-    role: "manager",
-    isBlocked: true,
-    createdAt: "12/01/2024",
-  },
-];
-
+const VITE_API_URL = import.meta.env.VITE_API_URL;
 const UsersTable = ({ onEditClick }) => {
+  const [searchText, setSearchText] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
-  const [filteredUsers, setFilteredUsers] = useState(USER_DATA);
+  const [activeSearchBox, setActiveSearchBox] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  // const []
 
-  const handleSearch = (e) => {
-    const term = e.target.value.toLowerCase();
-    setSearchTerm(term);
-    const filtered = USER_DATA.filter(
-      (user) =>
-        user.name.toLowerCase().includes(term) ||
-        user.role.toLowerCase().includes(term)
-    );
+  const { data, loading, error } = useFetchDataWithPagination(
+    `${VITE_API_URL}/api/v1/users`,
+    currentPage,
+    8,
+    searchText
+  );
 
-    setFilteredUsers(filtered);
+  console.log(data, loading, error);
+
+  // Function to handle page change
+  const handlePageClick = (page) => {
+    setCurrentPage(page);
   };
+
+  const handleSetSearchText = () => {
+    setSearchText(searchTerm.trim());
+  };
+
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter") {
+      handleSetSearchText(); //Trigger the search function when Enter key pressed
+    }
+  };
+
+  // Create an array of page numbers (e.g., [1, 2, 3])
+  const pageNumbers = [];
+  for (let i = 1; i <= data?.totalPages; i++) {
+    pageNumbers.push(i);
+  }
 
   return (
     <motion.div
@@ -76,15 +52,39 @@ const UsersTable = ({ onEditClick }) => {
     >
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-xl font-semibold text-gray-100">Users List</h2>
-        <div className="relative">
-          <input
-            type="text"
-            placeholder="Search products..."
-            className="bg-gray-700 text-white placeholder-gray-400 rounded-lg pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            onChange={handleSearch}
-            value={searchTerm}
-          />
-          <Search className="absolute left-3 top-2.5 text-gray-400" size={18} />
+        <div className="">
+          <button
+            className="flex sm:hidden items-center gap-[6px] border border-gray-700 px-3 py-2 rounded-md hover:bg-gray-700 "
+            onClick={() => setActiveSearchBox(true)}
+          >
+            <Search className="size-5 font-bold" />
+          </button>
+          <div
+            className={`${
+              activeSearchBox ? "flex" : "hidden"
+            } sm:flex items-center justify-center absolute left-0 bg-gray-800 top-0 w-full py-3 sm:relative gap-2`}
+          >
+            <div className="relative ">
+              <input
+                type="text"
+                placeholder="Search products..."
+                className="bg-gray-700 text-white placeholder-gray-400 rounded-lg pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                onChange={(e) => setSearchTerm(e.target.value)}
+                value={searchTerm}
+                onKeyDown={handleKeyPress}
+              />
+              <Search
+                className="absolute left-3 top-2.5 text-gray-400"
+                size={18}
+              />
+            </div>
+            <button
+              className="flex sm:hidden items-center gap-[6px] border border-gray-700 px-3 py-2 rounded-md hover:bg-gray-700 "
+              onClick={() => setActiveSearchBox(false)}
+            >
+              <X className="size-5 font-bold" />
+            </button>
+          </div>
         </div>
       </div>
 
@@ -111,21 +111,59 @@ const UsersTable = ({ onEditClick }) => {
           </thead>
 
           <tbody className="divide-y divide-gray-700">
-            {filteredUsers.map((user) => (
-              <UserTr
-                key={user._id}
-                _id={user?._id}
-                username={user?.username}
-                email={user?.email}
-                role={user?.role}
-                imageUrl={user?.imageUrl}
-                createdAt={user?.createdAt}
-                isBlocked={user?.isBlocked}
-                onEditClick={onEditClick}
-              />
-            ))}
+            {data?.data !== null && data?.data.length > 0
+              ? data?.data.map((user) => (
+                  <UserTr
+                    key={user._id}
+                    _id={user?._id}
+                    username={user?.username}
+                    email={user?.email}
+                    role={user?.role}
+                    imageUrl={user?.imageUrl}
+                    createdAt={user?.createdAt}
+                    isBlocked={user?.isBlocked}
+                    onEditClick={onEditClick}
+                  />
+                ))
+              : ""}
           </tbody>
         </table>
+        <div className="px-5 py-2 flex items-center w-full gap-3 mt-5">
+          <button
+            className={`w-10 h-10 border border-gray-600 text-gray-400 font-semibold text-base transition-all hover:bg-gray-700 hover:text-white ${
+              currentPage > 1 ? "flex-center" : "hidden"
+            }`}
+            onClick={() => setCurrentPage(currentPage > 1 && currentPage - 1)}
+          >
+            <MoveLeft size="16" />
+          </button>
+          {pageNumbers.map((page) => (
+            <button
+              key={page}
+              className={`w-10 h-10 border border-gray-600 text-gray-400 font-semibold text-base transition-all hover:bg-gray-700 hover:text-white ${
+                page === currentPage
+                  ? "bg-gray-700 text-white"
+                  : "text-gray-400"
+              }`}
+              onClick={() => handlePageClick(page)}
+            >
+              {page}
+            </button>
+          ))}
+
+          <button
+            className={`w-10 h-10 border border-gray-600 text-gray-400 font-semibold text-base transition-all hover:bg-gray-700 hover:text-white ${
+              currentPage < pageNumbers.length ? "flex-center" : "hidden"
+            }`}
+            onClick={() =>
+              setCurrentPage(
+                currentPage < pageNumbers.length && currentPage + 1
+              )
+            }
+          >
+            <MoveRight size="16" />
+          </button>
+        </div>
       </div>
     </motion.div>
   );

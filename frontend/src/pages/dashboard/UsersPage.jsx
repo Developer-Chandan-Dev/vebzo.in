@@ -10,13 +10,6 @@ import UserGrowChart from "../../components/dashboard/user/UserGrowChart";
 import ChangeUserDetailsPopup from "../../components/dashboard/user/ChangeUsersDetailsPopup";
 import useFetchData from "../../hooks/useFetchData";
 
-const userStats = {
-  totalUsers: 152845,
-  newUsersToday: 243,
-  activeUsers: 98520,
-  churnRate: "2.4%",
-};
-
 const VITE_API_URL = import.meta.env.VITE_API_URL;
 const UsersPage = () => {
   document.title = "Admin Dashboard - Users";
@@ -28,7 +21,7 @@ const UsersPage = () => {
     `${VITE_API_URL}/api/v1/analytics/user-cards`
   );
 
-  console.log(data, loading, error);
+  // console.log(data, loading, error);
   const handleEditClick = (user) => {
     setSelectedUser(user); // Set the selected user details
     setIsPopupActive(true); // Activate the popup

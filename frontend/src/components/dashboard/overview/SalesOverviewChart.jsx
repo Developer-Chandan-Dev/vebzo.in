@@ -13,7 +13,7 @@ import useFetchData from "../../../hooks/useFetchData";
 const VITE_API_URL = import.meta.env.VITE_API_URL;
 
 const SalesOverviewChart = () => {
-  const { data }= useFetchData(`${VITE_API_URL}/api/v1/analytics/chart/monthly-sales`)
+  const { data }= useFetchData(`${VITE_API_URL}/api/v1/analytics/chart/sales-overview`)
 
   return (
     <motion.div

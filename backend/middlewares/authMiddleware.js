@@ -35,5 +35,4 @@ const checkRole = (...allowedRoles) => {
   };
 };
 
-
 module.exports = { protect, admin, checkRole };

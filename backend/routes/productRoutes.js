@@ -9,9 +9,9 @@ const {
   updateProduct,
   deleteProduct,
   productImageUpload,
-  productsByCategory
+  productsByCategory,
 } = require("../controller/productController");
-const { protect, admin } = require("../middlewares/authMiddleware");
+const { protect, admin, checkRole } = require("../middlewares/authMiddleware");
 
 // Validation/Middlewares imports
 const validate = require("../middlewares/validation.middleware");
@@ -23,25 +23,42 @@ const {
 // <===== Product Routes =========>
 
 // Create a new product (Admin)
-router.post("/", protect, admin, validate(createProductValidationSchema), createProduct); 
+router.post(
+  "/",
+  protect,
+  checkRole("admin", "manager"),
+  validate(createProductValidationSchema),
+  createProduct
+);
 
 // Product image upload/update (Admin)
-router.put("/:productId/image", protect, admin, upload.single("imageUrl"), productImageUpload);
+router.put(
+  "/:productId/image",
+  protect,
+  checkRole("admin", "manager"),
+  upload.single("imageUrl"),
+  productImageUpload
+);
 
 // Get all products (Public)
-router.get("/", getProducts); 
+router.get("/", getProducts);
 
 // Get a product by ID (Public)
-router.get("/details/:id", getProductById); 
+router.get("/details/:id", getProductById);
 
 // Update product details (Admin)
-router.put("/:id", protect, admin, validate(updateProductValidationSchema), updateProduct);
+router.put(
+  "/:id",
+  protect,
+  checkRole("admin", "manager"),
+  validate(updateProductValidationSchema),
+  updateProduct
+);
 
 // Delete a product (Admin)
-router.delete("/:id", protect, admin, deleteProduct); 
+router.delete("/:id", protect, checkRole("admin", "manager"), deleteProduct);
 
 // Get products by category
-router.get("/category/:categoryId", productsByCategory)
-
+router.get("/category/:categoryId", productsByCategory);
 
 module.exports = router;

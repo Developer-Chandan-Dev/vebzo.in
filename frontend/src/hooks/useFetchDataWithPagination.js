@@ -20,16 +20,20 @@ const useFetchDataWithPagination = (
     const fetchData = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(url, {
-          params: {
-            page: currentPage,
-            limit: itemsPerPage,
-            query: searchTerm,
-            sortBy: sortBy,
-            minPrice: minPrice,
-            maxPrice: maxPrice
-          },
-        }); // Waiting for get requests
+        const response = await axios.get(
+          url,
+          {
+            params: {
+              page: currentPage,
+              limit: itemsPerPage,
+              query: searchTerm,
+              sortBy: sortBy,
+              minPrice: minPrice,
+              maxPrice: maxPrice,
+            },
+            withCredentials: true,
+          }
+        ); // Waiting for get requests
         const resData = response.data;
 
         setData(resData); // Set fetched data in state
@@ -41,6 +45,7 @@ const useFetchDataWithPagination = (
           setLoading(false);
           setData(null);
         }
+        console.log(error);
         setError(error.response.data.error);
         setLoading(false);
       }

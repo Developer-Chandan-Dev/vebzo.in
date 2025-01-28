@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useState } from "react";
 
-const useHandleSendingRequest = (initialState, method) => {
+const useHandleSendingRequest = (initialState) => {
   const [formData, setFormData] = useState(initialState);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -37,8 +37,8 @@ const useHandleSendingRequest = (initialState, method) => {
     } catch (error) {
       console.log(error);
       setLoading(false);
-      setError(error.response?.data?.error || "Something went wrong");
-      return error.response?.data?.error || "Something went wrong";
+      setError(error.response?.data?.message || "Something went wrong");
+      return error.response?.data?.message || "Something went wrong";
     }
   };
 

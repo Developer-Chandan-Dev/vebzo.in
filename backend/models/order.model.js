@@ -4,7 +4,6 @@ const orderSchema = new mongoose.Schema(
   {
     orderId: {
       type: String,
-      required: true,
       unique: true,
     },
     user: {
@@ -14,7 +13,6 @@ const orderSchema = new mongoose.Schema(
     },
     firstname: {
       type: String,
-      required: true,
     },
     lastname: {
       type: String,

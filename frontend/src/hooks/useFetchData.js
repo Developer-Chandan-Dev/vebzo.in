@@ -37,7 +37,6 @@ const useFetchData = (url) => {
         setLoading(false);
         setData(null);
       }
-      console.log(error);
       console.error(error.response.data.error);
       setError(error.response.data.error);
       setLoading(false);

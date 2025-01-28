@@ -8,6 +8,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { motion } from "framer-motion";
+import useFetchData from "../../../hooks/useFetchData";
 
 const salesData = [
   { name: "Jan", sales: 1000 },
@@ -18,7 +19,14 @@ const salesData = [
   { name: "Jun", sales: 5000 },
 ];
 
+const VITE_API_URL = import.meta.env.VITE_API_URL;
 const UserGrowChart = () => {
+  const { data } = useFetchData(
+    `${VITE_API_URL}/api/v1/analytics/chart/users-growth`
+  );
+
+  console.log(data?.data);
+
   return (
     <motion.div
       className="bg-gray-800 bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-6 border border-gray-700"
@@ -30,9 +38,9 @@ const UserGrowChart = () => {
 
       <div className="h-80">
         <ResponsiveContainer width={"100%"} height={"100%"}>
-          <LineChart data={salesData}>
+          <LineChart data={data?.data}>
             <CartesianGrid strokeDasharray="3 3" stroke="#485563" />
-            <XAxis dataKey={"name"} stroke="#9ca3af" />
+            <XAxis dataKey={"month"} stroke="#9ca3af" />
             <YAxis stroke="#9ca3af" />
             <Tooltip
               contentStyle={{
@@ -43,7 +51,7 @@ const UserGrowChart = () => {
             />
             <Line
               type="monotone"
-              dataKey="sales"
+              dataKey="totalUsers"
               stroke="#6366F1"
               strokeWidth={3}
               dot={{ fill: "#6366F1", strokeWidth: 2, r: 6 }}

@@ -26,7 +26,7 @@ const {
 
 // Charts
 const {
-  getMonthlySales,
+  getSalesOverview,
   salesByCategory,
   salesPerformance,
   topSellingProducts,
@@ -35,7 +35,8 @@ const {
   orderStatusBreakdown,
   orderVolumeOverTime,
   averageOrderValue,
-  newVsReturningCustomers
+  newVsReturningCustomers,
+  userGrowthChart
 } = require("../controller/analyticsChartController");
 
 // Card section controller
@@ -52,7 +53,7 @@ const { protect, admin, checkRole } = require("../middlewares/authMiddleware");
 
 // Overview Page
 router.get("/overview-cards", protect, checkRole("admin", "manager"), getOverview);
-router.get("/chart/monthly-sales", protect, checkRole("admin", "manager"), getMonthlySales); // Analytics route for monthly sales
+// router.get("/chart/sales-overview", protect, checkRole("admin", "manager"), getSalesOverview); // Analytics route for monthly sales
 router.get("/chart/top-selling-products", protect, checkRole("admin", "manager"), topSellingProducts) // Analytics route for top selling products
 router.get("/chart/order-status-breakdown", protect, checkRole("admin", "manager"), orderStatusBreakdown) // Analytics route for getting order status breakdown
 router.get("/chart/low-stock-products", protect, checkRole("admin", "manager"), lowStockProducts) // Analytics route for top low stock products
@@ -74,6 +75,7 @@ router.get("/top-selling-products", protect, checkRole("admin", "manager"), getT
 
 // <============== Users routes ================>
 router.get("/users-growth", protect, checkRole("admin", "manager"), getUserGrowth);
+router.get("/chart/users-growth", protect, checkRole("admin", "manager"), userGrowthChart)
 
 // <============== Order & Cart Analytics ===============>
 router.get("/order-status", protect, checkRole("admin", "manager"), getOrderStatusCounts);
@@ -91,7 +93,7 @@ router.get("/orders/date-range", protect, checkRole("admin", "manager"), getOrde
 
 // $$$$$=============> Charts <=============$$$$$
 // <========= Sales Charts ==========>
-router.get("/chart/monthly-sales", protect, checkRole("admin", "manager"), getMonthlySales); // Analytics route for monthly sales
+router.get("/chart/sales-overview", protect, checkRole("admin", "manager"), getSalesOverview); // Analytics route for monthly sales
 router.get("/chart/category-sales", protect, checkRole("admin", "manager"), salesByCategory); // Analytics route for getting sales by category
 router.get("/chart/sales-performance", protect, checkRole("admin", "manager"), salesPerformance); // Analytics route for checking sales performance
 

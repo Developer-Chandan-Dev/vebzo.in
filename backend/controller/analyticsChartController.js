@@ -1,4 +1,5 @@
 const Order = require("../models/order.model");
+const User = require("../models/user.models")
 const Product = require("../models/product.model");
 const asyncHandler = require("../utils/asyncHandler");
 const ErrorResponse = require("../utils/errorResponse");
@@ -10,7 +11,7 @@ const ErrorResponse = require("../utils/errorResponse");
  * @route GET /api/v1/analytics/monthly-sales
  * @query {year} - Optional: Filter data for a specific year
  */
-const getMonthlySales = asyncHandler(async (req, res, next) => {
+const getSalesOverview = asyncHandler(async (req, res, next) => {
   try {
     const { year } = req.query;
 
@@ -73,6 +74,63 @@ const getMonthlySales = asyncHandler(async (req, res, next) => {
   } catch (error) {
     console.error("Error fetching monthly sales data:", error);
     return next(new ErrorResponse("Failed to fetch monthly sales data.", 500));
+  }
+});
+
+const userGrowthChart = asyncHandler(async (req, res, next) => {
+  try {
+    const { year } = req.query;
+
+    // Default year is the current year
+    const targetYear = year ? parseInt(year) : new Date().getFullYear();
+
+    // Aggregate orders by month for the target year
+    const monthlyData = await User.aggregate([
+      {
+        $match: {
+          createdAt: {
+            $gte: new Date(`${targetYear}-01-01`),
+            $lte: new Date(`${targetYear}-12-31`),
+          },
+        },
+      },
+      {
+        $group: {
+          _id: { $month: "$createdAt" }, // Group by month ( 1- Jan, 2 = Feb etc. )
+          totalUsers: { $sum: 1 }, // Count the number of users
+        },
+      },
+      {
+        $sort: { _id: 1 }, // Sort by month
+      },
+    ]);
+    console.log(monthlyData);
+
+    // Format the data into a frontend-friently structure
+    const formattedData = Array(12)
+      .fill({})
+      .map((_, index) => {
+        const monthData = monthlyData.find(
+          (data) => data._id === index + 1
+        ) || { totalUsers: 0 };
+
+        return {
+          month: new Date(0, index).toLocaleString("default", {
+            month: "short",
+          }), // Jan, Feb, etc.
+          totalUsers: monthData.totalUsers,
+        };
+      });
+
+    // Response with the data
+    res.status(200).json({
+      success: true,
+      message: "Monthly users growth data fetched successfully",
+      data: formattedData,
+    });
+  } catch (error) {
+    console.log("Error fetdching monthly user growth data", error);
+    return next(new ErrorResponse("Failed to fetch monthly user growth data."));
   }
 });
 
@@ -435,7 +493,7 @@ const newVsReturningCustomers = asyncHandler(async (req, res, next) => {
 });
 
 module.exports = {
-  getMonthlySales,
+  getSalesOverview,
   salesByCategory,
   salesPerformance,
   topSellingProducts,
@@ -445,4 +503,5 @@ module.exports = {
   orderVolumeOverTime,
   averageOrderValue,
   newVsReturningCustomers,
+  userGrowthChart
 };

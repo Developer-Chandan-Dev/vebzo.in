@@ -9,6 +9,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
+import useFetchData from "../../../hooks/useFetchData";
 
 const monthlySalesData = [
   { month: "Jan", sales: 4000 },
@@ -20,8 +21,14 @@ const monthlySalesData = [
   { month: "Jul", sales: 7000 },
 ];
 
+const VITE_API_URL = import.meta.env.VITE_API_URL;
 const SalesOverviewChart = () => {
   const [selectedTimeRange, setSelectedTimeRange] = useState("This Month");
+
+  const { data, loading } = useFetchData(
+    `${VITE_API_URL}/api/v1/analytics/chart/sales-overview`
+  );
+  console.log(data, loading);
 
   return (
     <motion.div
@@ -47,7 +54,7 @@ const SalesOverviewChart = () => {
 
       <div className="w-full h-80">
         <ResponsiveContainer>
-          <AreaChart data={monthlySalesData}>
+          <AreaChart data={data?.data}>
             <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
             <XAxis dataKey="month" stroke="#9CA3AF" />
             <YAxis stroke="#9CA3Af" />
@@ -60,9 +67,23 @@ const SalesOverviewChart = () => {
             />
             <Area
               type="monotone"
-              dataKey="sales"
+              dataKey="totalRevenue"
               stroke="#885CF6"
               fill="#885CF6"
+              fillOpacity={0.3}
+            />
+            <Area
+              type="monotone"
+              dataKey="averageOrderValue"
+              stroke="#6366F1"
+              fill="#6366F1"
+              fillOpacity={0.3}
+            />
+            <Area
+              type="monotone"
+              dataKey="totalSales"
+              stroke="#108981"
+              fill="#108981"
               fillOpacity={0.3}
             />
           </AreaChart>

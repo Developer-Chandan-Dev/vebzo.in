@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import { motion } from "framer-motion";
-import { Edit, Trash2 } from "lucide-react";
+import { Edit, Trash2, User, UserCircle } from "lucide-react";
 
 const UserTr = ({
   _id,
@@ -21,11 +21,16 @@ const UserTr = ({
         transition={{ duration: 0.3 }}
       >
         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100 flex gap-2 items-center">
-          <img
-            src="../../../public/1.jpg"
-            alt="User img"
-            className="size-10 rounded-full"
-          />
+          {imageUrl ? (
+            <img
+              src={imageUrl}
+              alt="User img"
+              className="size-9 rounded-full border border-gray-600"
+            />
+          ) : (
+            <UserCircle className="size-9 text-gray-200" />
+          )}
+
           {username}
         </td>
 

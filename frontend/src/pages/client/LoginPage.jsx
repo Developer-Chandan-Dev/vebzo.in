@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import authService from "../../features/auth";
 import { login } from "../../store/features/userSlice";
 import SmallSpinner from "../../components/utility/SmallSpinner";
+import { fetchCartItems } from "../../store/features/cartSlice";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -28,7 +29,6 @@ const LoginPage = () => {
     }
 
     const res = await authService.login(email, password);
-    console.log(res);
     if (res.data.success === true) {
       // Dispatch the login action
       dispatch(login(res.data.user));
@@ -37,6 +37,7 @@ const LoginPage = () => {
       setLoading(false);
       setError(null);
       navigate("/");
+      dispatch(fetchCartItems());
     } else if (res.data.success === false) {
       setError(res.data.error);
       setLoading(false);

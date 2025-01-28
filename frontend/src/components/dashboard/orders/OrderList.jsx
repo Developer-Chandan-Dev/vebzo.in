@@ -1,6 +1,9 @@
 /* eslint-disable react/prop-types */
 import { Edit, IndianRupee, Origami, Trash2 } from "lucide-react";
 import { useState } from "react";
+import { formatDate } from "../../../utils/dateUtils";
+import useHandleSendingRequest from "../../../hooks/useHandleSendingRequest";
+const VITE_API_URL = import.meta.env.VITE_API_URL;
 
 const OrderList = ({
   _id,
@@ -16,13 +19,46 @@ const OrderList = ({
   status,
   createdAt,
   onEditClick,
+  username,
 }) => {
   const [newStatus, setNewStatus] = useState(status || "Pending");
   const [newPaymentStatus, setNewPaymentStatus] = useState(
     paymentStatus || "Pending"
   );
 
-  console.log(orderId, firstname, lastname);
+  const { handleSubmit } = useHandleSendingRequest();
+
+  const handleStatusUpdate = async (e) => {
+    const response = await handleSubmit(
+      "PUT",
+      `${VITE_API_URL}/api/v1/orders/${_id}/status`,
+      {
+        status: e.target.value,
+      }
+    );
+    if (response.success === true) {
+      setNewStatus(response?.status);
+    } else {
+      console.log(response);
+    }
+  };
+
+  const handlePaymentStatusUpdate = async (e) => {
+    const response = await handleSubmit(
+      "PUT",
+      `${VITE_API_URL}/api/v1/orders/${_id}/payment-status`,
+      {
+        paymentStatus: e.target.value,
+      }
+    );
+    if (response.success === true) {
+      console.log(response);
+      setNewPaymentStatus(response?.paymentStatus);
+    } else {
+      console.log(response);
+    }
+  };
+
   return (
     <>
       <div className="w-full h-auto p-5 border border-gray-600 rounded-md flex items-start flex-wrap gap-5 justify-between relative">
@@ -31,16 +67,18 @@ const OrderList = ({
             <Origami />
           </div>
           <div>
-            <h4 className="pb-2 text-red-400 font-medium">{orderId}</h4>
+            <h4 className="pb-2 text-red-400 font-medium">
+              {orderId ? orderId : "No orderId"}
+            </h4>
             <ul className="pb-2">
               {orderItems.map(({ product, quantity, price }, index) => (
                 <li key={index}>
-                  {product} x {quantity} = {price * quantity}
+                  {product?.name} x {quantity} = {price * quantity}
                 </li>
               ))}
             </ul>
             <h4 className="pb-2 font-semibold text-slate-200">
-              {firstname} {lastname}
+              {firstname ? `${firstname} ${lastname}` : username}
             </h4>
             <ul>
               <li>{shippingAddress && shippingAddress?.address}</li>
@@ -51,7 +89,7 @@ const OrderList = ({
           </div>
         </div>
         <div>
-          <h4 className="pb-2">Items : {orderItems.length}</h4>
+          {/* <h4 className="pb-2">Items : {orderItems.length}</h4> */}
           <ul>
             <li>
               <b>Method :</b> {paymentMethod}
@@ -60,10 +98,10 @@ const OrderList = ({
               <b>Payment Status :</b> {paymentStatus}
             </li>
             <li>
-              <b>Order Date :</b> {createdAt}
+              <b>Order Date :</b> {formatDate(createdAt)}
             </li>
             <li>
-              <b>Delivery Date :</b> {deliveredAt}
+              <b>Delivery Date :</b> {/* {formatDate(deliveredAt)} */}
             </li>
           </ul>
         </div>
@@ -74,7 +112,31 @@ const OrderList = ({
           </span>
         </div>
         <div className="flex items-center flex-col gap-5 ">
-          <div className="absolute right-5 bottom-4">
+          <select
+            name="status"
+            id="status"
+            className="bg-gray-700 border border-gray-600 outline outline-gray-600 py-2 px-3 w-48 rounded-md"
+            value={newStatus}
+            onChange={handleStatusUpdate}
+          >
+            <option value="Pending">Pending</option>
+            <option value="Confirmed">Confirmed</option>
+            <option value="Out for Delivery">Out for Delivery</option>
+            <option value="Delivered">Delivered</option>
+            <option value="Cancelled">Cancelled</option>
+          </select>
+          <select
+            name="paymentStatus"
+            id="paymentStatus"
+            value={newPaymentStatus}
+            onChange={handlePaymentStatusUpdate}
+            className="bg-gray-700 border border-gray-600 outline outline-gray-600 py-2 px-3 w-48 rounded-md"
+          >
+            <option value="Pending">Pending</option>
+            <option value="Paid">Paid</option>
+            <option value="Failed">Failed</option>
+          </select>
+          <div className="">
             <button className="px-4 py-2 rounded-md border border-gray-600 transition hover:bg-slate-600 mr-5">
               Update
             </button>
@@ -103,30 +165,6 @@ const OrderList = ({
               <Trash2 size={18} />
             </button>
           </div>
-          <select
-            name="status"
-            id="status"
-            className="bg-gray-700 border border-gray-600 outline outline-gray-600 py-2 px-3 w-48 rounded-md"
-            value={newStatus}
-            onChange={(e) => setNewStatus(e.target.value)}
-          >
-            <option value="Pending">Pending</option>
-            <option value="Confirmed">Confirmed</option>
-            <option value="Out for delivery">Out for Delivery</option>
-            <option value="Delivered">Delivered</option>
-            <option value="Cancelled">Cancelled</option>
-          </select>
-          <select
-            name="paymentStatus"
-            id="paymentStatus"
-            value={newPaymentStatus}
-            onChange={(e) => setNewPaymentStatus(e.target.value)}
-            className="bg-gray-700 border border-gray-600 outline outline-gray-600 py-2 px-3 w-48 rounded-md"
-          >
-            <option value="Pending">Pending</option>
-            <option value="Paid">Paid</option>
-            <option value="Failed">Failed</option>
-          </select>
         </div>
       </div>
     </>

@@ -13,14 +13,21 @@ const generateOrderNumber = () => {
     .padStart(2, "0")}${date
     .getDate()
     .toString()
-    .padStart(2, "0")}-${Math.floor(1000 + Math.randon() * 9000)}`;
+    .padStart(2, "0")}-${Math.floor(1000 + Math.random() * 9000)}`;
 };
 
 // @desc Create a new order
 // @route POST /api/v1/orders
 // @access Private
 const createOrder = asyncHandler(async (req, res, next) => {
-  const { orderItems, shippingAddress, totalPrice, paymentMethod } = req.body;
+  const {
+    firstname,
+    lastname,
+    orderItems,
+    shippingAddress,
+    totalPrice,
+    paymentMethod,
+  } = req.body;
 
   if (!orderItems || orderItems.length === 0) {
     return next(new ErrorResponse("No order items", 400));
@@ -32,6 +39,8 @@ const createOrder = asyncHandler(async (req, res, next) => {
 
     const order = new Order({
       user: req.user.id,
+      firstname,
+      lastname,
       orderId: generateOrderNumber(),
       orderItems,
       shippingAddress,
@@ -126,7 +135,9 @@ const updatePaymentStatus = asyncHandler(async (req, res, next) => {
     order.paymentStatus = paymentStatus;
     const updatedOrder = await order.save();
 
-    res.status(200).json({ success: true, date: updatedOrder });
+    res
+      .status(200)
+      .json({ success: true, paymentStatus: updatedOrder.paymentStatus });
   } catch (error) {
     console.log(error);
     return next(new ErrorResponse("Internal Server Error", 500));
@@ -139,6 +150,7 @@ const updatePaymentStatus = asyncHandler(async (req, res, next) => {
 const updateOrderStatus = asyncHandler(async (req, res, next) => {
   const { status } = req.body;
 
+  // console.log(status);
   if (
     ![
       "Pending",
@@ -167,10 +179,27 @@ const updateOrderStatus = asyncHandler(async (req, res, next) => {
 
     const updatedOrder = await order.save();
 
-    res.status(200).json({ success: true, date: updatedOrder });
+    res.status(200).json({ success: true, status: updatedOrder.status });
   } catch (error) {
     console.log(error);
     return next(new ErrorResponse("Internal Server Error", 500));
+  }
+});
+
+const getMyOrders = asyncHandler(async (req, res, next) => {
+  try {
+    const { id } = req.user;
+
+    const order = await Order.find({ user: id });
+
+    if (!order) {
+      return next(new ErrorResponse("Order not found", 404));
+    }
+
+    res.status(200).json({ order, totalOrders: order.length });
+  } catch (error) {
+    console.log(error);
+    return next(new ErrorResponse("Failed to fetch my orders", 500));
   }
 });
 
@@ -180,4 +209,5 @@ module.exports = {
   getOrderById,
   updatePaymentStatus,
   updateOrderStatus,
+  getMyOrders,
 };

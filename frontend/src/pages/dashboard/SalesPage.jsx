@@ -42,7 +42,7 @@ const SalesPage = () => {
             value={
               loading
                 ? "Loading..."
-                : `Rs. ${data?.data?.totalRevenue.toLocaleString()}`
+                : `Rs. ${data?.data?.totalRevenue.toLocaleString() || 0}`
             }
             color="#6366F1"
           />
@@ -52,7 +52,7 @@ const SalesPage = () => {
             value={
               loading
                 ? "Loading..."
-                : `Rs. ${data?.data?.monthlyRevenue.toLocaleString()}`
+                : `Rs. ${data?.data?.monthlyRevenue.toLocaleString() || 0}`
             }
             color="#108981"
           />

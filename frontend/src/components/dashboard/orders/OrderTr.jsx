@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import { motion } from "framer-motion";
 import { Edit, IndianRupee, Trash2 } from "lucide-react";
+import { formatDate } from "../../../utils/dateUtils";
 
 const OrderTr = ({
   _id,
@@ -14,6 +15,7 @@ const OrderTr = ({
   paymentStatus,
   deliveredAt,
   status,
+  username,
   createdAt,
   onEditClick,
 }) => {
@@ -24,10 +26,10 @@ const OrderTr = ({
       transition={{ duration: 0.3 }}
     >
       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
-        {orderId}
+        {orderId ? orderId : "No orderId"}
       </td>
       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
-        {firstname} {lastname}
+        {firstname ? `${firstname} ${lastname}` : username}
       </td>
       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300 flex items-center">
         <IndianRupee size={12} />
@@ -38,10 +40,12 @@ const OrderTr = ({
           className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
             status === "Delivered"
               ? "bg-green-100 text-green-800"
-              : status === "Processing"
+              : status === "Out for Delivery"
               ? "bg-yellow-100 text-yellow-800"
-              : status === "Shipped"
+              : status === "Confirmed"
               ? "bg-blue-100 text-blue-800"
+              : status === "Pending"
+              ? "bg-slate-100 text-slate-800"
               : "bg-red-100 text-red-800"
           }`}
         >
@@ -49,7 +53,20 @@ const OrderTr = ({
         </span>
       </td>
       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
-        {createdAt}
+        <span
+          className={`px-2 inline-flex text-xs leading-5 mx-auto font-semibold rounded-full ${
+            paymentStatus === "Paid"
+              ? "bg-green-100 text-green-800"
+              : paymentStatus === "Pending"
+              ? "bg-slate-100 text-slate-800"
+              : "bg-red-100 text-red-800"
+          }`}
+        >
+          {paymentStatus}
+        </span>
+      </td>
+      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
+        {formatDate(createdAt)}
       </td>
       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
         <div className="flex-center">

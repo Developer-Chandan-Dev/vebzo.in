@@ -1,78 +1,48 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import { motion } from "framer-motion";
-import { Search, Plus, X } from "lucide-react";
+import { Search, Plus, X, MoveLeft, MoveRight } from "lucide-react";
 import { useState } from "react";
 import ProductTr from "./ProductTr";
+import useFetchDataWithPagination from "../../../hooks/useFetchDataWithPagination";
+import SearchBox from "../../utility/SearchBox";
 
-const PRODUCT_DATA = [
-  {
-    _id: 1,
-    name: "Potato",
-    imageUrl: "/public/images/potato-1.webp",
-    category: "Vegetables",
-    price: 20,
-    stock: 143,
-    sold: 50,
-    view: 5,
-  },
-  {
-    _id: 2,
-    name: "Tomato",
-    imageUrl: "/public/images/tomato-country-1.webp",
-    category: "Vegetables",
-    price: 30,
-    stock: 89,
-    sold: 100,
-    view: 5,
-  },
-  {
-    _id: 3,
-    name: "Onion",
-    imageUrl: "/public/images/onion-1.webp",
-    category: "Vegetables",
-    price: 60,
-    stock: 56,
-    sold: 50,
-    view: 5,
-  },
-  {
-    _id: 4,
-    name: "Cauliflower",
-    imageUrl: "/public/images/cauliflower-1.webp",
-    category: "Vegetables",
-    price: 20,
-    stock: 210,
-    sold: 20,
-    view: 5,
-  },
-  {
-    _id: 5,
-    name: "Cabbage",
-    imageUrl: "/public/images/cabbage-1.webp",
-    category: "Vegetables",
-    price: 30,
-    stock: 100,
-    sold: 20,
-    view: 5,
-  },
-];
-
+const VITE_API_URL = import.meta.env.VITE_API_URL;
 const ProductsTable = ({ onEditClick }) => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [filteredProducts, setFilteredProducts] = useState(PRODUCT_DATA);
+  const [searchText, setSearchText] = useState("");
+  const [searchTerm, setSearchTerm] = useState("")
   const [activeSearchBox, setActiveSearchBox] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [sortBy, setSortBy] = useState("");
 
-  const handleSearch = (e) => {
-    const term = e.target.value.toLowerCase();
-    setSearchTerm(term);
-    const filtered = PRODUCT_DATA.filter(
-      (product) =>
-        product.name.toLowerCase().includes(term) ||
-        product.category.toLowerCase().includes(term)
-    );
+  const { data, loading, error } = useFetchDataWithPagination(
+    `${VITE_API_URL}/api/v1/products`,
+    currentPage,
+    8,
+    searchText,
+    sortBy
+  );
 
-    setFilteredProducts(filtered);
+  // Function to handle page change
+  const handlePageClick = (page) => {
+    setCurrentPage(page);
   };
+
+  const handleSetSearchText = ()=>{
+    setSearchText(searchTerm.trim());
+  }
+
+  const handleKeyPress= (event)=>{
+    if(event.key === "Enter"){
+      handleSetSearchText(); // Trigger the search function when Enter key is pressed
+    }
+  }
+
+  // Create an array of page numbers (e.g., [1, 2, 3])
+  const pageNumbers = [];
+  for (let i = 1; i <= data?.totalPages; i++) {
+    pageNumbers.push(i);
+  }
 
   return (
     <motion.div
@@ -81,10 +51,14 @@ const ProductsTable = ({ onEditClick }) => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.2 }}
     >
+      {/* <SearchBox/> */}
       <div className="flex justify-between items-center mb-6 gap-2 flex-wrap relative">
         <div className="flex items-center gap-3">
           <h2 className="text-xl font-semibold text-gray-100">Product List</h2>
-          <button className="flex items-center gap-[6px] border border-gray-700 px-3 py-2 rounded-md hover:bg-gray-700 " onClick={()=> onEditClick()}>
+          <button
+            className="flex items-center gap-[6px] border border-gray-700 px-3 py-2 rounded-md hover:bg-gray-700 "
+            onClick={() => onEditClick()}
+          >
             <Plus className="size-5 font-bold" />
             <span className="hidden sm:block">Add New</span>
           </button>
@@ -106,8 +80,9 @@ const ProductsTable = ({ onEditClick }) => {
                 type="text"
                 placeholder="Search products..."
                 className="bg-gray-700 text-white placeholder-gray-400 rounded-lg pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                onChange={handleSearch}
+                onChange={(e) => setSearchTerm(e.target.value)}
                 value={searchTerm}
+                onKeyDown={handleKeyPress}
               />
               <Search
                 className="absolute left-3 top-2.5 text-gray-400"
@@ -153,22 +128,71 @@ const ProductsTable = ({ onEditClick }) => {
           </thead>
 
           <tbody className="divide-y divide-gray-700">
-            {filteredProducts.map((product) => (
-              <ProductTr
-                key={product._id}
-                _id={product._id}
-                name={product.name}
-                imageUrl={product?.imageUrl}
-                category={product.category}
-                price={product.price}
-                stock={product.stock}
-                sold={product.sold}
-                view={product.view}
-                onEditClick={onEditClick}
-              />
-            ))}
+            {data?.data.length > 0 && data?.data !== null
+              ? data?.data.map(
+                  ({
+                    _id,
+                    name,
+                    imageUrl,
+                    category,
+                    price,
+                    stock,
+                    sold,
+                    views,
+                  }) => (
+                    <ProductTr
+                      key={_id}
+                      _id={_id}
+                      name={name}
+                      imageUrl={imageUrl}
+                      category={category?.name}
+                      price={price}
+                      stock={stock}
+                      sold={sold}
+                      view={views}
+                      onEditClick={onEditClick}
+                    />
+                  )
+                )
+              : ""}
           </tbody>
         </table>
+        <div className="px-5 py-2 flex items-center w-full gap-3 mt-5">
+          <button
+            className={`w-10 h-10 border border-gray-600 text-gray-400 font-semibold text-base transition-all hover:bg-gray-700 hover:text-white ${
+              currentPage > 1 ? "flex-center" : "hidden"
+            }`}
+            onClick={() => setCurrentPage(currentPage > 1 && currentPage - 1)}
+          >
+            <MoveLeft size="16" />
+          </button>
+          {pageNumbers.map((page) => (
+            <button
+              key={page}
+              className={`w-10 h-10 border border-gray-600 text-gray-400 font-semibold text-base transition-all hover:bg-gray-700 hover:text-white ${
+                page === currentPage
+                  ? "bg-gray-700 text-white"
+                  : "text-gray-400"
+              }`}
+              onClick={() => handlePageClick(page)}
+            >
+              {page}
+            </button>
+          ))}
+
+          <button
+            className={`w-10 h-10 border border-gray-600 text-gray-400 font-semibold text-base transition-all hover:bg-gray-700 hover:text-white ${
+              currentPage < pageNumbers.length ? "flex-center" : "hidden"
+            }`}
+            onClick={() =>
+              setCurrentPage(
+                currentPage < pageNumbers.length && currentPage + 1
+              )
+            }
+          >
+            <MoveRight size="16" />
+          </button>
+        </div>
       </div>
     </motion.div>
   );

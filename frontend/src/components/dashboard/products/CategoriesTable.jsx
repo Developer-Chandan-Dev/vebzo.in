@@ -2,6 +2,7 @@
 import { motion } from "framer-motion";
 import { Plus, Search } from "lucide-react";
 import CategoryBox from "./CategoryBox";
+import useFetchData from "../../../hooks/useFetchData";
 
 const CATEGORY_DATA = [
   {
@@ -48,7 +49,14 @@ const CATEGORY_DATA = [
   },
 ];
 
+const VITE_API_URL = import.meta.env.VITE_API_URL;
+
 const CategoriesTable = ({ onEditClick }) => {
+  const { data, loading, error } = useFetchData(
+    `${VITE_API_URL}/api/v1/category/`
+  );
+  console.log(data, loading, error);
+
   return (
     <motion.div
       className="bg-gray-800 bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-6 border border-gray-700 mb-6"
@@ -105,8 +113,8 @@ const CategoriesTable = ({ onEditClick }) => {
       </div>
 
       <div className=" flex items-center flex-wrap gap-4">
-        {CATEGORY_DATA.length > 0
-          ? CATEGORY_DATA.map((item) => (
+        {data?.data.length > 0 && data?.data !== null
+          ? data?.data.map((item) => (
               <CategoryBox
                 key={item._id}
                 name={item.name}

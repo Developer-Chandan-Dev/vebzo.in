@@ -1,293 +1,46 @@
+/* eslint-disable react/prop-types */
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { Search } from "lucide-react";
+import { MoveLeft, MoveRight, Search } from "lucide-react";
 import OrderTr from "./OrderTr";
 import OrderList from "./OrderList";
+import useFetchDataWithPagination from "../../../hooks/useFetchDataWithPagination";
 
-const orderData = [
-  {
-    _id: 1,
-    orderId: "ORD001",
-    customer: "John Doe",
-    firstname: "John",
-    lastname: "Doe",
-    orderItems: [
-      {
-        product: "Potato",
-        quantity: 1,
-        price: 20,
-      },
-      {
-        product: "Tomato",
-        quantity: 1,
-        price: 20,
-      },
-    ],
-    shippingAddress: {
-      address: "Bhogwara, Ugrasenpur, Prayagraj",
-      village: "Bhogwara",
-      city: "Prayagraj",
-      phone: "0123456789",
-    },
-    totalPrice: 40,
-    status: "Delivered",
-    paymentMethod: "COD",
-    paymentStatus: "Paid",
-    deliveredAt: "10/10/2024",
-    total: 235.4,
-    createdAt: "2024-06-01",
-    updatedAt: "2024-06-01",
-  },
-  {
-    _id: 2,
-    orderId: "ORD002",
-    customer: "Shiva Kumar",
-    firstname: "Shiva",
-    lastname: "Kumar",
-    orderItems: [
-      {
-        product: "Potato",
-        quantity: 2,
-        price: 20,
-      },
-      {
-        product: "Tomato",
-        quantity: 2,
-        price: 20,
-      },
-    ],
-    shippingAddress: {
-      address: "Bhogwara, Ugrasenpur, Prayagraj",
-      village: "Bhogwara",
-      city: "Prayagraj",
-      phone: "0123456789",
-    },
-    totalPrice: 80,
-    status: "Pending",
-    paymentMethod: "COD",
-    paymentStatus: "Pending",
-    deliveredAt: "10/10/2024",
-    total: 235.4,
-    createdAt: "2024-06-01",
-    updatedAt: "2024-06-01",
-  },
-  {
-    _id: 3,
-    orderId: "ORD003",
-    customer: "Shiva Kumar",
-    firstname: "Shiva",
-    lastname: "Kumar",
-    orderItems: [
-      {
-        product: "Potato",
-        quantity: 2,
-        price: 20,
-      },
-      {
-        product: "Tomato",
-        quantity: 2,
-        price: 20,
-      },
-    ],
-    shippingAddress: {
-      address: "Bhogwara, Ugrasenpur, Prayagraj",
-      village: "Bhogwara",
-      city: "Prayagraj",
-      phone: "0123456789",
-    },
-    totalPrice: 80,
-    status: "Pending",
-    paymentMethod: "COD",
-    paymentStatus: "Pending",
-    deliveredAt: "10/10/2024",
-    total: 235.4,
-    createdAt: "2024-06-01",
-    updatedAt: "2024-06-01",
-  },
-  {
-    _id: 4,
-    orderId: "ORD004",
-    customer: "Shiva Kumar",
-    firstname: "Shiva",
-    lastname: "Kumar",
-    orderItems: [
-      {
-        product: "Potato",
-        quantity: 2,
-        price: 20,
-      },
-      {
-        product: "Tomato",
-        quantity: 2,
-        price: 20,
-      },
-    ],
-    shippingAddress: {
-      address: "Bhogwara, Ugrasenpur, Prayagraj",
-      village: "Bhogwara",
-      city: "Prayagraj",
-      phone: "0123456789",
-    },
-    totalPrice: 80,
-    status: "Pending",
-    paymentMethod: "COD",
-    paymentStatus: "Pending",
-    deliveredAt: "10/10/2024",
-    total: 235.4,
-    createdAt: "2024-06-01",
-    updatedAt: "2024-06-01",
-  },
-  {
-    _id: 5,
-    orderId: "ORD005",
-    customer: "Shiva Kumar",
-    firstname: "Shiva",
-    lastname: "Kumar",
-    orderItems: [
-      {
-        product: "Potato",
-        quantity: 2,
-        price: 20,
-      },
-      {
-        product: "Tomato",
-        quantity: 2,
-        price: 20,
-      },
-    ],
-    shippingAddress: {
-      address: "Bhogwara, Ugrasenpur, Prayagraj",
-      village: "Bhogwara",
-      city: "Prayagraj",
-      phone: "0123456789",
-    },
-    totalPrice: 80,
-    status: "Pending",
-    paymentMethod: "COD",
-    paymentStatus: "Pending",
-    deliveredAt: "10/10/2024",
-    total: 235.4,
-    createdAt: "2024-06-01",
-    updatedAt: "2024-06-01",
-  },
-  {
-    _id: 6,
-    orderId: "ORD006",
-    customer: "Shiva Kumar",
-    firstname: "Shiva",
-    lastname: "Kumar",
-    orderItems: [
-      {
-        product: "Potato",
-        quantity: 2,
-        price: 20,
-      },
-      {
-        product: "Tomato",
-        quantity: 2,
-        price: 20,
-      },
-    ],
-    shippingAddress: {
-      address: "Bhogwara, Ugrasenpur, Prayagraj",
-      village: "Bhogwara",
-      city: "Prayagraj",
-      phone: "0123456789",
-    },
-    totalPrice: 80,
-    status: "Pending",
-    paymentMethod: "COD",
-    paymentStatus: "Pending",
-    deliveredAt: "10/10/2024",
-    total: 235.4,
-    createdAt: "2024-06-01",
-    updatedAt: "2024-06-01",
-  },
-  {
-    _id: 7,
-    orderId: "ORD007",
-    customer: "Shiva Kumar",
-    firstname: "Shiva",
-    lastname: "Kumar",
-    orderItems: [
-      {
-        product: "Potato",
-        quantity: 2,
-        price: 20,
-      },
-      {
-        product: "Tomato",
-        quantity: 2,
-        price: 20,
-      },
-    ],
-    shippingAddress: {
-      address: "Bhogwara, Ugrasenpur, Prayagraj",
-      village: "Bhogwara",
-      city: "Prayagraj",
-      phone: "0123456789",
-    },
-    totalPrice: 80,
-    status: "Pending",
-    paymentMethod: "COD",
-    paymentStatus: "Pending",
-    deliveredAt: "10/10/2024",
-    total: 235.4,
-    createdAt: "2024-06-01",
-    updatedAt: "2024-06-01",
-  },
-  {
-    _id: 8,
-    orderId: "ORD008",
-    customer: "Shiva Kumar",
-    firstname: "Shiva",
-    lastname: "Kumar",
-    orderItems: [
-      {
-        product: "Potato",
-        quantity: 2,
-        price: 20,
-      },
-      {
-        product: "Tomato",
-        quantity: 2,
-        price: 20,
-      },
-    ],
-    shippingAddress: {
-      address: "Bhogwara, Ugrasenpur, Prayagraj",
-      village: "Bhogwara",
-      city: "Prayagraj",
-      phone: "0123456789",
-    },
-    totalPrice: 80,
-    status: "Pending",
-    paymentMethod: "COD",
-    paymentStatus: "Pending",
-    deliveredAt: "10/10/2024",
-    total: 235.4,
-    createdAt: "2024-06-01",
-    updatedAt: "2024-06-01",
-  },
-];
-
+const VITE_API_URL = import.meta.env.VITE_API_URL;
 const OrderTable = ({ onEditClick }) => {
+  const [searchText, setSearchText] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
-  const [filteredOrders, setFilteredOrders] = useState(orderData);
-  const [activeList, setActiveList] = useState(true);
+  const [activeList, setActiveList] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
 
-  const handleSearch = (e) => {
-    const term = e.target.value.toLowerCase();
-    setSearchTerm(term);
-    const filtered = orderData.filter(
-      (order) =>
-        order.customer.toLowerCase().includes(term) ||
-        order.id.toLowerCase().includes(term)
-    );
+  const { data, loading } = useFetchDataWithPagination(
+    `${VITE_API_URL}/api/v1/orders`,
+    currentPage,
+    8,
+    searchText
+  );
+  console.log(data, loading);
 
-    setFilteredOrders(filtered);
+  // Function to handle page change
+  const handlePageClick = (page) => {
+    setCurrentPage(page);
   };
 
+  const handleSetSearchText = () => {
+    setSearchText(searchTerm.trim());
+  };
+
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter") {
+      handleSetSearchText(); // Trigger the search function when Enter key is pressed
+    }
+  };
+
+  // Create an array of page numbers (e.g., [1, 2, 3])
+  const pageNumbers = [];
+  for (let i = 1; i <= data?.totalPages; i++) {
+    pageNumbers.push(i);
+  }
   return (
     <motion.div
       className="bg-gray-800 bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-6 border border-gray-700 mb-6 my-7"
@@ -322,8 +75,9 @@ const OrderTable = ({ onEditClick }) => {
             type="text"
             placeholder="Search orders..."
             className="bg-gray-700 text-white placeholder-gray-400 rounded-lg pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            onChange={handleSearch}
+            onChange={(e) => setSearchTerm(e.target.value)}
             value={searchTerm}
+            onKeyDown={handleKeyPress}
           />
           <Search className="absolute left-3 top-2.5 text-gray-400" size={18} />
         </div>
@@ -347,6 +101,9 @@ const OrderTable = ({ onEditClick }) => {
                   Status
                 </th>
                 <th className="px-6 py-3 text-left font-medium text-gray-400 uppercase tracking-wider">
+                  Payment Status
+                </th>
+                <th className="px-6 py-3 text-left font-medium text-gray-400 uppercase tracking-wider">
                   Order Date
                 </th>
                 <th className="px-6 py-3 text-left font-medium text-gray-400 uppercase tracking-wider">
@@ -356,22 +113,23 @@ const OrderTable = ({ onEditClick }) => {
             </thead>
 
             <tbody className="divide-y divide-gray-700">
-              {filteredOrders.length > 0
-                ? filteredOrders.map((order) => (
+              {data?.data !== null && data?.data.length > 0
+                ? data?.data.map((order, index) => (
                     <OrderTr
-                      key={order._id}
-                      _id={order._id}
-                      orderId={order.orderId}
-                      firstname={order.firstname}
-                      lastname={order.lastname}
-                      orderItems={order.orderItems}
-                      shippingAddress={order.shippingAddress}
-                      totalPrice={order.totalPrice}
-                      paymentMethod={order.paymentMethod}
-                      paymentStatus={order.paymentStatus}
-                      deliveredAt={order.deliveredAt}
-                      status={order.status}
-                      createdAt={order.createdAt}
+                      key={index}
+                      _id={order?._id}
+                      orderId={order?.orderId}
+                      username={order?.user?.username}
+                      firstname={order?.firstname}
+                      lastname={order?.lastname}
+                      orderItems={order?.orderItems}
+                      shippingAddress={order?.shippingAddress}
+                      totalPrice={order?.totalPrice}
+                      paymentMethod={order?.paymentMethod}
+                      paymentStatus={order?.paymentStatus}
+                      deliveredAt={order?.deliveredAt}
+                      status={order?.status}
+                      createdAt={order?.createdAt}
                       onEditClick={onEditClick}
                     />
                   ))
@@ -380,26 +138,64 @@ const OrderTable = ({ onEditClick }) => {
           </table>
         )}
 
-        {activeList && filteredOrders.length > 0
-          ? filteredOrders.map((order) => (
+        {activeList && data?.data.length > 0 && data?.data !== null
+          ? data?.data.map((order, index) => (
               <OrderList
-                key={order._id}
-                _id={order._id}
-                orderId={order.orderId}
-                firstname={order.firstname}
-                lastname={order.lastname}
-                orderItems={order.orderItems}
-                shippingAddress={order.shippingAddress}
-                totalPrice={order.totalPrice}
-                paymentMethod={order.paymentMethod}
-                paymentStatus={order.paymentStatus}
-                deliveredAt={order.deliveredAt}
-                status={order.status}
-                createdAt={order.createdAt}
+                key={index}
+                _id={order?._id}
+                orderId={order?.orderId}
+                username={order?.user?.username}
+                firstname={order?.firstname}
+                lastname={order?.lastname}
+                orderItems={order?.orderItems}
+                shippingAddress={order?.shippingAddress}
+                totalPrice={order?.totalPrice}
+                paymentMethod={order?.paymentMethod}
+                paymentStatus={order?.paymentStatus}
+                deliveredAt={order?.deliveredAt}
+                status={order?.status}
+                createdAt={order?.createdAt}
                 onEditClick={onEditClick}
               />
             ))
           : ""}
+
+        <div className="px-5 py-2 flex items-center w-full gap-3 mt-5">
+          <button
+            className={`w-10 h-10 border border-gray-600 text-gray-400 font-semibold text-base transition-all hover:bg-gray-700 hover:text-white ${
+              currentPage > 1 ? "flex-center" : "hidden"
+            }`}
+            onClick={() => setCurrentPage(currentPage > 1 && currentPage - 1)}
+          >
+            <MoveLeft size="16" />
+          </button>
+          {pageNumbers.map((page) => (
+            <button
+              key={page}
+              className={`w-10 h-10 border border-gray-600 text-gray-400 font-semibold text-base transition-all hover:bg-gray-700 hover:text-white ${
+                page === currentPage
+                  ? "bg-gray-700 text-white"
+                  : "text-gray-400"
+              }`}
+              onClick={() => handlePageClick(page)}
+            >
+              {page}
+            </button>
+          ))}
+
+          <button
+            className={`w-10 h-10 border border-gray-600 text-gray-400 font-semibold text-base transition-all hover:bg-gray-700 hover:text-white ${
+              currentPage < pageNumbers.length ? "flex-center" : "hidden"
+            }`}
+            onClick={() =>
+              setCurrentPage(
+                currentPage < pageNumbers.length && currentPage + 1
+              )
+            }
+          >
+            <MoveRight size="16" />
+          </button>
+        </div>
       </div>
     </motion.div>
   );

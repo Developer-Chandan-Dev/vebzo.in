@@ -24,7 +24,7 @@ const Sidebar = ({
 
   const handleKeyPress = (event) => {
     if (event.key === "Enter") {
-      handleSetSearchText(); // Trigger the search function when Eter is pressed
+      handleSetSearchText(); // Trigger the search function when Enter key is pressed
     }
   };
   return (

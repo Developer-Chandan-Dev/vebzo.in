@@ -1,6 +1,8 @@
 const Joi = require("joi");
 
 const orderValidationSchema = Joi.object({
+  firstname: Joi.string().required().trim(),
+  lastname: Joi.string().optional(),
   orderItems: Joi.array()
     .items(
       Joi.object({

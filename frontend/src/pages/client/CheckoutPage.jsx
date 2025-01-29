@@ -1,8 +1,19 @@
+import { useState } from "react";
 import Footer from "../../components/client/Footer";
 import Header from "../../components/client/Header";
 import Button from "../../components/utility/Button";
 
 const CheckoutPage = () => {
+  const [firstname, setFirstname] = useState("");
+  const [lastname, setLastname] = useState("");
+  const [city, setCity] = useState("Prayagraj");
+  const [village, setVillage] = useState("Bhogwara");
+  const [address, setAddress] = useState("");
+  const [phone, setPhone] = useState("");
+  const [notes, setNotes] = useState("");
+
+  console.log(firstname, lastname, city, village, address, phone, notes);
+
   return (
     <div className="w-full h-auto">
       <Header />
@@ -11,15 +22,15 @@ const CheckoutPage = () => {
           <h1 className="text-5xl font-semibold amiri-quarn py-5">Checkout</h1>
         </div>
 
-        <div className="flex justify-between items-start gap-3 py-10 text-base">
+        <div className="flex xl:justify-between items-start gap-3 py-10 text-base flex-wrap xl:flex-nowrap">
           <div className="">
-            <form className="w-[650px] text-gray-600">
+            <form className="w-full md:w-[650px] text-gray-600">
               <div className="w-full  border-b-2">
                 <h3 className="py-3 font-semibold">Billing Details</h3>
               </div>
 
-              <div className="flex items-center justify-between py-4">
-                <div className="relative">
+              <div className="flex items-center gap-2 md:justify-between py-4 flex-wrap sm:flex-nowrap">
+                <div className="relative w-full">
                   <label htmlFor="fname" className="relative font-medium">
                     First Name <span className="text-red-600">*</span>
                   </label>
@@ -27,11 +38,13 @@ const CheckoutPage = () => {
                   <input
                     type="text"
                     id="fname"
-                    className="w-[300px] bg-white h-12 px-3 outline-gray-300 border my-1"
+                    value={firstname}
+                    onChange={(e) => setFirstname(e.target.value)}
+                    className="w-full sm:w-[230px] md:w-[300px] bg-white h-12 px-3 outline-gray-300 border my-1"
                     placeholder="Your First Name"
                   />
                 </div>
-                <div>
+                <div className="w-full">
                   <label htmlFor="lname" className="font-medium">
                     Last Name <span className="text-red-600">*</span>
                   </label>
@@ -39,7 +52,9 @@ const CheckoutPage = () => {
                   <input
                     type="text"
                     id="lname"
-                    className="w-[300px] bg-white h-12 px-3 outline-gray-300 border my-1"
+                    value={lastname}
+                    onChange={(e) => setLastname(e.target.value)}
+                    className="w-full sm:w-[230px] md:w-[300px] bg-white h-12 px-3 outline-gray-300 border my-1"
                     placeholder="Your Last Name"
                   />
                 </div>
@@ -52,6 +67,8 @@ const CheckoutPage = () => {
                 <select
                   type="text"
                   id="city"
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
                   className="w-full h-12 px-3 bg-white outline-gray-300 border my-1"
                 >
                   <option value="Prayagraj">Prayagraj</option>
@@ -65,6 +82,8 @@ const CheckoutPage = () => {
                 <select
                   type="text"
                   id="village"
+                  value={village}
+                  onChange={(e) => setVillage(e.target.value)}
                   className="w-full h-12 px-3 bg-white outline-gray-300 border my-1"
                 >
                   <option value="Bhogwara">Bhogwara</option>
@@ -80,6 +99,8 @@ const CheckoutPage = () => {
                 <input
                   type="text"
                   id="address"
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
                   className="w-full h-12 px-3 bg-white outline-gray-300 border my-1"
                   placeholder="Your Address..."
                 />
@@ -92,6 +113,8 @@ const CheckoutPage = () => {
                 <input
                   type="text"
                   id="city"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
                   className="w-full h-12 px-3 bg-white outline-gray-300 border my-1"
                   placeholder="Your Phone Name"
                 />
@@ -104,13 +127,15 @@ const CheckoutPage = () => {
                 <textarea
                   type="text"
                   id="city"
+                  value={notes}
+                  onChange={(e) => setNotes(e.target.value)}
                   className="w-full h-12 px-3 py-2 bg-white outline-gray-300 border my-1"
                   placeholder="Notes about your order, e.g. special notes for delivery"
                 />
               </div>
             </form>
           </div>
-          <div className="flex w-full items-center justify-end text-gray-800">
+          <div className="flex w-full items-center xl:justify-end text-gray-800">
             <div className="w-[550px] h-auto border-2 text-base">
               <div className="border-b px-5 py-4">
                 <h1 className="text-lg font-semibold">Cart Total</h1>

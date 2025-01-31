@@ -12,6 +12,7 @@ const ChangeUserDetailsPopup = ({ user, onClose }) => {
   const [blocked, setBlocked] = useState(user.isBlocked || false);
   const [image, setImage] = useState(user.profilePic || null);
   const [filePreview, setFilePreview] = useState(null);
+  console.log(role, blocked);
 
   // console.log(role, blocked, user);
 
@@ -36,17 +37,13 @@ const ChangeUserDetailsPopup = ({ user, onClose }) => {
   const onSubmit = async (e) => {
     e.preventDefault();
 
-    const data = new FormData();
-    data.append("username", username);
-    data.append("email", email);
-    data.append("role", role);
-    data.append("isBlocked", blocked);
-    data.append("profilePic", image);
-
     const response = await handleSubmit(
       "PUT",
-      `/api/v1/users/${user._id}`,
-      data
+      `/api/v1/users/update/${user._id}`,
+      {
+        role,
+        isBlocked: blocked,
+      }
     );
     console.log(response);
     alert("Form Submitted sucessfully");
@@ -110,6 +107,7 @@ const ChangeUserDetailsPopup = ({ user, onClose }) => {
                 placeholder="Username"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
+                disabled={true}
                 required
               />
             </div>
@@ -120,6 +118,7 @@ const ChangeUserDetailsPopup = ({ user, onClose }) => {
                 placeholder="Email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                disabled={true}
                 required
               />
             </div>
@@ -134,18 +133,13 @@ const ChangeUserDetailsPopup = ({ user, onClose }) => {
                 id="role"
                 className="px-3  w-full sm:w-72 py-2 drop-shadow rounded-md border border-slate-500 outline-slate-500 my-2  bg-gray-700"
                 required
+                value={role}
                 onChange={(e) => setRole(e.target.value)}
               >
                 <option value="">Choose Role</option>
-                <option selected={role === "admin"} value="admin">
-                  Admin
-                </option>
-                <option selected={role === "author"} value="author">
-                  Author
-                </option>
-                <option selected={role === "reader"} value="reader">
-                  Reader
-                </option>
+                <option value="admin">Admin</option>
+                <option value="manager">Manager</option>
+                <option value="user">User</option>
               </select>
             </div>
             <div className="my-3">
@@ -158,22 +152,12 @@ const ChangeUserDetailsPopup = ({ user, onClose }) => {
                 id="blocked"
                 className="px-3 w-full sm:w-72 py-2 drop-shadow rounded-md border  border-slate-500 outline-slate-500 my-2  bg-gray-700"
                 required
+                value={blocked}
                 onChange={(e) => setBlocked(e.target.value)}
               >
                 <option value="">Choose Status</option>
-                <option selected={blocked === true} value={true}>
-                  Blocked
-                </option>
-                <option
-                  selected={
-                    blocked === false ||
-                    blocked === "" ||
-                    blocked === "undefined"
-                  }
-                  value={false}
-                >
-                  Unblocked
-                </option>
+                <option value={true}>Blocked</option>
+                <option value={false}>Unblocked</option>
               </select>
             </div>
 

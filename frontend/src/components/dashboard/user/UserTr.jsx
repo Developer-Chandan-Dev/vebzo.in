@@ -2,6 +2,7 @@
 /* eslint-disable react/prop-types */
 import { motion } from "framer-motion";
 import { Edit, Trash2, User, UserCircle } from "lucide-react";
+import { formatDate } from "../../../utils/dateUtils";
 
 const UserTr = ({
   _id,
@@ -49,7 +50,7 @@ const UserTr = ({
           </span>
         </td>
         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
-          {createdAt}
+          {formatDate(createdAt)}
         </td>
         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
           <span

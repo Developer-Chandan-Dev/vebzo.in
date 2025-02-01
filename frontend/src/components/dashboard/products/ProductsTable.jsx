@@ -1,7 +1,8 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import { motion } from "framer-motion";
-import { Search, Plus, X, MoveLeft, MoveRight } from "lucide-react";
+import { Search, Plus, X, MoveLeft, MoveRight, RefreshCwIcon } from "lucide-react";
 import { useState } from "react";
 import ProductTr from "./ProductTr";
 import useFetchDataWithPagination from "../../../hooks/useFetchDataWithPagination";
@@ -10,12 +11,12 @@ import SearchBox from "../../utility/SearchBox";
 const VITE_API_URL = import.meta.env.VITE_API_URL;
 const ProductsTable = ({ onEditClick }) => {
   const [searchText, setSearchText] = useState("");
-  const [searchTerm, setSearchTerm] = useState("")
+  const [searchTerm, setSearchTerm] = useState("");
   const [activeSearchBox, setActiveSearchBox] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [sortBy, setSortBy] = useState("");
 
-  const { data, loading, error } = useFetchDataWithPagination(
+  const { data, loading, error, refreshData } = useFetchDataWithPagination(
     `${VITE_API_URL}/api/v1/products`,
     currentPage,
     8,
@@ -28,21 +29,23 @@ const ProductsTable = ({ onEditClick }) => {
     setCurrentPage(page);
   };
 
-  const handleSetSearchText = ()=>{
+  const handleSetSearchText = () => {
     setSearchText(searchTerm.trim());
-  }
+  };
 
-  const handleKeyPress= (event)=>{
-    if(event.key === "Enter"){
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter") {
       handleSetSearchText(); // Trigger the search function when Enter key is pressed
     }
-  }
+  };
 
   // Create an array of page numbers (e.g., [1, 2, 3])
   const pageNumbers = [];
   for (let i = 1; i <= data?.totalPages; i++) {
     pageNumbers.push(i);
   }
+
+  console.log(data?.data);
 
   return (
     <motion.div
@@ -75,6 +78,14 @@ const ProductsTable = ({ onEditClick }) => {
               activeSearchBox ? "flex" : "hidden"
             } sm:flex items-center justify-center absolute left-0 bg-gray-800 top-0 w-full py-3 sm:relative gap-2`}
           >
+            <button
+              className="w-auto px-3 gap-2 h-9 border flex-center text-gray-500 transition-all hover:text-gray-400 rounded-md border-gray-600"
+              title="Refresh"
+              onClick={refreshData}
+            >
+              <span className="hidden sm:block">Refresh</span>
+              <RefreshCwIcon className="size-4" />
+            </button>
             <div className="relative ">
               <input
                 type="text"
@@ -136,6 +147,7 @@ const ProductsTable = ({ onEditClick }) => {
                     imageUrl,
                     category,
                     price,
+                    description,
                     stock,
                     sold,
                     views,
@@ -146,7 +158,9 @@ const ProductsTable = ({ onEditClick }) => {
                       name={name}
                       imageUrl={imageUrl}
                       category={category?.name}
+                      categoryId={category?._id}
                       price={price}
+                      description={description}
                       stock={stock}
                       sold={sold}
                       view={views}

@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
 import "./style.css";
+import { toast } from 'react-toastify'
 import { motion } from "framer-motion";
 import { Edit2, User2Icon, X } from "lucide-react";
 import { useRef, useState } from "react";
@@ -12,9 +13,6 @@ const ChangeUserDetailsPopup = ({ user, onClose }) => {
   const [blocked, setBlocked] = useState(user.isBlocked || false);
   const [image, setImage] = useState(user.profilePic || null);
   const [filePreview, setFilePreview] = useState(null);
-  console.log(role, blocked);
-
-  // console.log(role, blocked, user);
 
   const fileInputRef = useRef(null);
 
@@ -45,8 +43,11 @@ const ChangeUserDetailsPopup = ({ user, onClose }) => {
         isBlocked: blocked,
       }
     );
-    console.log(response);
-    alert("Form Submitted sucessfully");
+    if(response.success === true){
+      toast.success(response.message)
+    }else{
+      console.log(response);
+    }
   };
 
   return (

@@ -2,6 +2,8 @@ import "./App.css";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import { ToastContainer } from 'react-toastify'
+import "react-toastify/dist/ReactToastify.css"
 
 // Route Imports
 import ClientRoutes from "./routes/ClientRoutes";
@@ -18,6 +20,7 @@ function App() {
   }, [dispatch]);
 
   return (
+    <>
     <Router>
       <Routes>
         {/* Client Routes */}
@@ -38,6 +41,8 @@ function App() {
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>
+    <ToastContainer/>
+    </>
   );
 }
 

@@ -5,12 +5,12 @@ import authService from "../../features/auth";
 import { login } from "../../store/features/userSlice";
 import SmallSpinner from "../../components/utility/SmallSpinner";
 import { fetchCartItems } from "../../store/features/cartSlice";
+import { toast } from "react-toastify";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -20,12 +20,15 @@ const LoginPage = () => {
     setLoading(true);
 
     if (!email || !password) {
-      return setError("Please fill in all fields");
+      setLoading(false);
+      toast.error("Please fill in all fields");
+      return;
     }
 
     if (password.length < 6) {
       setLoading(false);
-      return setError("Password must be atleast 6 characters");
+      toast.error("Password must be atleast 6 characters");
+      return;
     }
 
     const res = await authService.login(email, password);
@@ -35,15 +38,19 @@ const LoginPage = () => {
       setEmail("");
       setPassword("");
       setLoading(false);
-      setError(null);
       navigate("/");
       dispatch(fetchCartItems());
-    } else if (res.data.success === false) {
-      setError(res.data.error);
+    } else if (res.data.success !== true && res.data.message) {
+      console.log(res.data.message);
+      toast.error(res.data.message);
+      setLoading(false);
+    } else if (res.data?.errors) {
+      console.log(res);
+      toast.error(res.data.errors[0]);
       setLoading(false);
     } else {
-      console.log(res);
-      setError("Something went wrong");
+      console.log(res.data);
+      toast.error("Something went wrong");
       setLoading(false);
     }
   };

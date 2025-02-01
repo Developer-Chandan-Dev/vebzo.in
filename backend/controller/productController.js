@@ -45,7 +45,7 @@ const productImageUpload = asyncHandler(async (req, res, next) => {
   try {
     const productId = req.params.productId; // Get product ID from route parameters
     const newImagePath = req.file?.path; // Path of the uploaded image from Multer
-    console.log(newImagePath, req.file);
+    console.log(newImagePath, req.file, '48');
     // Find the product in the database
     const product = await Product.findById(productId);
     if (!product) {

@@ -19,6 +19,7 @@ const createProductValidationSchema = Joi.object({
   category: Joi.string().required().messages({
     "string.empty": "Category is required.",
   }),
+  isFeatured: Joi.boolean().optional(),
   imageUrl: Joi.string().uri().optional(),
   imageUrlPublicId: Joi.string().optional(),
   averageRating: Joi.number().min(0).max(5).default(0).optional(),
@@ -32,6 +33,7 @@ const updateProductValidationSchema = Joi.object({
   stock: Joi.number().integer().min(0).optional(),
   sold: Joi.number().integer().min(0).optional(),
   category: Joi.string().optional(),
+  isFeatured: Joi.boolean().optional(),
   imageUrl: Joi.string().uri().optional(),
   imageUrlPublicId: Joi.string().optional(),
   averageRating: Joi.number().min(0).max(5).optional(),

@@ -17,11 +17,10 @@ const UsersPage = () => {
   const [isPopupActive, setIsPopupActive] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
 
-  const { data, loading, error } = useFetchData(
+  const { data, loading } = useFetchData(
     `${VITE_API_URL}/api/v1/analytics/user-cards`
   );
 
-  // console.log(data, loading, error);
   const handleEditClick = (user) => {
     setSelectedUser(user); // Set the selected user details
     setIsPopupActive(true); // Activate the popup

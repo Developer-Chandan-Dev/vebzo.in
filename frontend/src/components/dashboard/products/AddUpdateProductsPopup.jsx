@@ -1,25 +1,60 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import { motion } from "framer-motion";
+import { toast } from "react-toastify";
 import { Edit2, Image, X } from "lucide-react";
 import { useRef, useState } from "react";
+import useHandleSendingRequest from "../../../hooks/useHandleSendingRequest";
+import useFetchData from "../../../hooks/useFetchData";
+const VITE_API_URL = import.meta.env.VITE_API_URL;
 
 const AddUpdateProductsPopup = ({ product, onClose }) => {
   const [name, setName] = useState(product?.name || "");
   const [description, setDescription] = useState(product?.description || "");
   const [price, setPrice] = useState(product?.price || "");
-  const [category, setCategory] = useState(product?.category || "");
+  const [category, setCategory] = useState(product?.categoryId || "");
   const [stock, setStock] = useState(product?.stock || "");
   const [isFeatured, setIsFeatured] = useState(product?.isFeatured || false);
 
+  const [newProductId, setNewProductId] = useState("");
+
+  const { data, loading } = useFetchData(`${VITE_API_URL}/api/v1/category`);
+
   const [secondPage, setSecondPage] = useState(false);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(name, description, price, category, stock);
+  const { handleSubmit } = useHandleSendingRequest();
 
-    if ((name, description, price, category, stock)) {
+  const onSubmit = async (e) => {
+    e.preventDefault();
+
+    const response = await handleSubmit(
+      product ? "PUT" : "POST",
+      product
+        ? `${VITE_API_URL}/api/v1/products/${product._id}`
+        : `${VITE_API_URL}/api/v1/products`,
+      {
+        name,
+        description,
+        price,
+        category,
+        stock,
+        isFeatured,
+      }
+    );
+    if (response.success === true) {
+      toast.success(response.message);
       setSecondPage(true);
+      setNewProductId(response?.data._id);
+      setName("");
+      setDescription("");
+      setPrice(0);
+      setCategory("");
+      setStock(0);
+      setIsFeatured(false);
+    } else {
+      toast.error(response.message);
+      setSecondPage(false);
+      console.log(response);
     }
   };
 
@@ -43,7 +78,7 @@ const AddUpdateProductsPopup = ({ product, onClose }) => {
             </div>
             <form
               className="px-1 py-2 sm:p-5 text-slate-100"
-              onSubmit={handleSubmit}
+              onSubmit={onSubmit}
             >
               <div>
                 <label htmlFor="name" className="ml-1">
@@ -128,8 +163,12 @@ const AddUpdateProductsPopup = ({ product, onClose }) => {
                       className="w-full sm:w-60 h-10 py-1 px-[10px] border rounded-md border-slate-500 outline-slate-500 my-2 bg-gray-700"
                     >
                       <option value="">Choose a category</option>
-                      <option value="vegitables">Vegitables</option>
-                      <option value="fruits">Fruits</option>
+                      {data?.data.map(({ name, _id }) => (
+                        <option key={_id} value={_id}>
+                          {name}
+                        </option>
+                      ))}
+                      {/* <option value="fruits">Fruits</option> */}
                     </select>
                   </div>
                 </div>
@@ -138,21 +177,27 @@ const AddUpdateProductsPopup = ({ product, onClose }) => {
                 <div>
                   <label className="">What is Featured product ?</label>
                   <div className="flex items-center gap-3 py-2 ml-1">
-                    <label htmlFor="fyes">Yes</label>
+                    <label htmlFor="fyes" className="cursor-pointer">
+                      Yes
+                    </label>
                     <input
                       type="checkbox"
                       name="fyes"
                       id="fyes"
-                      value={true}
+                      checked={isFeatured === true}
+                      onChange={() => setIsFeatured(true)}
                       className="size-4 cursor-pointer"
                     />
 
-                    <label htmlFor="fno">No</label>
+                    <label htmlFor="fno" className="cursor-pointer">
+                      No
+                    </label>
                     <input
                       type="checkbox"
                       name="fno"
                       id="fno"
-                      value={false}
+                      checked={isFeatured === false}
+                      onChange={() => setIsFeatured(false)}
                       className="size-4 cursor-pointer"
                     />
                   </div>
@@ -197,6 +242,8 @@ const AddUpdateProductsPopup = ({ product, onClose }) => {
             imageUrl={product?.imageUrl}
             secondPage={secondPage}
             setSecondPage={setSecondPage}
+            productId={newProductId}
+            onClose={onClose}
           />
         )}
       </div>
@@ -206,13 +253,19 @@ const AddUpdateProductsPopup = ({ product, onClose }) => {
 
 export default AddUpdateProductsPopup;
 
-const AddUpdateProductImage = ({ imageUrl, secondPage, setSecondPage }) => {
+const AddUpdateProductImage = ({
+  imageUrl,
+  secondPage,
+  setSecondPage,
+  productId,
+  onClose,
+}) => {
   const [image, setImage] = useState(imageUrl || null);
-  const [filePreview, setFilePreview] = useState(null);
+  const [filePreview, setFilePreview] = useState(image || null);
 
   const fileInputRef = useRef(null);
 
-  // const { handleSubmit } = useHandleSendingRequest();
+  const { handleSubmit } = useHandleSendingRequest();
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -228,18 +281,37 @@ const AddUpdateProductImage = ({ imageUrl, secondPage, setSecondPage }) => {
     }
   };
 
-  const handleUploadImage = () => {
-    console.log(image);
+  const onSubmit = async (e) => {
+    e.preventDefault();
 
-    if (image) {
-      alert("Image Uploaded successfully");
+    const data = new FormData();
+
+    data.append("imageUrl", image);
+
+    const response = await handleSubmit(
+      "PUT",
+      `${VITE_API_URL}/api/v1/products/${productId}/image`,
+      data,
+      true
+    );
+
+    if (response.success === true) {
+      toast.success(response.message);
+    } else {
+      toast.error(response.message);
     }
-    setSecondPage(false);
   };
-
   return (
     <>
       <div className="flex-center w-full h-full flex-col gap-5">
+        <div className="w-full flex items-center justify-between">
+          <h1 className="text-white">
+            {imageUrl ? "Update Product Image" : "Add New Product Image"}
+          </h1>
+          <div className="py-1 flex-center transition-all rounded-md hover:bg-red-500 w-7 cursor-pointer hover:text-white">
+            <X size={18} className="" onClick={onClose} />
+          </div>
+        </div>
         {/* <div> */}
         <div className="w-full sm:w-80 flex items-center mt-6 justify-start flex-col">
           <div className="w-40 h-40 drop-shadow border border-slate-500 outline-slate-500 rounded-md relative mainImageBox overflow-hidden">
@@ -276,10 +348,16 @@ const AddUpdateProductImage = ({ imageUrl, secondPage, setSecondPage }) => {
             Not now
           </button>
           <button
+            className="px-6 rounded-md py-2 border text-slate-100 border-slate-500 font-semibold transition-all hover:text-white hover:bg-slate-700 hover:shadow-md shadow-slate-300"
+            onClick={onClose}
+          >
+            Close Popup
+          </button>
+          <button
             className={`${
               filePreview ? "block" : "hidden"
             } px-6 rounded-md py-2 border text-slate-100 border-slate-500 font-semibold transition-all hover:text-white hover:bg-slate-700 hover:shadow-md shadow-slate-300`}
-            onClick={handleUploadImage}
+            onClick={onSubmit}
           >
             Save
           </button>

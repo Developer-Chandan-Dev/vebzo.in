@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { ensureUncategorizedExists } = require("../utils/categoryUtils");
 
 const productSchema = new mongoose.Schema(
   {
@@ -27,7 +28,9 @@ const productSchema = new mongoose.Schema(
     category: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Category",
-      required: true,
+      default: async function () {
+        return await ensureUncategorizedExists();
+      },
     },
     isFeatured: {
       type: Boolean,
@@ -49,7 +52,7 @@ const productSchema = new mongoose.Schema(
       default: 0, // Total number of ratings
     },
     views: { type: Number, default: 0 }, // New field for tracking views
-  // Add other fields as required
+    // Add other fields as required
   },
   { timestamps: true }
 );

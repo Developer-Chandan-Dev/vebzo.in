@@ -30,7 +30,6 @@ const ProductsPage = () => {
   console.log(data, loading, error);
 
   const handleEditClick = (product) => {
-    console.log(product);
     setSelectedProduct(product); // Set the selected product details
     setIsPopupActive(true); // Activate the popup
   };
@@ -40,7 +39,6 @@ const ProductsPage = () => {
   };
 
   const handleEditCategoryClick = (category) => {
-    console.log(category);
     setSelectedCategory(category); // Set the selected category details
     setIsCategoryPopupActive(true); // Activate the category popup
   };

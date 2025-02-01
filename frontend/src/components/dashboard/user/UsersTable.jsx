@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import { motion } from "framer-motion";
-import { MoveLeft, MoveRight, Search, X } from "lucide-react";
+import { MoveLeft, MoveRight, RefreshCwIcon, Search, X } from "lucide-react";
 import { useState } from "react";
 import UserTr from "./UserTr";
 import useFetchDataWithPagination from "../../../hooks/useFetchDataWithPagination";
@@ -13,14 +13,12 @@ const UsersTable = ({ onEditClick }) => {
   const [currentPage, setCurrentPage] = useState(1);
   // const []
 
-  const { data, loading, error } = useFetchDataWithPagination(
+  const { data, loading, error, refreshData } = useFetchDataWithPagination(
     `${VITE_API_URL}/api/v1/users`,
     currentPage,
     8,
     searchText
   );
-
-  console.log(data, loading, error);
 
   // Function to handle page change
   const handlePageClick = (page) => {
@@ -64,6 +62,10 @@ const UsersTable = ({ onEditClick }) => {
               activeSearchBox ? "flex" : "hidden"
             } sm:flex items-center justify-center absolute left-0 bg-gray-800 top-0 w-full py-3 sm:relative gap-2`}
           >
+            <button className="w-auto px-3 gap-2 h-9 border flex-center text-gray-500 transition-all hover:text-gray-400 rounded-md border-gray-600" title="Refresh" onClick={refreshData}>
+              <span className="hidden sm:block">Refresh</span>
+              <RefreshCwIcon className="size-4"/>
+            </button>
             <div className="relative ">
               <input
                 type="text"

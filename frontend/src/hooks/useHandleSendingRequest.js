@@ -14,10 +14,9 @@ const useHandleSendingRequest = (initialState) => {
     }));
   };
 
-  const handleSubmit = async (method, url, formData) => {
+  const handleSubmit = async (method, url, formData, bool) => {
     setLoading(true);
     setError(null);
-    console.log(url);
 
     console.log(method, url, formData);
     try {
@@ -27,7 +26,9 @@ const useHandleSendingRequest = (initialState) => {
         data: formData, //
         withCredentials: true,
         headers: {
-          "Content-Type": "application/json",
+          // "Content-Type": "application/json",
+          "Content-Type":
+            bool ? "multipart/form-data" : "application/json",
         },
       });
 

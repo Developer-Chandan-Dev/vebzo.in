@@ -40,11 +40,14 @@ const decreaseStock = async (orderItems) => {
 };
 
 const validateStock = async (orderItems) => {
+  console.log(orderItems);
   for (const item of orderItems) {
+    console.log(item, item.product, "45");
     const product = await Product.findById(item.product);
+    console.log(product, "47");
 
     if (!product || product.stock < item.quantity) {
-      throw new Error(`Insufficient stock for product: ${product.name}`);
+      throw new Error(`Insufficient stock for product: ${product}`);
     }
   }
 };
@@ -89,5 +92,5 @@ module.exports = {
   decreaseStock,
   validateStock,
   getProductStock,
-  checkLowStock
+  checkLowStock,
 };

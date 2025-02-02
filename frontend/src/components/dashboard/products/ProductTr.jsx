@@ -1,6 +1,8 @@
 /* eslint-disable react/prop-types */
 import { motion } from "framer-motion";
 import { Edit, IndianRupee, Trash2 } from "lucide-react";
+import useHandleDeletewithSweetAlert from "../../../hooks/useHandleDeleteWithSweetAlert";
+const VITE_API_URL = import.meta.env.VITE_API_URL;
 
 const ProductTr = ({
   _id,
@@ -15,6 +17,8 @@ const ProductTr = ({
   view,
   onEditClick,
 }) => {
+  const { handleDelete } = useHandleDeletewithSweetAlert();
+
   return (
     <motion.tr
       key={_id}
@@ -66,7 +70,12 @@ const ProductTr = ({
             }}
           />
         </button>
-        <button className="text-red-400 hover:text-red-300">
+        <button
+          className="text-red-400 hover:text-red-300"
+          onClick={() =>
+            handleDelete(`${VITE_API_URL}/api/v1/products/${_id}`, name)
+          }
+        >
           <Trash2 size={18} />
         </button>
       </td>

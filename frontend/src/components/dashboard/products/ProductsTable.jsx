@@ -164,6 +164,7 @@ const ProductsTable = ({ onEditClick }) => {
                       stock={stock}
                       sold={sold}
                       view={views}
+                      refreshData={refreshData}
                       onEditClick={onEditClick}
                     />
                   )

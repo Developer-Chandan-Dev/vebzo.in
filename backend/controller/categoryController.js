@@ -34,8 +34,33 @@ const createCategory = asyncHandler(async (req, res, next) => {
 // @access Public
 const getCategories = asyncHandler(async (req, res, next) => {
   try {
-    const category = await Category.find();
-    res.status(200).json({ success: true, data: category });
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 8;
+
+    const { query } = req.query;
+
+    const filters = {};
+
+    // Filtering logic
+    if (query) {
+      filters.$or = [
+        { name: { $regex: query, $options: "i" } },
+        { description: { $regex: query, $options: "i" } },
+      ];
+    }
+
+    const totalCategories = await Category.countDocuments(filters);
+    const totalPages = Math.ceil(totalCategories / limit);
+
+    // Fetch paginated, filtered and sorted data
+
+    const category = await Category.find(filters)
+      .skip((page - 1) * limit)
+      .limit(limit);
+
+    res
+      .status(200)
+      .json({ success: true, data: category, totalCategories, totalPages });
   } catch (error) {
     console.log(error);
     return next(new ErrorResponse("Internal Server Error", 500));

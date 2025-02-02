@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import { motion } from "framer-motion";
 import { MoveLeft, MoveRight, RefreshCwIcon, Search, X } from "lucide-react";

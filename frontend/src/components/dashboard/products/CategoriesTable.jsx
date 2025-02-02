@@ -1,61 +1,34 @@
 /* eslint-disable react/prop-types */
 import { motion } from "framer-motion";
-import { Plus, Search } from "lucide-react";
+import { Plus, RefreshCwIcon, Search, X } from "lucide-react";
 import CategoryBox from "./CategoryBox";
 import useFetchData from "../../../hooks/useFetchData";
-
-const CATEGORY_DATA = [
-  {
-    _id: 1,
-    name: "Vegitables",
-    description:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis voluptates explicabo, libero repellendus veritatis sequi esse mollitia distinctio quo rerum.",
-  },
-  {
-    _id: 2,
-    name: "Vegitables",
-    description:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis voluptates explicabo, libero repellendus veritatis sequi esse mollitia distinctio quo rerum.",
-  },
-  {
-    _id: 3,
-    name: "Vegitables",
-    description:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis voluptates explicabo, libero repellendus veritatis sequi esse mollitia distinctio quo rerum.",
-  },
-  {
-    _id: 4,
-    name: "Vegitables",
-    description:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis voluptates explicabo, libero repellendus veritatis sequi esse mollitia distinctio quo rerum.",
-  },
-  {
-    _id: 5,
-    name: "Vegitables",
-    description:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis voluptates explicabo, libero repellendus veritatis sequi esse mollitia distinctio quo rerum.",
-  },
-  {
-    _id: 6,
-    name: "Vegitables",
-    description:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis voluptates explicabo, libero repellendus veritatis sequi esse mollitia distinctio quo rerum.",
-  },
-  {
-    _id: 7,
-    name: "Vegitables",
-    description:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis voluptates explicabo, libero repellendus veritatis sequi esse mollitia distinctio quo rerum.",
-  },
-];
+import { useState } from "react";
+import useFetchDataWithPagination from "../../../hooks/useFetchDataWithPagination";
 
 const VITE_API_URL = import.meta.env.VITE_API_URL;
 
 const CategoriesTable = ({ onEditClick }) => {
-  const { data, loading, error } = useFetchData(
-    `${VITE_API_URL}/api/v1/category/`
+  const [searchText, setSearchText] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [activeSearchBox, setActiveSearchBox] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const { data, loading, error, refreshData } = useFetchDataWithPagination(
+    `${VITE_API_URL}/api/v1/category/`,
+    1,
+    9,
+    searchText
   );
-  console.log(data, loading, error);
+  const handleSetSearchText = () => {
+    setSearchText(searchTerm.trim());
+  };
+
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter") {
+      handleSetSearchText(); // Trigger the search function when Enter key is pressed
+    }
+  };
 
   return (
     <motion.div
@@ -77,25 +50,35 @@ const CategoriesTable = ({ onEditClick }) => {
             <span className="hidden sm:block">Add New</span>
           </button>
         </div>
+
         <div className="">
           <button
             className="flex sm:hidden items-center gap-[6px] border border-gray-700 px-3 py-2 rounded-md hover:bg-gray-700 "
-            // onClick={() => setActiveSearchBox(true)}
+            onClick={() => setActiveSearchBox(true)}
           >
             <Search className="size-5 font-bold" />
           </button>
-          {/* <div
+          <div
             className={`${
               activeSearchBox ? "flex" : "hidden"
             } sm:flex items-center justify-center absolute left-0 bg-gray-800 top-0 w-full py-3 sm:relative gap-2`}
           >
+            <button
+              className="w-auto px-3 gap-2 h-9 border flex-center text-gray-500 transition-all hover:text-gray-400 rounded-md border-gray-600"
+              title="Refresh"
+              onClick={refreshData}
+            >
+              <span className="hidden sm:block">Refresh</span>
+              <RefreshCwIcon className="size-4" />
+            </button>
             <div className="relative ">
               <input
                 type="text"
                 placeholder="Search products..."
                 className="bg-gray-700 text-white placeholder-gray-400 rounded-lg pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                onChange={handleSearch}
+                onChange={(e) => setSearchTerm(e.target.value)}
                 value={searchTerm}
+                onKeyDown={handleKeyPress}
               />
               <Search
                 className="absolute left-3 top-2.5 text-gray-400"
@@ -108,7 +91,7 @@ const CategoriesTable = ({ onEditClick }) => {
             >
               <X className="size-5 font-bold" />
             </button>
-          </div> */}
+          </div>
         </div>
       </div>
 
@@ -117,6 +100,7 @@ const CategoriesTable = ({ onEditClick }) => {
           ? data?.data.map((item) => (
               <CategoryBox
                 key={item._id}
+                _id={item._id}
                 name={item.name}
                 description={item.description}
                 onEditClick={onEditClick}

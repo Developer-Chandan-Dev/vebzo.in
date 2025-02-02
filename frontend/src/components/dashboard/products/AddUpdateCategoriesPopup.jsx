@@ -2,13 +2,45 @@
 import { useState } from "react";
 import { X } from "lucide-react";
 import { motion } from "framer-motion";
+import useFetchData from "../../../hooks/useFetchData";
+import useHandleSendingRequest from "../../../hooks/useHandleSendingRequest";
+import { toast } from "react-toastify";
+
+const VITE_API_URL = import.meta.env.VITE_API_URL;
 
 const AddUpdateCategoriesPopup = ({ category, onClose }) => {
   const [name, setName] = useState(category?.name || "");
   const [description, setDescription] = useState(category?.description || "");
+  const [newCategoryId, setNewCategoryId] = useState("");
+  const [loading, setLoading] = useState(false);
+  console.log(category)
+  const { handleSubmit } = useHandleSendingRequest();
 
-  const handleSubmit = () => {
-    console.log(name, description);
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    const response = await handleSubmit(
+      category ? "PUT" : "POST",
+      category
+        ? `${VITE_API_URL}/api/v1/category/${category._id}`
+        : `${VITE_API_URL}/api/v1/category`,
+      {
+        name,
+        description,
+      }
+    );
+    if (response.success === true) {
+      console.log(response);
+      toast.success(response.message);
+      setNewCategoryId(response?.data._id);
+      setName("");
+      setDescription("");
+      setLoading(false);
+    } else {
+      toast.error(response.message);
+      setLoading(false);
+    }
   };
   return (
     <motion.div
@@ -27,10 +59,7 @@ const AddUpdateCategoriesPopup = ({ category, onClose }) => {
               <X size={18} className="" onClick={onClose} />
             </div>
           </div>
-          <form
-            className="px-1 py-2 sm:p-5 text-slate-100"
-            onSubmit={handleSubmit}
-          >
+          <form className="px-1 py-2 sm:p-5 text-slate-100" onSubmit={onSubmit}>
             <div>
               <label htmlFor="name" className="ml-1">
                 Product Name

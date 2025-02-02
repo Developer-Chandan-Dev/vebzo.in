@@ -85,4 +85,23 @@ const updateUserByAdmin = asyncHandler(async (req, res, next) => {
   }
 });
 
-module.exports = { getAllUsers, updateUserByAdmin };
+const deleteUserByAdmin = asyncHandler(async (req, res, next) => {
+  try {
+    const user = await User.findById(req.params.id);
+
+    if (!user) {
+      return next(new ErrorResponse("User not found", 404));
+    }
+
+    await User.findByIdAndDelete(req.params.id);
+
+    res
+      .status(200)
+      .json({ success: true, message: "User deleted successfully" });
+  } catch (error) {
+    console.log(error);
+    return next(new ErrorResponse("Failed to delete User", 403));
+  }
+});
+
+module.exports = { getAllUsers, updateUserByAdmin, deleteUserByAdmin };

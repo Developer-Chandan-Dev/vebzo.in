@@ -26,7 +26,6 @@ const useHandleSendingRequest = (initialState) => {
         data: formData, //
         withCredentials: true,
         headers: {
-          // "Content-Type": "application/json",
           "Content-Type":
             bool ? "multipart/form-data" : "application/json",
         },

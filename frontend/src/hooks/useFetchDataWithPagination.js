@@ -15,7 +15,6 @@ const useFetchDataWithPagination = (
   const [data, setData] = useState(null);
   const [refresh, setRefresh] = useState(0); // Add a state to trigger re-fetch
 
-
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);

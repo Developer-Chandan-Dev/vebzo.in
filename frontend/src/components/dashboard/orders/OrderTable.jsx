@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { MoveLeft, MoveRight, Search } from "lucide-react";
+import { MoveLeft, MoveRight, RefreshCwIcon, Search, X } from "lucide-react";
 import OrderTr from "./OrderTr";
 import OrderList from "./OrderList";
 import useFetchDataWithPagination from "../../../hooks/useFetchDataWithPagination";
@@ -12,8 +12,9 @@ const OrderTable = ({ onEditClick }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [activeList, setActiveList] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [activeSearchBox, setActiveSearchBox] = useState(false);
 
-  const { data, loading } = useFetchDataWithPagination(
+  const { data, loading, refreshData } = useFetchDataWithPagination(
     `${VITE_API_URL}/api/v1/orders`,
     currentPage,
     8,
@@ -70,16 +71,47 @@ const OrderTable = ({ onEditClick }) => {
         <h2 className="text-xl font-semibold text-gray-100">
           {activeList ? "Order List" : "Order Table"}
         </h2>
-        <div className="relative">
-          <input
-            type="text"
-            placeholder="Search orders..."
-            className="bg-gray-700 text-white placeholder-gray-400 rounded-lg pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            onChange={(e) => setSearchTerm(e.target.value)}
-            value={searchTerm}
-            onKeyDown={handleKeyPress}
-          />
-          <Search className="absolute left-3 top-2.5 text-gray-400" size={18} />
+        <div className="">
+          <button
+            className="flex sm:hidden items-center gap-[6px] border border-gray-700 px-3 py-2 rounded-md hover:bg-gray-700 "
+            onClick={() => setActiveSearchBox(true)}
+          >
+            <Search className="size-5 font-bold" />
+          </button>
+          <div
+            className={`${
+              activeSearchBox ? "flex" : "hidden"
+            } sm:flex items-center justify-center absolute left-0 bg-gray-800 top-0 w-full py-3 sm:relative gap-2`}
+          >
+            <button
+              className="w-auto px-3 gap-2 h-9 border flex-center text-gray-500 transition-all hover:text-gray-400 rounded-md border-gray-600"
+              title="Refresh"
+              onClick={refreshData}
+            >
+              <span className="hidden sm:block">Refresh</span>
+              <RefreshCwIcon className="size-4" />
+            </button>
+            <div className="relative ">
+              <input
+                type="text"
+                placeholder="Search products..."
+                className="bg-gray-700 text-white placeholder-gray-400 rounded-lg pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                onChange={(e) => setSearchTerm(e.target.value)}
+                value={searchTerm}
+                onKeyDown={handleKeyPress}
+              />
+              <Search
+                className="absolute left-3 top-2.5 text-gray-400"
+                size={18}
+              />
+            </div>
+            <button
+              className="flex sm:hidden items-center gap-[6px] border border-gray-700 px-3 py-2 rounded-md hover:bg-gray-700 "
+              onClick={() => setActiveSearchBox(false)}
+            >
+              <X className="size-5 font-bold" />
+            </button>
+          </div>
         </div>
       </div>
 

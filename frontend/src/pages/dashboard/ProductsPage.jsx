@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { AlertTriangle, DollarSign, Package, TrendingUp } from "lucide-react";
@@ -27,7 +28,6 @@ const ProductsPage = () => {
   const { data, loading, error } = useFetchData(
     `${VITE_API_URL}/api/v1/analytics/product-cards`
   );
-  console.log(data, loading, error);
 
   const handleEditClick = (product) => {
     setSelectedProduct(product); // Set the selected product details

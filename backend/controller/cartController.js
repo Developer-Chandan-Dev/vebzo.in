@@ -8,19 +8,17 @@ const addToCart = asyncHandler(async (req, res, next) => {
   try {
     if (!productId || !quantity) {
       return next(
-        new ErrorResponse("Please provide Product name and quantity", 400)
+        new ErrorResponse("Please provide product ID and quantity", 400)
       );
     }
 
     if (quantity < 1) {
-      return next(
-        new ErrorResponse("Please choose product quantity minimume (1)", 400)
-      );
+      return next(new ErrorResponse("Quantity must be at least 1", 400));
     }
 
     let cart = await Cart.findOne({ user: req.user.id }).populate({
-      path: "cartItems.product", // Populate the `product` field inside `cartItems`
-      select: "name price category imageUrl", // Spcifiy the fields you want from the Product model
+      path: "cartItems.product",
+      select: "name price category imageUrl",
     });
 
     if (!cart) {
@@ -28,36 +26,27 @@ const addToCart = asyncHandler(async (req, res, next) => {
     }
 
     const existingItem = cart.cartItems.find(
-      (item) => item.product._id.toString() === productId
+      (item) => item.product?._id.toString() === productId
     );
 
     if (existingItem) {
-      existingItem.quantity =
-        parseInt(existingItem.quantity) + parseInt(quantity);
+      existingItem.quantity += parseInt(quantity, 10);
     } else {
-      cart.cartItems.push({ product: productId, quantity });
+      cart.cartItems.push({
+        product: productId,
+        quantity: parseInt(quantity, 10),
+      });
     }
-
-    console.log(cart);
 
     await cart.save();
 
-    let newAddedItem = await Cart.findOne({
-      user: req.user.id,
-      "cartItems.product": productId,
-    }).populate({
-      path: "cartItems.product", // Populate the `product` field inside `cartItems`
-      select: "name price category imageUrl", // Spcifiy the fields you want from the Product model
+    res.status(200).json({
+      success: true,
+      message: "Item added to cart successfully",
+      data: cart,
     });
-    // let newAddedItem = await Cart.findOne({ cartItems : productId }).populate({
-    //   path: "cartItems.product", // Populate the `product` field inside `cartItems`
-    //   select: "name price category imageUrl", // Spcifiy the fields you want from the Product model
-    // });
-    console.log(newAddedItem, "49");
-
-    res.status(200).json(cart);
   } catch (error) {
-    console.log(error);
+    console.error("Error in addToCart:", error);
     return next(new ErrorResponse("Internal Server Error", 500));
   }
 });

@@ -1,7 +1,13 @@
-import { useState } from "react";
+/* eslint-disable no-unused-vars */
+import { toast } from "react-toastify";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import Footer from "../../components/client/Footer";
 import Header from "../../components/client/Header";
 import Button from "../../components/utility/Button";
+import { fetchCartItems } from "../../store/features/cartSlice";
+import useHandleSendingRequest from "../../hooks/useHandleSendingRequest";
+const VITE_API_URL = import.meta.env.VITE_API_URL;
 
 const CheckoutPage = () => {
   const [firstname, setFirstname] = useState("");
@@ -11,9 +17,85 @@ const CheckoutPage = () => {
   const [address, setAddress] = useState("");
   const [phone, setPhone] = useState("");
   const [notes, setNotes] = useState("");
+  const [subTotal, setSubTotal] = useState(0);
+  const [deliveryCharge, setDeliveryCharge] = useState(0);
+  const [grandTotal, setGrandTotal] = useState(0);
+  const [orderItems, setOrderItems] = useState([]);
 
-  console.log(firstname, lastname, city, village, address, phone, notes);
+  const dispatch = useDispatch();
 
+  useEffect(() => {
+    dispatch(fetchCartItems());
+  }, [dispatch]);
+
+  const { cartItems, status, error } = useSelector((state) => state.cart);
+
+  useEffect(() => {
+    if (cartItems.length > 0) {
+      const formattedOrderItems = cartItems.map((item) => ({
+        product: item.product._id, // Product ID
+        quantity: item.quantity,
+        price: item.product.price,
+      }));
+
+      setOrderItems(formattedOrderItems);
+    }
+  }, [cartItems]);
+
+  const calculateGrandTotal = (cartItems) => {
+    return cartItems.reduce((total, item) => {
+      return total + item.quantity * item.product.price;
+    }, 0);
+  };
+
+  console.log(orderItems, cartItems);
+
+  // Usage
+  const GrandTotal = calculateGrandTotal(cartItems);
+
+  useEffect(() => {
+    setSubTotal(parseInt(GrandTotal));
+  }, [GrandTotal]);
+
+  useEffect(() => {
+    setGrandTotal(subTotal + deliveryCharge);
+  }, [deliveryCharge, subTotal]);
+
+  console.log(grandTotal);
+
+  const { handleSubmit } = useHandleSendingRequest();
+
+  const onSubmit = async (e) => {
+    try {
+      e.preventDefault();
+      const response = await handleSubmit(
+        "POST",
+        `${VITE_API_URL}/api/v1/orders`,
+        {
+          firstname,
+          lastname,
+          orderItems,
+          shippingAddress: {
+            address,
+            village,
+            city,
+            phone,
+          },
+          paymentMethod: "COD",
+          totalPrice: grandTotal,
+        }
+      );
+
+      if (response.success === true) {
+        toast.success(response.message);
+      } else {
+        console.log(response);
+        toast.error(response.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <div className="w-full h-auto">
       <Header />
@@ -143,7 +225,7 @@ const CheckoutPage = () => {
               <table className="my-3 mx-3">
                 <tr className="border-b">
                   <td className="px-4 py-4 w-40">Sub Total</td>
-                  <td className="px-4 py-4 w-auto">Rs. 20.00</td>
+                  <td className="px-4 py-4 w-auto">Rs. {subTotal}</td>
                 </tr>
                 <tr className="border-b">
                   <td className="px-4 py-4 w-40">Shipping</td>
@@ -155,12 +237,15 @@ const CheckoutPage = () => {
                 </tr>
                 <tr className="border-b">
                   <td className="px-4 py-4 w-40">Total</td>
-                  <td className="px-4 py-4 w-auto">20.00</td>
+                  <td className="px-4 py-4 w-auto">
+                    Rs. {subTotal + deliveryCharge}
+                  </td>
                 </tr>
               </table>
               <div className="px-3 py-5">
                 <Button
                   width={"w-full"}
+                  onClick={onSubmit}
                   className=" flex-center"
                   label="PROCEED TO CHECKOUT"
                 />

@@ -2,12 +2,14 @@ import { XCircle } from "lucide-react";
 import Footer from "../../components/client/Footer";
 import Header from "../../components/client/Header";
 import Button from "../../components/utility/Button";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCartItems } from "../../store/features/cartSlice";
 
 const CartPage = () => {
+  const [subTotal, setSubTotal] = useState(0);
+  const [deliveryCharge, setDeliveryCharge] = useState(0);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -16,6 +18,22 @@ const CartPage = () => {
 
   const { cartItems, status, error } = useSelector((state) => state.cart);
   console.log(cartItems, status, error);
+
+  const calculateGrandTotal = (cartItems) => {
+    return (
+      cartItems.length > 0 &&
+      cartItems.reduce((total, item) => {
+        return total + item.quantity * item.product?.price;
+      }, 0)
+    );
+  };
+
+  // Usage
+  const grandTotal = calculateGrandTotal(cartItems);
+
+  useEffect(() => {
+    setSubTotal(parseInt(grandTotal));
+  }, [grandTotal]);
 
   return (
     <div className="w-full h-auto">
@@ -73,27 +91,6 @@ const CartPage = () => {
                     </tr>
                   ))
                 : ""}
-              {/* <tr className="border-b">
-                <td className="py-3 px-5" colSpan={2}>
-                  <div className="flex items-center justify-around">
-                    <XCircle className="text-gray-400 transition-all cursor-pointer hover:text-gray-600" />
-                    <img
-                      src="/public/images/potato-1.webp"
-                      className="size-20"
-                      alt="potato"
-                    />
-                  </div>
-                </td>
-                <td className="py-3"> Potato</td>
-                <td className="py-3">20</td>
-                <td className="py-3">
-                  <input
-                    type="number"
-                    className="w-16 h-10 pl-4 border outline-none "
-                  />
-                </td>
-                <td className="py-3">20</td>
-              </tr> */}
             </tbody>
             <tfoot>
               <tr className="">
@@ -114,7 +111,7 @@ const CartPage = () => {
             <table className="my-3 mx-3">
               <tr className="border-b">
                 <td className="px-4 py-4 w-40">Sub Total</td>
-                <td className="px-4 py-4 w-auto">Rs. 20.00</td>
+                <td className="px-4 py-4 w-auto">Rs. {subTotal}</td>
               </tr>
               <tr className="border-b">
                 <td className="px-4 py-4 w-40">Shipping</td>
@@ -126,7 +123,9 @@ const CartPage = () => {
               </tr>
               <tr className="border-b">
                 <td className="px-4 py-4 w-40">Total</td>
-                <td className="px-4 py-4 w-auto">20.00</td>
+                <td className="px-4 py-4 w-auto">
+                  Rs. {subTotal + deliveryCharge}
+                </td>
               </tr>
             </table>
             <div className="px-3 py-5">

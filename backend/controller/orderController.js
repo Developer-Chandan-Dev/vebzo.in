@@ -1,4 +1,5 @@
 const Order = require("../models/order.model");
+const Cart = require("../models/cart.models");
 const {
   decreaseStock,
   validateStock,
@@ -52,7 +53,30 @@ const createOrder = asyncHandler(async (req, res, next) => {
     await decreaseStock(orderItems);
 
     const createdOrder = await order.save();
-    res.status(201).json({ success: true, data: createdOrder });
+    if (createdOrder) {
+      // Find the user's cart
+      const cart = await Cart.findOne({ user: req.user.id });
+
+      if (cart) {
+        // Remove ordered products from the cart
+        cart.cartItems = cart.cartItems.filter(
+          (cartItem) =>
+            !orderItems.some(
+              (orderItem) =>
+                orderItem.product.toString() === cartItem.product.toString()
+            )
+        );
+
+        // Save the updated cart
+        await cart.save();
+      }
+    }
+
+    res.status(201).json({
+      success: true,
+      data: createdOrder,
+      message: "Your order added successfully.",
+    });
   } catch (error) {
     console.log(error);
     return next(new ErrorResponse(error, 500));

@@ -7,6 +7,7 @@ import Header from "../../components/client/Header";
 import Button from "../../components/utility/Button";
 import { fetchCartItems } from "../../store/features/cartSlice";
 import useHandleSendingRequest from "../../hooks/useHandleSendingRequest";
+import { useNavigate } from "react-router-dom";
 const VITE_API_URL = import.meta.env.VITE_API_URL;
 
 const CheckoutPage = () => {
@@ -23,6 +24,8 @@ const CheckoutPage = () => {
   const [orderItems, setOrderItems] = useState([]);
 
   const dispatch = useDispatch();
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(fetchCartItems());
@@ -88,6 +91,7 @@ const CheckoutPage = () => {
 
       if (response.success === true) {
         toast.success(response.message);
+        navigate("/cart");
       } else {
         console.log(response);
         toast.error(response.message);

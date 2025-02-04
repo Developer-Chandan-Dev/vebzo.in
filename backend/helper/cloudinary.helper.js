@@ -5,7 +5,7 @@ const {
 
 const handleImageUpload = async (data, newImagePath, name, folderName) => {
   if (newImagePath) {
-    console.log(data, newImagePath, name, folderName);
+    console.log(data, newImagePath, name, folderName, '8');
     // Delete the old image from Cloudinary if it exists
     if (data.imageUrlPublicId) {
       await deleteFromCloudinary(data.imageUrlPublicId);

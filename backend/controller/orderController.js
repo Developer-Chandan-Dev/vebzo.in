@@ -214,7 +214,7 @@ const getMyOrders = asyncHandler(async (req, res, next) => {
   try {
     const { id } = req.user;
 
-    const order = await Order.find({ user: id });
+    const order = await Order.find({ user: id }).populate("orderItems.product", "name imageUrl");
 
     if (!order) {
       return next(new ErrorResponse("Order not found", 404));

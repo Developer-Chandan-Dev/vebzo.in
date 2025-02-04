@@ -14,6 +14,7 @@ import LoginPage from "../pages/client/LoginPage";
 import UserProfilePage from "../pages/client/UserProfilePage";
 import MyProfile from "../components/client/profile/MyProfile";
 import WishList from "../components/client/profile/WishList";
+import MyOrders from "../components/client/profile/MyOrders";
 
 const ClientRoutes = () => {
   // Retrive authenticated user information from Redux state
@@ -48,6 +49,7 @@ const ClientRoutes = () => {
         element={authUser ? <UserProfilePage /> : <Navigate to="/" />}
       >
         <Route path="" element={<MyProfile />} />
+        <Route path="my-orders" element={<MyOrders />} />
         <Route path="wishlist" element={<WishList />} />
       </Route>
     </Routes>

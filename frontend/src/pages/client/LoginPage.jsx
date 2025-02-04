@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import authService from "../../features/auth";
@@ -50,7 +50,7 @@ const LoginPage = () => {
       setLoading(false);
     } else {
       console.log(res.data);
-      toast.error("Something went wrong");
+      toast.error(res.data || "Something went wrong");
       setLoading(false);
     }
   };

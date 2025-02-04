@@ -2,7 +2,14 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import { motion } from "framer-motion";
-import { Search, Plus, X, MoveLeft, MoveRight, RefreshCwIcon } from "lucide-react";
+import {
+  Search,
+  Plus,
+  X,
+  MoveLeft,
+  MoveRight,
+  RefreshCwIcon,
+} from "lucide-react";
 import { useState } from "react";
 import ProductTr from "./ProductTr";
 import useFetchDataWithPagination from "../../../hooks/useFetchDataWithPagination";
@@ -174,9 +181,8 @@ const ProductsTable = ({ onEditClick }) => {
         </table>
         <div className="px-5 py-2 flex items-center w-full gap-3 mt-5">
           <button
-            className={`w-10 h-10 border border-gray-600 text-gray-400 font-semibold text-base transition-all hover:bg-gray-700 hover:text-white ${
-              currentPage > 1 ? "flex-center" : "hidden"
-            }`}
+            className={`w-10 h-10 border border-gray-600 text-gray-400 font-semibold text-base transition-all hover:bg-gray-700 hover:text-white flex-center `}
+            disabled={currentPage > 1 && currentPage - 1}
             onClick={() => setCurrentPage(currentPage > 1 && currentPage - 1)}
           >
             <MoveLeft size="16" />

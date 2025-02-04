@@ -121,7 +121,7 @@ const updateProfile = asyncHandler(async (req, res, next) => {
     const userId = req.params.id; // ID from the route parameter
     const loggedInUserId = req.user.id; // Logged-in user ID from authentication middleware
     const newImagePath = req.file?.path; // Path of the uploaded image
-
+    console.log(updates);
     // Ensure the logged-in user can only update their own profile
     if (userId !== loggedInUserId) {
       return next(

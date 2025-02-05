@@ -41,12 +41,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Apply rate limiting to API routes only
-const globalLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 100,
-  message: "Too many requests from this IP, please try again later",
-});
-app.use("/api", globalLimiter);
+// const globalLimiter = rateLimit({
+//   windowMs: 15 * 60 * 1000,
+//   max: 100,
+//   message: "Too many requests from this IP, please try again later",
+// });
+// app.use("/api", globalLimiter);
 
 // Connect to database
 db();

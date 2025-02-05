@@ -5,6 +5,7 @@ import { MoveLeft, MoveRight, RefreshCwIcon, Search, X } from "lucide-react";
 import { useState } from "react";
 import UserTr from "./UserTr";
 import useFetchDataWithPagination from "../../../hooks/useFetchDataWithPagination";
+import Spinner from "../../utility/Spinner";
 
 const VITE_API_URL = import.meta.env.VITE_API_URL;
 const UsersTable = ({ onEditClick }) => {
@@ -63,9 +64,13 @@ const UsersTable = ({ onEditClick }) => {
               activeSearchBox ? "flex" : "hidden"
             } sm:flex items-center justify-center absolute left-0 bg-gray-800 top-0 w-full py-3 sm:relative gap-2`}
           >
-            <button className="w-auto px-3 gap-2 h-9 border flex-center text-gray-500 transition-all hover:text-gray-400 rounded-md border-gray-600" title="Refresh" onClick={refreshData}>
+            <button
+              className="w-auto px-3 gap-2 h-9 border flex-center text-gray-500 transition-all hover:text-gray-400 rounded-md border-gray-600"
+              title="Refresh"
+              onClick={refreshData}
+            >
               <span className="hidden sm:block">Refresh</span>
-              <RefreshCwIcon className="size-4"/>
+              <RefreshCwIcon className="size-4" />
             </button>
             <div className="relative ">
               <input
@@ -91,83 +96,90 @@ const UsersTable = ({ onEditClick }) => {
         </div>
       </div>
 
-      <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-700">
-          <thead>
-            <tr>
-              <th className="px-6 py-3 text-left font-medium text-gray-400 uppercase tracking-wider">
-                Name
-              </th>
-              <th className="px-6 py-3 text-left font-medium text-gray-400 uppercase tracking-wider">
-                Email
-              </th>
-              <th className="px-6 py-3 text-left font-medium text-gray-400 uppercase tracking-wider">
-                Role
-              </th>
-              <th className="px-6 py-3 text-left font-medium text-gray-400 uppercase tracking-wider">
-                Created At
-              </th>
-              <th className="px-6 py-3 text-left font-medium text-gray-400 uppercase tracking-wider">
-                Status
-              </th>
-            </tr>
-          </thead>
-
-          <tbody className="divide-y divide-gray-700">
-            {data?.data !== null && data?.data.length > 0
-              ? data?.data.map((user) => (
-                  <UserTr
-                    key={user._id}
-                    _id={user?._id}
-                    username={user?.username}
-                    email={user?.email}
-                    role={user?.role}
-                    imageUrl={user?.imageUrl}
-                    createdAt={user?.createdAt}
-                    isBlocked={user?.isBlocked}
-                    onEditClick={onEditClick}
-                  />
-                ))
-              : ""}
-          </tbody>
-        </table>
-        <div className="px-5 py-2 flex items-center w-full gap-3 mt-5">
-          <button
-            className={`w-10 h-10 border border-gray-600 text-gray-400 font-semibold text-base transition-all hover:bg-gray-700 hover:text-white ${
-              currentPage > 1 ? "flex-center" : "hidden"
-            }`}
-            onClick={() => setCurrentPage(currentPage > 1 && currentPage - 1)}
-          >
-            <MoveLeft size="16" />
-          </button>
-          {pageNumbers.map((page) => (
-            <button
-              key={page}
-              className={`w-10 h-10 border border-gray-600 text-gray-400 font-semibold text-base transition-all hover:bg-gray-700 hover:text-white ${
-                page === currentPage
-                  ? "bg-gray-700 text-white"
-                  : "text-gray-400"
-              }`}
-              onClick={() => handlePageClick(page)}
-            >
-              {page}
-            </button>
-          ))}
-
-          <button
-            className={`w-10 h-10 border border-gray-600 text-gray-400 font-semibold text-base transition-all hover:bg-gray-700 hover:text-white ${
-              currentPage < pageNumbers.length ? "flex-center" : "hidden"
-            }`}
-            onClick={() =>
-              setCurrentPage(
-                currentPage < pageNumbers.length && currentPage + 1
-              )
-            }
-          >
-            <MoveRight size="16" />
-          </button>
+      {loading && (
+        <div className="w-full h-72 flex-center">
+          <Spinner />
         </div>
-      </div>
+      )}
+      {!loading && (
+        <div className="overflow-x-auto">
+          <table className="min-w-full divide-y divide-gray-700">
+            <thead>
+              <tr>
+                <th className="px-6 py-3 text-left font-medium text-gray-400 uppercase tracking-wider">
+                  Name
+                </th>
+                <th className="px-6 py-3 text-left font-medium text-gray-400 uppercase tracking-wider">
+                  Email
+                </th>
+                <th className="px-6 py-3 text-left font-medium text-gray-400 uppercase tracking-wider">
+                  Role
+                </th>
+                <th className="px-6 py-3 text-left font-medium text-gray-400 uppercase tracking-wider">
+                  Created At
+                </th>
+                <th className="px-6 py-3 text-left font-medium text-gray-400 uppercase tracking-wider">
+                  Status
+                </th>
+              </tr>
+            </thead>
+
+            <tbody className="divide-y divide-gray-700">
+              {data?.data !== null && data?.data.length > 0
+                ? data?.data.map((user) => (
+                    <UserTr
+                      key={user._id}
+                      _id={user?._id}
+                      username={user?.username}
+                      email={user?.email}
+                      role={user?.role}
+                      imageUrl={user?.imageUrl}
+                      createdAt={user?.createdAt}
+                      isBlocked={user?.isBlocked}
+                      onEditClick={onEditClick}
+                    />
+                  ))
+                : ""}
+            </tbody>
+          </table>
+          <div className="px-5 py-2 flex items-center w-full gap-3 mt-5">
+            <button
+              className={`w-10 h-10 border border-gray-600 text-gray-400 font-semibold text-base transition-all hover:bg-gray-700 hover:text-white ${
+                currentPage > 1 ? "flex-center" : "hidden"
+              }`}
+              onClick={() => setCurrentPage(currentPage > 1 && currentPage - 1)}
+            >
+              <MoveLeft size="16" />
+            </button>
+            {pageNumbers.map((page) => (
+              <button
+                key={page}
+                className={`w-10 h-10 border border-gray-600 text-gray-400 font-semibold text-base transition-all hover:bg-gray-700 hover:text-white ${
+                  page === currentPage
+                    ? "bg-gray-700 text-white"
+                    : "text-gray-400"
+                }`}
+                onClick={() => handlePageClick(page)}
+              >
+                {page}
+              </button>
+            ))}
+
+            <button
+              className={`w-10 h-10 border border-gray-600 text-gray-400 font-semibold text-base transition-all hover:bg-gray-700 hover:text-white ${
+                currentPage < pageNumbers.length ? "flex-center" : "hidden"
+              }`}
+              onClick={() =>
+                setCurrentPage(
+                  currentPage < pageNumbers.length && currentPage + 1
+                )
+              }
+            >
+              <MoveRight size="16" />
+            </button>
+          </div>
+        </div>
+      )}
     </motion.div>
   );
 };

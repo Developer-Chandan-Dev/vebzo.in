@@ -14,6 +14,7 @@ import { useState } from "react";
 import ProductTr from "./ProductTr";
 import useFetchDataWithPagination from "../../../hooks/useFetchDataWithPagination";
 import SearchBox from "../../utility/SearchBox";
+import Spinner from "../../utility/Spinner";
 
 const VITE_API_URL = import.meta.env.VITE_API_URL;
 const ProductsTable = ({ onEditClick }) => {
@@ -116,105 +117,111 @@ const ProductsTable = ({ onEditClick }) => {
           </div>
         </div>
       </div>
-
-      <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-700">
-          <thead>
-            <tr>
-              <th className="px-6 py-3 text-left font-medium text-gray-400 uppercase tracking-wider">
-                Name
-              </th>
-              <th className="px-6 py-3 text-left font-medium text-gray-400 uppercase tracking-wider">
-                Category
-              </th>
-              <th className="px-6 py-3 text-left font-medium text-gray-400 uppercase tracking-wider">
-                Price
-              </th>
-              <th className="px-6 py-3 text-left font-medium text-gray-400 uppercase tracking-wider">
-                Stock
-              </th>
-              <th className="px-6 py-3 text-left font-medium text-gray-400 uppercase tracking-wider">
-                Sold
-              </th>
-              <th className="px-6 py-3 text-left font-medium text-gray-400 uppercase tracking-wider">
-                View
-              </th>
-              <th className="px-6 py-3 text-left font-medium text-gray-400 uppercase tracking-wider">
-                Actions
-              </th>
-            </tr>
-          </thead>
-
-          <tbody className="divide-y divide-gray-700">
-            {data?.data.length > 0 && data?.data !== null
-              ? data?.data.map(
-                  ({
-                    _id,
-                    name,
-                    imageUrl,
-                    category,
-                    price,
-                    description,
-                    stock,
-                    sold,
-                    views,
-                  }) => (
-                    <ProductTr
-                      key={_id}
-                      _id={_id}
-                      name={name}
-                      imageUrl={imageUrl}
-                      category={category?.name}
-                      categoryId={category?._id}
-                      price={price}
-                      description={description}
-                      stock={stock}
-                      sold={sold}
-                      view={views}
-                      refreshData={refreshData}
-                      onEditClick={onEditClick}
-                    />
-                  )
-                )
-              : ""}
-          </tbody>
-        </table>
-        <div className="px-5 py-2 flex items-center w-full gap-3 mt-5">
-          <button
-            className={`w-10 h-10 border border-gray-600 text-gray-400 font-semibold text-base transition-all hover:bg-gray-700 hover:text-white flex-center `}
-            disabled={currentPage > 1 && currentPage - 1}
-            onClick={() => setCurrentPage(currentPage > 1 && currentPage - 1)}
-          >
-            <MoveLeft size="16" />
-          </button>
-          {pageNumbers.map((page) => (
-            <button
-              key={page}
-              className={`w-10 h-10 border border-gray-600 text-gray-400 font-semibold text-base transition-all hover:bg-gray-700 hover:text-white ${
-                page === currentPage
-                  ? "bg-gray-700 text-white"
-                  : "text-gray-400"
-              }`}
-              onClick={() => handlePageClick(page)}
-            >
-              {page}
-            </button>
-          ))}
-
-          <button
-            className={`w-10 h-10 border border-gray-600 text-gray-400 font-semibold text-base transition-all hover:bg-gray-700 hover:text-white ${
-              currentPage < pageNumbers.length ? "flex-center" : "hidden"
-            }`}
-            onClick={() =>
-              setCurrentPage(
-                currentPage < pageNumbers.length && currentPage + 1
-              )
-            }
-          >
-            <MoveRight size="16" />
-          </button>
+      {loading && (
+        <div className="w-full h-72 flex-center">
+          <Spinner />
         </div>
-      </div>
+      )}
+      {!loading && (
+        <div className="overflow-x-auto">
+          <table className="min-w-full divide-y divide-gray-700">
+            <thead>
+              <tr>
+                <th className="px-6 py-3 text-left font-medium text-gray-400 uppercase tracking-wider">
+                  Name
+                </th>
+                <th className="px-6 py-3 text-left font-medium text-gray-400 uppercase tracking-wider">
+                  Category
+                </th>
+                <th className="px-6 py-3 text-left font-medium text-gray-400 uppercase tracking-wider">
+                  Price
+                </th>
+                <th className="px-6 py-3 text-left font-medium text-gray-400 uppercase tracking-wider">
+                  Stock
+                </th>
+                <th className="px-6 py-3 text-left font-medium text-gray-400 uppercase tracking-wider">
+                  Sold
+                </th>
+                <th className="px-6 py-3 text-left font-medium text-gray-400 uppercase tracking-wider">
+                  View
+                </th>
+                <th className="px-6 py-3 text-left font-medium text-gray-400 uppercase tracking-wider">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+
+            <tbody className="divide-y divide-gray-700">
+              {data?.data.length > 0 && data?.data !== null
+                ? data?.data.map(
+                    ({
+                      _id,
+                      name,
+                      imageUrl,
+                      category,
+                      price,
+                      description,
+                      stock,
+                      sold,
+                      views,
+                    }) => (
+                      <ProductTr
+                        key={_id}
+                        _id={_id}
+                        name={name}
+                        imageUrl={imageUrl}
+                        category={category?.name}
+                        categoryId={category?._id}
+                        price={price}
+                        description={description}
+                        stock={stock}
+                        sold={sold}
+                        view={views}
+                        refreshData={refreshData}
+                        onEditClick={onEditClick}
+                      />
+                    )
+                  )
+                : ""}
+            </tbody>
+          </table>
+          <div className="px-5 py-2 flex items-center w-full gap-3 mt-5">
+            <button
+              className={`w-10 h-10 border border-gray-600 text-gray-400 font-semibold text-base transition-all hover:bg-gray-700 hover:text-white flex-center `}
+              disabled={currentPage > 1 && currentPage - 1}
+              onClick={() => setCurrentPage(currentPage > 1 && currentPage - 1)}
+            >
+              <MoveLeft size="16" />
+            </button>
+            {pageNumbers.map((page) => (
+              <button
+                key={page}
+                className={`w-10 h-10 border border-gray-600 text-gray-400 font-semibold text-base transition-all hover:bg-gray-700 hover:text-white ${
+                  page === currentPage
+                    ? "bg-gray-700 text-white"
+                    : "text-gray-400"
+                }`}
+                onClick={() => handlePageClick(page)}
+              >
+                {page}
+              </button>
+            ))}
+
+            <button
+              className={`w-10 h-10 border border-gray-600 text-gray-400 font-semibold text-base transition-all hover:bg-gray-700 hover:text-white ${
+                currentPage < pageNumbers.length ? "flex-center" : "hidden"
+              }`}
+              onClick={() =>
+                setCurrentPage(
+                  currentPage < pageNumbers.length && currentPage + 1
+                )
+              }
+            >
+              <MoveRight size="16" />
+            </button>
+          </div>
+        </div>
+      )}
     </motion.div>
   );
 };

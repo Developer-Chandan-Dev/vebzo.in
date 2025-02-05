@@ -5,6 +5,7 @@ import { MoveLeft, MoveRight, RefreshCwIcon, Search, X } from "lucide-react";
 import OrderTr from "./OrderTr";
 import OrderList from "./OrderList";
 import useFetchDataWithPagination from "../../../hooks/useFetchDataWithPagination";
+import Spinner from "../../utility/Spinner";
 
 const VITE_API_URL = import.meta.env.VITE_API_URL;
 const OrderTable = ({ onEditClick }) => {
@@ -115,8 +116,13 @@ const OrderTable = ({ onEditClick }) => {
         </div>
       </div>
 
+      {loading && (
+        <div className="w-full h-72 flex-center">
+          <Spinner />
+        </div>
+      )}
       <div className="overflow-x-auto gap-5 flex-center flex-col">
-        {!activeList && (
+        {!activeList && !loading && (
           <table className="min-w-full divide-y divide-gray-700">
             <thead>
               <tr>

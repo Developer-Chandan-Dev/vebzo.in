@@ -5,6 +5,7 @@ import { useState } from "react";
 import ItemBox from "./ItemBox";
 import useFetchData from "../../../hooks/useFetchData";
 import useFetchDataWithPagination from "../../../hooks/useFetchDataWithPagination";
+import Spinner from "../../utility/Spinner";
 
 const Container = ({
   toggleSidebar,
@@ -29,7 +30,6 @@ const Container = ({
     toggleFilter ? minPrice : "",
     toggleFilter ? maxPrice : ""
   );
-  
 
   // Function to handle page change
   const handlePageClick = (page) => {
@@ -41,7 +41,7 @@ const Container = ({
   for (let i = 1; i <= data?.totalPages; i++) {
     pageNumbers.push(i);
   }
-  
+
   return (
     <div className="w-full md:w-[800px] h-auto text-left">
       <div className="flex-between">
@@ -85,7 +85,13 @@ const Container = ({
       </div>
 
       <div className="flex items-center flex-wrap gap-5 my-14 ">
-        {data?.data.length > 0 && data?.data !== null
+        {loading && (
+          <div className="w-full h-64 flex-center">
+            <Spinner />
+          </div>
+        )}
+
+        {!loading && data?.data.length > 0 && data?.data !== null
           ? data?.data.map((item, index) => (
               <ItemBox
                 key={index}

@@ -1,22 +1,69 @@
+import { useEffect, useState } from "react";
 import { Image, TrainTrack, X } from "lucide-react";
+import { formatDate } from "../../../utils/dateUtils";
 import Button from "../../utility/Button";
 import useFetchDataWithPagination from "../../../hooks/useFetchDataWithPagination";
-import { formatDate } from "../../../utils/dateUtils";
+import useHandleSendingRequest from "../../../hooks/useHandleSendingRequest";
+import Spinner from "../../utility/Spinner";
+
 const VITE_API_URL = import.meta.env.VITE_API_URL;
 
 const MyOrders = () => {
+  const [myOrders, setMyOrders] = useState(null);
+  const [loading2, setLoading2] = useState(false);
+
   const { data, loading, error } = useFetchDataWithPagination(
     `${VITE_API_URL}/api/v1/orders/my-orders`
   );
 
-  console.log(data?.order, loading, error);
+  // console.log(data?.order, loading, error);
+
+  useEffect(() => {
+    setMyOrders(data?.order);
+  }, [data?.order]);
+
+  const { handleSubmit } = useHandleSendingRequest();
+
+  const handleCancelingOrder = async (_id, status) => {
+    setLoading2(true);
+    try {
+      const response = await handleSubmit(
+        "PUT",
+        `${VITE_API_URL}/api/v1/orders/${_id}/status`,
+        { status: status }
+      );
+
+      if (response.success === true) {
+        setMyOrders(
+          myOrders.filter((item) =>
+            item?._id === _id ? (item.status = response.status) : "Not match"
+          )
+        );
+
+        setLoading2(false);
+      } else {
+        console.log(response);
+      }
+    } catch (error) {
+      console.log(error);
+      setLoading2(false);
+    }
+  };
+
+  // console.log(myOrders);
 
   return (
     <div className="w-full px-4 h-auto py-5">
       <h1 className="text-3xl font-semibold ml-2 mb-5">My Orders</h1>
+      {loading && (
+        <div className="w-full h-64 flex-center">
+          <Spinner />
+        </div>
+      )}
+
       <div className="w-full mt-5 h-auto">
-        {data?.order.length > 0 && data?.order !== null
-          ? data?.order.map((item, index) => (
+        {!loading && myOrders?.length > 0 && myOrders !== null
+          ? myOrders.map((item, index) => (
               <div
                 key={index}
                 className=" bg-[#f8f6f3] px-5 py-5 drop-shadow-md mb-7 rounded-md"
@@ -86,7 +133,21 @@ const MyOrders = () => {
                   </div>
 
                   <div className="w-full mt-5 pt-4 border-t flex items-center justify-between">
-                    <Button label="CANCEL ORDER" sm={true} LeftIcon={X} />
+                    <Button
+                      label={
+                        item?.status === "Cancelled"
+                          ? "RESUME ORDER"
+                          : "CANCEL ORDER"
+                      }
+                      sm={true}
+                      LeftIcon={X}
+                      onClick={() =>
+                        handleCancelingOrder(
+                          item?._id,
+                          item?.status === "Cancelled" ? "Pending" : "Cancelled"
+                        )
+                      }
+                    />
                     <p>
                       <b>Rs. {item?.totalPrice}</b>
                     </p>

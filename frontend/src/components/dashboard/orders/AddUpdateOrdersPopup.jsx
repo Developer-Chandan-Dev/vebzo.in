@@ -18,7 +18,7 @@ const AddUpdateOrdersPopup = ({ order, onClose }) => {
     e.preventDefault();
   };
 
-  console.log(firstname, lastname, order);
+  console.log(order);
 
   return (
     <motion.div

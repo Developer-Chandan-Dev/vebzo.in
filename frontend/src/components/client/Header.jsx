@@ -1,17 +1,36 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Button from "../utility/Button";
 import { Menu, ShoppingCart, User, X } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 const Header = ({ bg = "bg-white" }) => {
+  const [subTotal, setSubTotal] = useState(0);
   const [toggleMenu, setToggleMenu] = useState(false);
   const location = useLocation();
 
   const authUser = useSelector((state) => state.user.user);
   const { cartItems } = useSelector((state) => state.cart);
+
+  console.log(cartItems);
+
+  const calculateGrandTotal = (cartItems) => {
+    return (
+      cartItems.length > 0 &&
+      cartItems.reduce((total, item) => {
+        return total + item.quantity * item.product?.price;
+      }, 0)
+    );
+  };
+
+  // Usage
+  const grandTotal = calculateGrandTotal(cartItems);
+
+    useEffect(() => {
+      setSubTotal(parseInt(grandTotal));
+    }, [grandTotal]);
 
   return (
     <header
@@ -78,7 +97,7 @@ const Header = ({ bg = "bg-white" }) => {
           <>
             <div className="flex item-center gap-x-4 relative">
               <p className="text-base font-semibold text-[#8bc34a] drop-shadow-sm">
-                Rs. 100
+                Rs. {subTotal}
               </p>
               <Link to="/cart">
                 <ShoppingCart

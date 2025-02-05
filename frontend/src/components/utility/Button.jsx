@@ -14,6 +14,7 @@ const Button = ({
   bg = "bg-[#6a9739]",
   text = "text-[14px]",
   onClick,
+  type,
 }) => {
   return (
     <button
@@ -25,6 +26,7 @@ const Button = ({
         disable ? "opacity-50 cursor-default" : ""
       } ${width} ${bg} ${text}`}
       onClick={onClick}
+      type={type}
     >
       {LeftIcon && <LeftIcon size={16} />}
       {label}

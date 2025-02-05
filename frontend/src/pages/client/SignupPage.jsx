@@ -3,12 +3,12 @@ import "./style.css";
 import { Link, useNavigate } from "react-router-dom";
 import authService from "../../features/auth";
 import SmallSpinner from "../../components/utility/SmallSpinner";
+import { toast } from "react-toastify";
 
 const SignupPage = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
@@ -19,12 +19,12 @@ const SignupPage = () => {
 
     if (!username || !email || !password) {
       setLoading(false);
-      return setError("Please fill all the fields");
+      return toast.error("Please fill in all fields");
     }
 
     if (password.length < 6) {
       setLoading(false);
-      return setError("Password must be 6 characters at least.");
+      return toast.error("Password must be atleast 6 characters");;
     }
 
     const res = await authService.createAccount(username, email, password);
@@ -32,11 +32,19 @@ const SignupPage = () => {
     if (res.data.success === true) {
       setLoading(false);
       navigate("/login");
-    } else {
+    } else if (res.data.success !== true && res.data.message) {
+      console.log(res.data.message);
+      toast.error(res.data.message);
       setLoading(false);
-      setError(res.data.error);
+    } else if (res.data?.errors) {
+      console.log(res);
+      toast.error(res.data.errors[0]);
+      setLoading(false);
+    } else {
+      console.log(res.data);
+      toast.error(res.data || "Something went wrong");
+      setLoading(false);
     }
-    console.log(res);
   };
   return (
     <div className="w-full h-screen flex-center ">

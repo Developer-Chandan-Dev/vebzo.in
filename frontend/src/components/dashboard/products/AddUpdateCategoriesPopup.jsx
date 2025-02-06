@@ -1,8 +1,7 @@
 /* eslint-disable react/prop-types */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { X } from "lucide-react";
 import { motion } from "framer-motion";
-import useFetchData from "../../../hooks/useFetchData";
 import useHandleSendingRequest from "../../../hooks/useHandleSendingRequest";
 import { toast } from "react-toastify";
 
@@ -13,7 +12,7 @@ const AddUpdateCategoriesPopup = ({ category, onClose }) => {
   const [description, setDescription] = useState(category?.description || "");
   const [newCategoryId, setNewCategoryId] = useState("");
   const [loading, setLoading] = useState(false);
-  console.log(category)
+  console.log(category);
   const { handleSubmit } = useHandleSendingRequest();
 
   const onSubmit = async (e) => {
@@ -42,6 +41,18 @@ const AddUpdateCategoriesPopup = ({ category, onClose }) => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") {
+        onClose(false);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
   return (
     <motion.div
       className="fixed flex-center left-0 top-0 w-full h-full z-10 drop-shadow text-slate-500 backdrop-filter backdrop-blur-sm bg-opacity-5 "

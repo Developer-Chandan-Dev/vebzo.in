@@ -34,9 +34,8 @@ export class AuthService {
           withCredentials: true,
         }
       );
-      console.log(res);
+
       if (res) {
-        console.log(res.data.message);
         return res;
       }
     } catch (error) {

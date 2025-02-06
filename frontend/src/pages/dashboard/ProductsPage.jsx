@@ -96,6 +96,14 @@ const ProductsPage = () => {
         </motion.div>
 
         <div className="full border-t mb-10 gap-3 text-base border-slate-600 shadow-lg">
+          <button
+            className={`px-6 py-3 hover:bg-slate-800 bg-slate-800`}
+          >
+            Products
+          </button>
+        </div>
+
+        {/* <div className="full border-t mb-10 gap-3 text-base border-slate-600 shadow-lg">
           <Link to="/dashboard/products">
             <button
               className={`px-6 py-3 hover:bg-slate-800 border-r ${
@@ -117,9 +125,18 @@ const ProductsPage = () => {
               Categories
             </button>
           </Link>
-        </div>
+        </div> */}
         {/* <Outlet> */}
         <ProductsTable onEditClick={handleEditClick} />
+
+        <div className="full border-t mb-10 gap-3 text-base border-slate-600 shadow-lg">
+          <button
+            className={`px-6 py-3 hover:bg-slate-800 bg-slate-800
+                `}
+          >
+            Categories
+          </button>
+        </div>
         <CategoriesTable onEditClick={handleEditCategoryClick} />
         {/* </Outlet> */}
 

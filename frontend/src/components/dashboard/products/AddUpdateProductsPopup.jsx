@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { toast } from "react-toastify";
 import { Edit2, Image, X } from "lucide-react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import useHandleSendingRequest from "../../../hooks/useHandleSendingRequest";
 import useFetchData from "../../../hooks/useFetchData";
 const VITE_API_URL = import.meta.env.VITE_API_URL;
@@ -57,6 +57,18 @@ const AddUpdateProductsPopup = ({ product, onClose }) => {
       console.log(response);
     }
   };
+
+    useEffect(() => {
+      const handleKeyDown = (event) => {
+        if (event.key === "Escape") {
+          onClose(false);
+        }
+      };
+  
+      window.addEventListener("keydown", handleKeyDown);
+  
+      return () => window.removeEventListener("keydown", handleKeyDown);
+    },[]);
 
   return (
     <motion.div

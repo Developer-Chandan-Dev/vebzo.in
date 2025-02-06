@@ -18,7 +18,7 @@ const useHandleDeletewithSweetAlert = () => {
         axios
           .delete(`${url}`, { withCredentials: true })
           .then(() => {
-            // setData(data.filter((item) => item._id !== id));
+            setData(data.filter((item) => item._id !== id));
             Swal.fire("Deleted!", `${name} has been deleted`, "success");
           })
           .catch((error) => {

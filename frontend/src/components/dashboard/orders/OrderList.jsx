@@ -20,6 +20,9 @@ const OrderList = ({
   createdAt,
   onEditClick,
   username,
+  handleDelete,
+  setOrderItems,
+  orderItems2,
 }) => {
   const [newStatus, setNewStatus] = useState(status || "Pending");
   const [newPaymentStatus, setNewPaymentStatus] = useState(
@@ -101,7 +104,8 @@ const OrderList = ({
               <b>Order Date :</b> {formatDate(createdAt)}
             </li>
             <li>
-              <b>Delivery Date :</b> {/* {formatDate(deliveredAt)} */}
+              <b>Delivery Date :</b>{" "}
+              {deliveredAt ? formatDate(deliveredAt) : ""}
             </li>
           </ul>
         </div>
@@ -161,7 +165,18 @@ const OrderList = ({
                 }}
               />
             </button>
-            <button className="text-red-400 hover:text-red-300">
+            <button
+              className="text-red-400 hover:text-red-300"
+              onClick={() =>
+                handleDelete(
+                  `${VITE_API_URL}/api/v1/orders/${_id}`,
+                  orderId,
+                  _id,
+                  setOrderItems,
+                  orderItems2
+                )
+              }
+            >
               <Trash2 size={18} />
             </button>
           </div>

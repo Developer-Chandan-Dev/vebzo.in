@@ -16,9 +16,10 @@ const ProductTr = ({
   sold,
   view,
   onEditClick,
+  handleDelete,
+  setProductData,
+  productData,
 }) => {
-  const { handleDelete } = useHandleDeletewithSweetAlert();
-
   return (
     <motion.tr
       key={_id}
@@ -73,7 +74,13 @@ const ProductTr = ({
         <button
           className="text-red-400 hover:text-red-300"
           onClick={() =>
-            handleDelete(`${VITE_API_URL}/api/v1/products/${_id}`, name)
+            handleDelete(
+              `${VITE_API_URL}/api/v1/products/${_id}`,
+              name,
+              _id,
+              setProductData,
+              productData
+            )
           }
         >
           <Trash2 size={18} />

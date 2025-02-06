@@ -10,4 +10,4 @@ const ensureUncategorizedExists = async () => {
   return uncategorized._id;
 };
 
-module.export = { ensureUncategorizedExists };
+module.exports = { ensureUncategorizedExists };

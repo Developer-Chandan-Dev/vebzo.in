@@ -1,24 +1,109 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { toast } from "react-toastify";
 import { X } from "lucide-react";
+import useHandleSendingRequest from "../../../hooks/useHandleSendingRequest";
+import useFetchData from "../../../hooks/useFetchData";
+const VITE_API_URL = import.meta.env.VITE_API_URL;
 
-const AddUpdateOrdersPopup = ({ order, onClose }) => {
-  // const [orderId, setOrderId] = useState(order?.orderId || "");
-  const [firstname, setFirstname] = useState(order?.firstname || "");
-  const [lastname, setLastname] = useState(order?.lastname || "");
-  const [totalPrice, setTotalPrice] = useState(order?.totalPrice || 0);
-  const [paymentStatus, setPaymentStatus] = useState(
-    order?.paymentStatus || "Pending"
+const AddUpdateOrdersPopup = ({ order, onClose, refreshData }) => {
+  const [orderId, setOrderId] = useState("");
+  const [totalPrice, setTotalPrice] = useState(0);
+  const [status, setStatus] = useState("Pending");
+  const [paymentStatus, setPaymentStatus] = useState("Pending");
+  const [deliveredAt, setDeliveredAt] = useState("");
+  const [phone, setPhone] = useState("");
+  const [village, setVillage] = useState("");
+  const [city, setCity] = useState("");
+  const [address, setAddress] = useState("");
+
+  const { data, loading, error } = useFetchData(
+    `${VITE_API_URL}/api/v1/orders/details/${order?._id}`
   );
-  const [deliveredAt, setDeliveredAt] = useState(order?.deliveredAt || "");
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  useEffect(() => {
+    setOrderId(data?.data?.orderId);
+    setTotalPrice(data?.data?.totalPrice);
+    setStatus(data?.data?.status);
+    setPaymentStatus(data?.data?.paymentStatus);
+    setDeliveredAt(data?.data?.deliveredAt || "");
+    setPhone(data?.data?.shippingAddress?.phone);
+    setVillage(data?.data?.shippingAddress?.village);
+    setCity(data?.data?.shippingAddress?.city);
+    setAddress(data?.data?.shippingAddress?.address);
+  }, [data?.data]);
+
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") {
+        onClose(false);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
+  const { handleSubmit } = useHandleSendingRequest();
+
+  const handleStatusUpdate = async (e) => {
+    const response = await handleSubmit(
+      "PUT",
+      `${VITE_API_URL}/api/v1/orders/${order?._id}/status`,
+      {
+        status: e.target.value,
+      }
+    );
+    if (response.success === true) {
+      console.log(response);
+      setStatus(response?.status);
+      toast.success("Status Updated Successfully");
+    } else {
+      console.log(response);
+    }
   };
 
-  console.log(order);
+  const handlePaymentStatusUpdate = async (e) => {
+    const response = await handleSubmit(
+      "PUT",
+      `${VITE_API_URL}/api/v1/orders/${order?._id}/payment-status`,
+      {
+        paymentStatus: e.target.value,
+      }
+    );
+    if (response.success === true) {
+      console.log(response);
+      setPaymentStatus(response?.paymentStatus);
+      toast.success("Payment Status Updated Successfully");
+    } else {
+      console.log(response);
+    }
+  };
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const res = await handleSubmit("PUT", `${VITE_API_URL}/api/v1/orders`, {
+        status,
+        paymentStatus,
+        deliveredAt,
+        shippingAddress: {
+          phone,
+          village,
+          city,
+          address,
+        },
+      });
+
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <motion.div
@@ -36,173 +121,131 @@ const AddUpdateOrdersPopup = ({ order, onClose }) => {
             <X size={18} className="" onClick={onClose} />
           </div>
         </div>
-        <form
-          className="px-1 py-2 sm:p-5 text-slate-100"
-          onSubmit={handleSubmit}
-        >
+        <form className="px-1 py-2 sm:p-5 text-slate-100" onSubmit={onSubmit}>
           <div>
-            <h3 className="ml-1 mb-2 text-lg">Order ID : <span className="text-red-400">{order?.orderId}</span></h3>
+            <h3 className="ml-1 my-3 text-lg">
+              Order ID : <span className="text-red-400">{orderId}</span>
+            </h3>
           </div>
-          <div className="flex items-center gap-2">
-            <div>
-              <label htmlFor="name" className="ml-1">
-                Frist Name
-                <span className="text-red-400 ml-1">*</span>
-              </label>
-              <div className="py-1">
-                <input
-                  type="text"
-                  id="name"
-                  required
-                  value={firstname}
-                  onChange={(e) => setFirstname(e.target.value)}
-                  className="w-full sm:w-60 h-9 py-1 px-[10px] border rounded-md border-slate-500 outline-slate-500 my-2 bg-gray-700"
-                  placeholder="Enter Product Name"
-                />
-              </div>
-            </div>
-            <div>
-              <label htmlFor="name" className="ml-1">
-                Last Name
-                <span className="text-red-400 ml-1">*</span>
-              </label>
-              <div className="py-1">
-                <input
-                  type="text"
-                  id="name"
-                  required
-                  value={lastname}
-                  onChange={(e) => setLastname(e.target.value)}
-                  className="w-full sm:w-60 h-9 py-1 px-[10px] border rounded-md border-slate-500 outline-slate-500 my-2 bg-gray-700"
-                  placeholder="Enter Product Name"
-                />
-              </div>
-            </div>
-          </div>
-          <div>
-            <label htmlFor="description" className="ml-1">
-              Product Description
-              <span className="text-red-400 ml-1">*</span>
-            </label>
-            <div className="py-1">
-              <textarea
-                type="text"
-                id="description"
-                required
-                // value={description}
-                // onChange={(e) => setDescription(e.target.value)}
-                className="w-full h-28 resize-none py-2 px-[10px] border rounded-md border-slate-500 outline-slate-500 my-2 bg-gray-700"
-                placeholder="Enter Product Name"
-              />
-            </div>
-          </div>
+
           <div className="flex items-center gap-x-4 gap-y-2 flex-wrap">
             <div>
-              <label htmlFor="price" className="ml-1">
-                Price
-                <span className="text-red-400 ml-1">*</span>
-              </label>
-              <div className="py-1">
-                <input
-                  type="number"
-                  id="price"
-                  required
-                  //   value={price}
-                  //   onChange={(e) => setPrice(e.target.value)}
-                  className="w-24 sm:w-32 h-10 py-1 px-[10px] border rounded-md border-slate-500 outline-slate-500 my-2 bg-gray-700"
-                  placeholder="Price"
-                />
-              </div>
-            </div>
-            <div>
-              <label htmlFor="stock" className="ml-1">
-                Stock
-                <span className="text-red-400 ml-1">*</span>
-              </label>
-              <div className="py-1">
-                <input
-                  type="number"
-                  id="stock"
-                  required
-                  //   value={stock}
-                  //   onChange={(e) => setStock(e.target.value)}
-                  className="w-24 sm:w-32 h-10 py-1 px-[10px] border rounded-md border-slate-500 outline-slate-500 my-2 bg-gray-700"
-                  placeholder="Stock"
-                />
-              </div>
-            </div>
-            <div>
               <label htmlFor="category" className="ml-1">
-                Category
+                Status
                 <span className="text-red-400 ml-1">*</span>
               </label>
               <div className="py-1">
                 <select
                   id="category"
-                  //   value={category}
+                  value={status}
                   required
-                  //   onChange={(e) => setCategory(e.target.value)}
-                  className="w-full sm:w-60 h-10 py-1 px-[10px] border rounded-md border-slate-500 outline-slate-500 my-2 bg-gray-700"
+                  onChange={handleStatusUpdate}
+                  className="w-full sm:w-80 h-10 py-1 px-[10px] border rounded-md border-slate-500 outline-slate-500 my-2 bg-gray-700"
                 >
-                  <option value="">Choose a category</option>
-                  <option value="vegitables">Vegitables</option>
-                  <option value="fruits">Fruits</option>
+                  <option value="Pending">Pending</option>
+                  <option value="Confirmed">Confirmed</option>
+                  <option value="Out for Delivery">Out for Delivery</option>
+                  <option value="Delivered">Delivered</option>
+                  <option value="Cancelled">Cancelled</option>
+                </select>
+              </div>
+            </div>
+            <div>
+              <label htmlFor="category" className="ml-1">
+                Payment Status
+                <span className="text-red-400 ml-1">*</span>
+              </label>
+              <div className="py-1">
+                <select
+                  id="category"
+                  value={paymentStatus}
+                  required
+                  onChange={handlePaymentStatusUpdate}
+                  className="w-full sm:w-80 h-10 py-1 px-[10px] border rounded-md border-slate-500 outline-slate-500 my-2 bg-gray-700"
+                >
+                  <option value="Pending">Pending</option>
+                  <option value="Paid">Paid</option>
+                  <option value="Failed">Failed</option>
                 </select>
               </div>
             </div>
           </div>
-          <div className="sm:flex items-center gap-8 py-3">
+          <div className="flex items-center gap-x-4 gap-y-2 flex-wrap">
             <div>
-              <label className="">What is Featured product ?</label>
-              <div className="flex items-center gap-3 py-2 ml-1">
-                <label htmlFor="fyes">Yes</label>
-                <input
-                  type="checkbox"
-                  name="fyes"
-                  id="fyes"
-                  value={true}
-                  className="size-4 cursor-pointer"
-                />
-
-                <label htmlFor="fno">No</label>
-                <input
-                  type="checkbox"
-                  name="fno"
-                  id="fno"
-                  value={false}
-                  className="size-4 cursor-pointer"
-                />
+              <label htmlFor="village" className="ml-1">
+                Village
+                <span className="text-red-400 ml-1">*</span>
+              </label>
+              <div className="py-1">
+                <select
+                  id="village"
+                  value={village}
+                  required
+                  onChange={(e) => setVillage(e.target.value)}
+                  className="w-full sm:w-80 h-10 py-1 px-[10px] border rounded-md border-slate-500 outline-slate-500 my-2 bg-gray-700"
+                >
+                  <option value="">Choose a village</option>
+                  <option value="Bhogwara">Bhogwara</option>
+                  <option value="Udagi">Udagi</option>
+                  <option value="Savdih">Savdih</option>
+                  <option value="Belhabandh (Kwajgi patti)">Savdih</option>
+                </select>
               </div>
             </div>
             <div>
-              <label className="ml-1">What is Trending Product ?</label>
-              <div className="flex items-center gap-3 py-2 ml-1">
-                <label htmlFor="tyes">Yes</label>
-                <input
-                  type="checkbox"
-                  name="tyes"
-                  id="tyes"
-                  value={true}
-                  className="size-4 cursor-pointer"
-                />
+              <label htmlFor="category" className="ml-1">
+                City
+                <span className="text-red-400 ml-1">*</span>
+              </label>
+              <div className="py-1">
+                <select
+                  id="category"
+                  value={city}
+                  required
+                  onChange={(e) => setCity(e.target.value)}
+                  className="w-full sm:w-80 h-10 py-1 px-[10px] border rounded-md border-slate-500 outline-slate-500 my-2 bg-gray-700"
+                >
+                  <option value="Prayagraj">Prayagraj</option>
+                </select>
+              </div>
+            </div>
+          </div>
 
-                <label htmlFor="tno">No</label>
+          <div>
+            <textarea
+              className="w-11/12 h-20 py-2 px-[10px] border rounded-md border-slate-500 outline-slate-500 my-2 bg-gray-700"
+              name=""
+              id=""
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+            ></textarea>
+          </div>
+          <div className="flex items-center gap-4">
+            <div>
+              <label htmlFor="name" className="ml-1">
+                Phone
+                <span className="text-red-400 ml-1">*</span>
+              </label>
+              <div className="py-1">
                 <input
-                  type="checkbox"
-                  name="tno"
-                  id="tno"
-                  value={false}
-                  className="size-4 cursor-pointer"
+                  type="text"
+                  id="name"
+                  required
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  className="w-full sm:w-60 h-10 py-1 px-[10px] border rounded-md border-slate-500 outline-slate-500 my-2 bg-gray-700"
+                  placeholder="Enter Product Name"
                 />
               </div>
             </div>
           </div>
-          <div>
+
+          <div className="mt-2">
             <button
               className="px-6 rounded-md py-2 border text-slate-100 border-slate-500 font-semibold transition-all hover:text-white hover:bg-slate-700 hover:shadow-md shadow-slate-300"
               type="submit"
             >
-              Save
+              Update
             </button>
           </div>
         </form>

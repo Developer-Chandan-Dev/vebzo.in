@@ -3,7 +3,6 @@
 import { motion } from "framer-motion";
 import { Edit, Trash2, User, UserCircle } from "lucide-react";
 import { formatDate } from "../../../utils/dateUtils";
-import useHandleDeletewithSweetAlert from "../../../hooks/useHandleDeleteWithSweetAlert";
 const VITE_API_URL = import.meta.env.VITE_API_URL;
 
 const UserTr = ({
@@ -15,8 +14,10 @@ const UserTr = ({
   isBlocked,
   imageUrl,
   onEditClick,
+  handleDelete,
+  setUsersData,
+  usersData,
 }) => {
-  const { handleDelete } = useHandleDeletewithSweetAlert();
   return (
     <>
       <motion.tr
@@ -87,7 +88,13 @@ const UserTr = ({
           <button
             className="text-red-400 hover:text-red-300"
             onClick={() =>
-              handleDelete(`${VITE_API_URL}/api/v1/users/${_id}`, username)
+              handleDelete(
+                `${VITE_API_URL}/api/v1/users/${_id}`,
+                username,
+                _id,
+                setUsersData,
+                usersData
+              )
             }
           >
             <Trash2 size={18} />

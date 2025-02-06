@@ -1,10 +1,13 @@
+import { useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Image, TrainTrack, X } from "lucide-react";
 import { formatDate } from "../../../utils/dateUtils";
+import { logout } from "../../../store/features/userSlice";
 import Button from "../../utility/Button";
+import Spinner from "../../utility/Spinner";
 import useFetchDataWithPagination from "../../../hooks/useFetchDataWithPagination";
 import useHandleSendingRequest from "../../../hooks/useHandleSendingRequest";
-import Spinner from "../../utility/Spinner";
 
 const VITE_API_URL = import.meta.env.VITE_API_URL;
 
@@ -21,6 +24,9 @@ const MyOrders = () => {
   useEffect(() => {
     setMyOrders(data?.order);
   }, [data?.order]);
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const { handleSubmit } = useHandleSendingRequest();
 
@@ -50,7 +56,11 @@ const MyOrders = () => {
     }
   };
 
-  // console.log(myOrders);
+  if (error?.includes("Not Authorized") || error?.includes("no token")) {
+    // Dispatch the logout action
+    dispatch(logout());
+    navigate("/login");
+  }
 
   return (
     <div className="w-full px-4 h-auto py-5">
@@ -59,6 +69,10 @@ const MyOrders = () => {
         <div className="w-full h-64 flex-center">
           <Spinner />
         </div>
+      )}
+
+      {!loading && error && (
+        <div className="w-full px-3 py-2 text-red-500">{error}</div>
       )}
 
       <div className="w-full mt-5 h-auto">

@@ -119,6 +119,28 @@ const getOrders = asyncHandler(async (req, res, next) => {
   }
 });
 
+// @desc Delete a order (Admin && Manager)
+// @route GET /api/v1/orders/:id
+// @access Admin & Manager
+const deleteOrder = asyncHandler(async (req, res, next) => {
+  try {
+    const order = await Order.findById(req.params.id);
+
+    if (!order) {
+      return next(new ErrorResponse("Order not found", 404));
+    }
+
+    await Order.findByIdAndDelete(req.params.id);
+
+    res
+      .status(200)
+      .json({ success: true, message: "Order deleted successfully" });
+  } catch (error) {
+    console.log(error);
+    return next(new ErrorResponse("Failed to delete order", 500));
+  }
+});
+
 // @desc Get a single order by ID
 // @route GET /api/v1/orders/:id
 // @access Private
@@ -214,7 +236,10 @@ const getMyOrders = asyncHandler(async (req, res, next) => {
   try {
     const { id } = req.user;
 
-    const order = await Order.find({ user: id }).populate("orderItems.product", "name imageUrl");
+    const order = await Order.find({ user: id }).populate(
+      "orderItems.product",
+      "name imageUrl"
+    );
 
     if (!order) {
       return next(new ErrorResponse("Order not found", 404));
@@ -234,4 +259,5 @@ module.exports = {
   updatePaymentStatus,
   updateOrderStatus,
   getMyOrders,
+  deleteOrder,
 };

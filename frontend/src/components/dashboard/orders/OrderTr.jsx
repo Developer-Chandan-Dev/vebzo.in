@@ -2,6 +2,7 @@
 import { motion } from "framer-motion";
 import { Edit, IndianRupee, Trash2 } from "lucide-react";
 import { formatDate } from "../../../utils/dateUtils";
+const VITE_API_URL = import.meta.env.VITE_API_URL;
 
 const OrderTr = ({
   _id,
@@ -18,6 +19,9 @@ const OrderTr = ({
   username,
   createdAt,
   onEditClick,
+  handleDelete,
+  setOrderItems,
+  orderItems2,
 }) => {
   return (
     <motion.tr
@@ -91,7 +95,18 @@ const OrderTr = ({
               }}
             />
           </button>
-          <button className="text-red-400 hover:text-red-300">
+          <button
+            className="text-red-400 hover:text-red-300"
+            onClick={() =>
+              handleDelete(
+                `${VITE_API_URL}/api/v1/orders/${_id}`,
+                orderId,
+                _id,
+                setOrderItems,
+                orderItems2
+              )
+            }
+          >
             <Trash2 size={18} />
           </button>
         </div>

@@ -42,7 +42,7 @@ const useFetchDataWithPagination = (
           setData(null);
         }
         console.log(error);
-        setError(error.response.data.error);
+        setError(error.response.data.message);
         setLoading(false);
       }
     };

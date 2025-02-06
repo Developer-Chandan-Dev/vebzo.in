@@ -1,5 +1,4 @@
 /* eslint-disable react/prop-types */
-/* eslint-disable no-unused-vars */
 import { useEffect, useRef, useState } from "react";
 import Button from "../utility/Button";
 import { Menu, ShoppingCart, User, X } from "lucide-react";
@@ -28,9 +27,9 @@ const Header = ({ bg = "bg-white" }) => {
   // Usage
   const grandTotal = calculateGrandTotal(cartItems);
 
-    useEffect(() => {
-      setSubTotal(parseInt(grandTotal));
-    }, [grandTotal]);
+  useEffect(() => {
+    setSubTotal(parseInt(grandTotal));
+  }, [grandTotal]);
 
   return (
     <header
@@ -100,16 +99,27 @@ const Header = ({ bg = "bg-white" }) => {
                 Rs. {subTotal}
               </p>
               <Link to="/cart">
+              <div className="relative">
                 <ShoppingCart
                   className="text-[#8bc34a] cursor-pointer"
                   size="20"
                 />
-                <span className="flex-center text-xs px-1 py-[2px] right-5 -top-3 text-white absolute font-serif rounded-full bg-[#8bc34a]">
+                <span className="flex-center text-xs px-1 py-[2px] -right-2 -top-4 text-white absolute font-serif rounded-full bg-[#8bc34a]">
                   {cartItems?.length}
                 </span>
+
+              </div>
               </Link>
               <Link to="/profile">
-                <User size="20" className="cursor-pointer" />
+                {authUser?.imageUrl ? (
+                  <img
+                    src={authUser?.imageUrl}
+                    alt="User"
+                    className="size-9 rounded-full overflow-hidden border"
+                  />
+                ) : (
+                  <User size="20" className="cursor-pointer" />
+                )}
               </Link>
             </div>
           </>
@@ -150,7 +160,7 @@ const Header = ({ bg = "bg-white" }) => {
                   size="22"
                 />
                 <span className="px-1 py-[2px] flex-center text-xs right-12 -top-1 text-white absolute font-serif rounded-full bg-[#8bc34a]">
-                {cartItems?.length}
+                  {cartItems?.length}
                 </span>
               </Link>
               <button

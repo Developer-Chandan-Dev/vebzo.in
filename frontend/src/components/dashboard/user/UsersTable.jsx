@@ -2,13 +2,15 @@
 /* eslint-disable react/prop-types */
 import { motion } from "framer-motion";
 import { MoveLeft, MoveRight, RefreshCwIcon, Search, X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import UserTr from "./UserTr";
 import useFetchDataWithPagination from "../../../hooks/useFetchDataWithPagination";
 import Spinner from "../../utility/Spinner";
+import useHandleDeletewithSweetAlert from "../../../hooks/useHandleDeleteWithSweetAlert";
 
 const VITE_API_URL = import.meta.env.VITE_API_URL;
 const UsersTable = ({ onEditClick }) => {
+  const [usersData, setUsersData] = useState(null);
   const [searchText, setSearchText] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [activeSearchBox, setActiveSearchBox] = useState(false);
@@ -21,6 +23,10 @@ const UsersTable = ({ onEditClick }) => {
     8,
     searchText
   );
+
+  useEffect(()=>{
+    setUsersData(data?.data)
+  },[data?.data])
 
   // Function to handle page change
   const handlePageClick = (page) => {
@@ -37,6 +43,7 @@ const UsersTable = ({ onEditClick }) => {
     }
   };
 
+  const { handleDelete } = useHandleDeletewithSweetAlert();
   // Create an array of page numbers (e.g., [1, 2, 3])
   const pageNumbers = [];
   for (let i = 1; i <= data?.totalPages; i++) {
@@ -125,8 +132,8 @@ const UsersTable = ({ onEditClick }) => {
             </thead>
 
             <tbody className="divide-y divide-gray-700">
-              {data?.data !== null && data?.data.length > 0
-                ? data?.data.map((user) => (
+              {usersData !== null && usersData?.length > 0
+                ? usersData.map((user) => (
                     <UserTr
                       key={user._id}
                       _id={user?._id}
@@ -137,6 +144,9 @@ const UsersTable = ({ onEditClick }) => {
                       createdAt={user?.createdAt}
                       isBlocked={user?.isBlocked}
                       onEditClick={onEditClick}
+                      handleDelete={handleDelete}
+                      setUsersData={setUsersData}
+                      usersData={usersData}
                     />
                   ))
                 : ""}

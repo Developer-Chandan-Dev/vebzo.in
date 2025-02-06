@@ -3,12 +3,14 @@ import { motion } from "framer-motion";
 import { Plus, RefreshCwIcon, Search, X } from "lucide-react";
 import CategoryBox from "./CategoryBox";
 import useFetchData from "../../../hooks/useFetchData";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useFetchDataWithPagination from "../../../hooks/useFetchDataWithPagination";
+import useHandleDeletewithSweetAlert from "../../../hooks/useHandleDeleteWithSweetAlert";
 
 const VITE_API_URL = import.meta.env.VITE_API_URL;
 
 const CategoriesTable = ({ onEditClick }) => {
+  const [categories, setCategories] = useState(null);
   const [searchText, setSearchText] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [activeSearchBox, setActiveSearchBox] = useState(false);
@@ -20,6 +22,11 @@ const CategoriesTable = ({ onEditClick }) => {
     9,
     searchText
   );
+
+  useEffect(()=>{
+    setCategories(data?.data);
+  },[data?.data])
+
   const handleSetSearchText = () => {
     setSearchText(searchTerm.trim());
   };
@@ -29,6 +36,8 @@ const CategoriesTable = ({ onEditClick }) => {
       handleSetSearchText(); // Trigger the search function when Enter key is pressed
     }
   };
+
+  const { handleDelete } = useHandleDeletewithSweetAlert();
 
   return (
     <motion.div
@@ -96,14 +105,17 @@ const CategoriesTable = ({ onEditClick }) => {
       </div>
 
       <div className=" flex items-center flex-wrap gap-4">
-        {data?.data.length > 0 && data?.data !== null
-          ? data?.data.map((item) => (
+        {categories?.length > 0 && categories !== null
+          ? categories.map((item) => (
               <CategoryBox
                 key={item._id}
                 _id={item._id}
                 name={item.name}
                 description={item.description}
                 onEditClick={onEditClick}
+                handleDelete={handleDelete}
+                setCategories={setCategories}
+                categories={categories}
               />
             ))
           : "No categories found"}

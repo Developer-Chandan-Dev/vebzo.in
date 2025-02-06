@@ -15,44 +15,47 @@ import UserProfilePage from "../pages/client/UserProfilePage";
 import MyProfile from "../components/client/profile/MyProfile";
 import WishList from "../components/client/profile/WishList";
 import MyOrders from "../components/client/profile/MyOrders";
+import ScrollToTop from "../components/utility/ScrollToTop";
 
 const ClientRoutes = () => {
   // Retrive authenticated user information from Redux state
   const authUser = useSelector((state) => state.user.user);
-  console.log(authUser);
 
   return (
-    <Routes>
-      <Route path="/" element={<HomePage />} />
-      <Route path="/about" element={<AboutPage />} />
-      <Route path="/contact" element={<ContactPage />} />
-      <Route
-        path="/cart"
-        element={authUser ? <CartPage /> : <Navigate to="/" />}
-      />
-      <Route
-        path="/checkout"
-        element={authUser ? <CheckoutPage /> : <Navigate to="/" />}
-      />
-      <Route path="/shop" element={<ShopPage />} />
-      <Route path="/shop/:id" element={<ProductPage />} />
-      <Route
-        path="/signup"
-        element={authUser ? <Navigate to="/" /> : <SignupPage />}
-      />
-      <Route
-        path="/login"
-        element={authUser ? <Navigate to="/" /> : <LoginPage />}
-      />
-      <Route
-        path="/profile"
-        element={authUser ? <UserProfilePage /> : <Navigate to="/" />}
-      >
-        <Route path="" element={<MyProfile />} />
-        <Route path="my-orders" element={<MyOrders />} />
-        <Route path="wishlist" element={<WishList />} />
-      </Route>
-    </Routes>
+    <>
+      <ScrollToTop />
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/about" element={<AboutPage />} />
+        <Route path="/contact" element={<ContactPage />} />
+        <Route
+          path="/cart"
+          element={authUser ? <CartPage /> : <Navigate to="/" />}
+        />
+        <Route
+          path="/checkout"
+          element={authUser ? <CheckoutPage /> : <Navigate to="/" />}
+        />
+        <Route path="/shop" element={<ShopPage />} />
+        <Route path="/shop/:id" element={<ProductPage />} />
+        <Route
+          path="/signup"
+          element={authUser ? <Navigate to="/" /> : <SignupPage />}
+        />
+        <Route
+          path="/login"
+          element={authUser ? <Navigate to="/" /> : <LoginPage />}
+        />
+        <Route
+          path="/profile"
+          element={authUser ? <UserProfilePage /> : <Navigate to="/" />}
+        >
+          <Route path="" element={<MyProfile />} />
+          <Route path="my-orders" element={<MyOrders />} />
+          <Route path="wishlist" element={<WishList />} />
+        </Route>
+      </Routes>
+    </>
   );
 };
 

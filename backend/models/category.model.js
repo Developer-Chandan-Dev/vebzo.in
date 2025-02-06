@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Product = require("./product.model");
+const { ensureUncategorizedExists } = require("../utils/categoryUtils");
 
 const categorySchema = new mongoose.Schema(
   {
@@ -20,7 +21,7 @@ const categorySchema = new mongoose.Schema(
 // Middleware: When a category is deleted, assign its products to "Uncategorized"
 categorySchema.pre("findOneAndDelete", async function (next) {
   const categoryId = this.getQuery()._id;
-  const uncategorized = await ensureUncategorizedExists();
+  const uncategorized = await ensureUncategorizedExists;
 
   // Update all products that use the delete category
   await Product.updateMany(

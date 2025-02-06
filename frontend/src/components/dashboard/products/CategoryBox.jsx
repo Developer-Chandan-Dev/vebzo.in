@@ -1,8 +1,17 @@
 /* eslint-disable react/prop-types */
 import { Edit, Trash2 } from "lucide-react";
 import { motion } from "framer-motion";
+const VITE_API_URL = import.meta.env.VITE_API_URL;
 
-const CategoryBox = ({ _id, name, description, onEditClick }) => {
+const CategoryBox = ({
+  _id,
+  name,
+  description,
+  onEditClick,
+  handleDelete,
+  setCategories,
+  categories,
+}) => {
   return (
     <motion.div
       className="bg-gray-800 w-80 rounded-md p-4 border border-gray-600 "
@@ -25,7 +34,18 @@ const CategoryBox = ({ _id, name, description, onEditClick }) => {
               }}
             />
           </button>
-          <button className="text-red-400 hover:text-red-300">
+          <button
+            className="text-red-400 hover:text-red-300"
+            onClick={() =>
+              handleDelete(
+                `${VITE_API_URL}/api/v1/category/${_id}`,
+                name,
+                _id,
+                setCategories,
+                categories
+              )
+            }
+          >
             <Trash2 size={18} />
           </button>
         </div>

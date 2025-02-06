@@ -1,11 +1,12 @@
 /* eslint-disable react/prop-types */
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MoveLeft, MoveRight, RefreshCwIcon, Search, X } from "lucide-react";
 import OrderTr from "./OrderTr";
 import OrderList from "./OrderList";
 import useFetchDataWithPagination from "../../../hooks/useFetchDataWithPagination";
 import Spinner from "../../utility/Spinner";
+import useHandleDeletewithSweetAlert from "../../../hooks/useHandleDeleteWithSweetAlert";
 
 const VITE_API_URL = import.meta.env.VITE_API_URL;
 const OrderTable = ({ onEditClick }) => {
@@ -14,6 +15,7 @@ const OrderTable = ({ onEditClick }) => {
   const [activeList, setActiveList] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [activeSearchBox, setActiveSearchBox] = useState(false);
+  const [orderItems, setOrderItems] = useState(null);
 
   const { data, loading, refreshData } = useFetchDataWithPagination(
     `${VITE_API_URL}/api/v1/orders`,
@@ -21,8 +23,10 @@ const OrderTable = ({ onEditClick }) => {
     8,
     searchText
   );
-  console.log(data, loading);
 
+  useEffect(()=>{
+    setOrderItems(data?.data)
+  },[data?.data])
   // Function to handle page change
   const handlePageClick = (page) => {
     setCurrentPage(page);
@@ -43,6 +47,9 @@ const OrderTable = ({ onEditClick }) => {
   for (let i = 1; i <= data?.totalPages; i++) {
     pageNumbers.push(i);
   }
+
+  const { handleDelete } = useHandleDeletewithSweetAlert();
+
   return (
     <motion.div
       className="bg-gray-800 bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-6 border border-gray-700 mb-6 my-7"
@@ -151,8 +158,8 @@ const OrderTable = ({ onEditClick }) => {
             </thead>
 
             <tbody className="divide-y divide-gray-700">
-              {data?.data !== null && data?.data.length > 0
-                ? data?.data.map((order, index) => (
+              {orderItems !== null && orderItems?.length > 0
+                ? orderItems.map((order, index) => (
                     <OrderTr
                       key={index}
                       _id={order?._id}
@@ -169,6 +176,9 @@ const OrderTable = ({ onEditClick }) => {
                       status={order?.status}
                       createdAt={order?.createdAt}
                       onEditClick={onEditClick}
+                      handleDelete={handleDelete}
+                      setOrderItems={setOrderItems}
+                      orderItems2={orderItems}
                     />
                   ))
                 : "Nothing found"}
@@ -176,8 +186,8 @@ const OrderTable = ({ onEditClick }) => {
           </table>
         )}
 
-        {activeList && data?.data.length > 0 && data?.data !== null
-          ? data?.data.map((order, index) => (
+        {activeList && !loading && orderItems?.length > 0 && orderItems !== null
+          ? orderItems.map((order, index) => (
               <OrderList
                 key={index}
                 _id={order?._id}
@@ -194,6 +204,9 @@ const OrderTable = ({ onEditClick }) => {
                 status={order?.status}
                 createdAt={order?.createdAt}
                 onEditClick={onEditClick}
+                handleDelete={handleDelete}
+                setOrderItems={setOrderItems}
+                orderItems2={orderItems}
               />
             ))
           : ""}

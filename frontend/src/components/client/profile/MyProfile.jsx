@@ -13,8 +13,8 @@ import useHandleSendingRequest from "../../../hooks/useHandleSendingRequest";
 const VITE_API_URL = import.meta.env.VITE_API_URL;
 const MyProfile = () => {
   const { data, error } = useFetchData(`${VITE_API_URL}/api/v1/auth/me`);
-  const user = data?.user;
 
+  const [user, setUser] = useState(null);
   const [username, setUsername] = useState(user?.username);
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState(data?.user?.email || "");
@@ -29,7 +29,8 @@ const MyProfile = () => {
     setPhone(user?.phone);
     setAddress(user?.address);
     setFilePreview(user?.imageUrl);
-  }, [image, user]);
+    setUser(data?.user);
+  }, [data?.user, image, user]);
 
   const dispatch = useDispatch();
   const authUser = useSelector((state) => state.user.user);
@@ -55,7 +56,7 @@ const MyProfile = () => {
     if (res.data.sucess === true) {
       console.log(res.data.message);
     } else {
-      console.log(res.data.error);
+      console.log(res.data);
     }
 
     // Dispatch the logout action

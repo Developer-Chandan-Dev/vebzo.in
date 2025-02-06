@@ -10,14 +10,16 @@ import {
   MoveRight,
   RefreshCwIcon,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ProductTr from "./ProductTr";
 import useFetchDataWithPagination from "../../../hooks/useFetchDataWithPagination";
 import SearchBox from "../../utility/SearchBox";
 import Spinner from "../../utility/Spinner";
+import useHandleDeletewithSweetAlert from "../../../hooks/useHandleDeleteWithSweetAlert";
 
 const VITE_API_URL = import.meta.env.VITE_API_URL;
 const ProductsTable = ({ onEditClick }) => {
+  const [productData, setProductData] = useState(null);
   const [searchText, setSearchText] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [activeSearchBox, setActiveSearchBox] = useState(false);
@@ -31,6 +33,10 @@ const ProductsTable = ({ onEditClick }) => {
     searchText,
     sortBy
   );
+
+  useEffect(() => {
+    setProductData(data?.data);
+  }, [data?.data]);
 
   // Function to handle page change
   const handlePageClick = (page) => {
@@ -46,6 +52,8 @@ const ProductsTable = ({ onEditClick }) => {
       handleSetSearchText(); // Trigger the search function when Enter key is pressed
     }
   };
+
+  const { handleDelete } = useHandleDeletewithSweetAlert();
 
   // Create an array of page numbers (e.g., [1, 2, 3])
   const pageNumbers = [];
@@ -152,8 +160,8 @@ const ProductsTable = ({ onEditClick }) => {
             </thead>
 
             <tbody className="divide-y divide-gray-700">
-              {data?.data.length > 0 && data?.data !== null
-                ? data?.data.map(
+              {productData?.length > 0 && productData !== null
+                ? productData.map(
                     ({
                       _id,
                       name,
@@ -179,6 +187,9 @@ const ProductsTable = ({ onEditClick }) => {
                         view={views}
                         refreshData={refreshData}
                         onEditClick={onEditClick}
+                        handleDelete={handleDelete}
+                        setProductData={setProductData}
+                        productData={productData}
                       />
                     )
                   )

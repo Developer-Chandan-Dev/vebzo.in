@@ -3,7 +3,7 @@ import "./style.css";
 import { toast } from 'react-toastify'
 import { motion } from "framer-motion";
 import { Edit2, User2Icon, X } from "lucide-react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import useHandleSendingRequest from "../../../hooks/useHandleSendingRequest";
 
 const ChangeUserDetailsPopup = ({ user, onClose }) => {
@@ -49,6 +49,18 @@ const ChangeUserDetailsPopup = ({ user, onClose }) => {
       console.log(response);
     }
   };
+
+    useEffect(() => {
+      const handleKeyDown = (event) => {
+        if (event.key === "Escape") {
+          onClose(false);
+        }
+      };
+  
+      window.addEventListener("keydown", handleKeyDown);
+  
+      return () => window.removeEventListener("keydown", handleKeyDown);
+    },[]);
 
   return (
     <motion.div

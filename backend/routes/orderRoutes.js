@@ -6,20 +6,38 @@ const {
   getOrderById,
   updatePaymentStatus,
   updateOrderStatus,
-  getMyOrders
+  getMyOrders,
+  deleteOrder,
 } = require("../controller/orderController");
-const { protect, admin } = require("../middlewares/authMiddleware");
+const { protect, admin, checkRole } = require("../middlewares/authMiddleware");
 
 // Validation imports
 const validate = require("../middlewares/validation.middleware");
 const { orderValidationSchema } = require("../validations/validateOrder");
 
 // Order Routes
-router.post("/", protect, validate(orderValidationSchema), createOrder); // Create a new order
+router.post(
+  "/",
+  protect,
+  checkRole("admin", "manager"),
+  validate(orderValidationSchema),
+  createOrder
+); // Create a new order
 router.get("/", protect, admin, getOrders); // Get all orders (Admin)
+router.delete("/:id", protect, checkRole("admin", "manager"), deleteOrder); // Delete order by order _id (Admin)
 router.get("/details/:id", protect, getOrderById); // Get order by ID
-router.put("/:id/payment-status", protect, admin, updatePaymentStatus); // Update Payment Status
-router.put("/:id/status", protect, admin, updateOrderStatus); // Update Order Status
-router.get("/my-orders", protect, getMyOrders)
+router.put(
+  "/:id/payment-status",
+  protect,
+  checkRole("admin", "manager"),
+  updatePaymentStatus
+); // Update Payment Status
+router.put(
+  "/:id/status",
+  protect,
+  checkRole("admin", "manager"),
+  updateOrderStatus
+); // Update Order Status
+router.get("/my-orders", protect, getMyOrders);
 
 module.exports = router;

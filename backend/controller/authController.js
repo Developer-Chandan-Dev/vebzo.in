@@ -84,6 +84,7 @@ const login = asyncHandler(async (req, res, next) => {
         username: user.username,
         email: user.email,
         role: user.role,
+        imageUrl: user?.imageUrl,
       },
     });
   } catch (error) {

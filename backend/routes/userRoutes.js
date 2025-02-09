@@ -9,7 +9,7 @@ const {
 
 const { protect, admin, checkRole } = require("../middlewares/authMiddleware");
 
-router.get("/", protect, getAllUsers);
+router.get("/", protect, checkRole("admin"), getAllUsers);
 router.put("/update/:id", protect, checkRole("admin"), updateUserByAdmin);
 router.delete("/:id", protect, checkRole("admin"), deleteUserByAdmin);
 

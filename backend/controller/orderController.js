@@ -107,6 +107,7 @@ const getOrders = asyncHandler(async (req, res, next) => {
     const orders = await Order.find(filters)
       .skip((page - 1) * limit)
       .limit(limit)
+      .sort({ createdAt: -1 }) // Sort by latest
       .populate("user", "username email")
       .populate("orderItems.product", "name");
 

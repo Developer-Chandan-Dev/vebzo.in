@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import { motion } from "framer-motion";
-import { Edit, IndianRupee, Trash2 } from "lucide-react";
+import { Edit, Image, IndianRupee, Trash2 } from "lucide-react";
 import useHandleDeletewithSweetAlert from "../../../hooks/useHandleDeleteWithSweetAlert";
 const VITE_API_URL = import.meta.env.VITE_API_URL;
 
@@ -28,11 +28,16 @@ const ProductTr = ({
       transition={{ duration: 0.3 }}
     >
       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100 flex gap-2 items-center">
-        <img
-          src={imageUrl ? imageUrl : "/public/images/potato-1.webp"}
-          alt="Product img"
-          className="size-10 rounded-full"
-        />
+        {imageUrl ? (
+          <img
+            src={imageUrl}
+            alt="Product img"
+            className="size-10 rounded-full"
+          />
+        ) : (
+          <Image className="size-10 text-gray-400" />
+        )}
+
         {name}
       </td>
 

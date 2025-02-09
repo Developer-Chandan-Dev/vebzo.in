@@ -29,7 +29,7 @@ const getAllUsers = asyncHandler(async (req, res, next) => {
     const users = await User.find(filters)
       .select("-password")
       .skip((page - 1) * limit)
-      .limit(limit);
+      .limit(limit).sort({ createdAt: -1 }); // Sort by latest
 
     res
       .status(200)

@@ -12,7 +12,7 @@ const initialState = {
 // Thunk to fetch cart items from the backend
 export const fetchCartItems = createAsyncThunk(
   "cart/fetchCartItems",
-  async (_,{ rejectWithValue }) => {
+  async (_, { rejectWithValue }) => {
     try {
       const response = await axios.get(`${VITE_API_URL}/api/v1/cart/`, {
         withCredentials: true,
@@ -20,7 +20,7 @@ export const fetchCartItems = createAsyncThunk(
       console.log(response);
       return response.data; // Assume backend returns the full cart (array of items)
     } catch (error) {
-        console.log(error);
+      console.log(error);
       return rejectWithValue(error.response.data);
     }
   }
@@ -51,7 +51,10 @@ export const removeFromCart = createAsyncThunk(
   "cart/removeFromCart",
   async ({ productId }, { rejectWithValue }) => {
     try {
-      await axios.delete(`${VITE_API_URL}/api/v1/cart/${productId}`);
+      console.log(productId);
+      await axios.delete(`${VITE_API_URL}/api/v1/cart/${productId}`, {
+        withCredentials: true,
+      });
       return productId; // Return the productId to remove it from Redux state
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -97,7 +100,7 @@ const cartSlice = createSlice({
       })
       .addCase(fetchCartItems.fulfilled, (state, action) => {
         state.status = "succeeded";
-        console.log(state.cart, action.payload)
+        console.log(state.cart, action.payload);
         state.cartItems = action.payload; // Replace cart items with fetched data
       })
       .addCase(fetchCartItems.rejected, (state, action) => {

@@ -11,9 +11,9 @@ const UserProfilePage = () => {
   return (
     <div className="w-full h-auto">
       <Header />
-      <div className="h-auto py-10 px-10 flex justify-center text-left text-gray-700 gap-10 relative">
-        <div className="w-56 h-44 sticky top-32 p-2 bg-slate-50 ">
-          <ul className="px-3 py-3">
+      <div className="h-auto md:py-10 px-5 sm:px-10 md:flex justify-center text-left text-gray-700 gap-10 relative">
+        <div className="w-full md:w-56 z-10 h-auto md:h-44 sticky top-[72px] md:top-32 p-2 bg-slate-50 ">
+          <ul className="px-3 md:py-3 flex-center gap-2 md:block">
             <Link to="/profile">
               <li
                 className={`cursor-pointer px-3 transition-all rounded-md text-gray-600 font-semibold ${
@@ -49,7 +49,7 @@ const UserProfilePage = () => {
             </Link>
           </ul>
         </div>
-        <div className="w-[850px] h-auto pb-10 border rounded-3xl overflow-hidden">
+        <div className="w-full md:w-[850px] h-auto pb-10 border md:rounded-3xl overflow-hidden">
           <Outlet>
             <MyProfile />
             <MyOrders />

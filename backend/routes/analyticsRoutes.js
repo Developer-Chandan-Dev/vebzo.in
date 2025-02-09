@@ -75,7 +75,7 @@ router.get("/top-selling-products", protect, checkRole("admin", "manager"), getT
 
 // <============== Users routes ================>
 router.get("/users-growth", protect, checkRole("admin", "manager"), getUserGrowth);
-router.get("/chart/users-growth", protect, checkRole("admin", "manager"), userGrowthChart)
+router.get("/chart/users-growth", protect, checkRole("admin"), userGrowthChart)
 
 // <============== Order & Cart Analytics ===============>
 router.get("/order-status", protect, checkRole("admin", "manager"), getOrderStatusCounts);
@@ -116,7 +116,7 @@ router.get("/chart/new-vs-returning-customers", protect, checkRole("admin", "man
 // Card Section routes
 
 router.get("/sales-cards", protect, checkRole("admin", "manager"), salesCardData);
-router.get("/user-cards", protect, checkRole("admin", "manager"), userCardData);
+router.get("/user-cards", protect, checkRole("admin"), userCardData);
 router.get("/product-cards", protect, checkRole("admin", "manager"), productCardData);
 router.get("/analytics-cards", protect, checkRole("admin", "manager"), analyticsCardData);
 

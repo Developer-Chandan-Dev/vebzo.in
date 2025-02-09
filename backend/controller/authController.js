@@ -96,7 +96,7 @@ const login = asyncHandler(async (req, res, next) => {
 const logout = asyncHandler(async (req, res, next) => {
   try {
     res.cookie("apna_store_jwt", "", { maxAge: 0 });
-    res.status(200).json({ message: "Logged out Successfully" });
+    res.status(200).json({ success: true, message: "Logged out Successfully" });
   } catch (error) {
     console.error(error);
     return next(new ErrorResponse("Internal Server Error", 500));

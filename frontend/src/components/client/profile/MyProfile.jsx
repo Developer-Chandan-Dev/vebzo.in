@@ -3,6 +3,7 @@ import { toast } from "react-toastify";
 import { UserIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Navigate } from 'react-router-dom'
 import Button from "../../utility/Button";
 import SmallSpinner from "../../utility/SmallSpinner";
 import authService from "../../../features/auth";
@@ -53,10 +54,12 @@ const MyProfile = () => {
 
   const handleLogout = async () => {
     const res = await authService.logout();
+    console.log(res);
     if (res.data.sucess === true) {
-      console.log(res.data.message);
+      toast.success(res.data.message);
+      <Navigate to="/"/>
     } else {
-      console.log(res.data);
+      toast.error(res.data.message);
     }
 
     // Dispatch the logout action
@@ -133,7 +136,7 @@ const MyProfile = () => {
           </div>
         </div>
       </div>
-      <div className="w-full px-20 py-10">
+      <div className="w-full px-5 sm:px-10 md:px-20 py-10">
         <form className="mx-auto text-gray-800" onSubmit={onSubmit}>
           {/* <div> */}
           <div>

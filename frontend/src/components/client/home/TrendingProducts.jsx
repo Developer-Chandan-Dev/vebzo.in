@@ -9,7 +9,6 @@ const TrendingProducts = () => {
     `${VITE_API_URL}/api/v1/products?isFeatured=true`
   );
 
-  console.log(data, loading, error);
   return (
     <div className="w-full px-5 sm:px-10 py-20 ">
       <h2 className="text-4xl font-semibold text-gray-700 head-line-1">

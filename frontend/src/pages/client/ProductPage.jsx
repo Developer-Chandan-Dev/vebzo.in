@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { useEffect, useState } from "react";
-import { Star } from "lucide-react";
+import { Image, Star } from "lucide-react";
 import { useParams } from "react-router-dom";
 import Footer from "../../components/client/Footer";
 import Header from "../../components/client/Header";
@@ -14,6 +14,9 @@ const VITE_API_URL = import.meta.env.VITE_API_URL;
 const ProductPage = () => {
   const [quantity, setQuantity] = useState(1);
   const [productId, setProductId] = useState("");
+  const [productData, setProductData] = useState(null);
+  const [showDescription, setShowDescription] = useState(true);
+  const [showReview, setShowReview] = useState(false);
 
   const { id } = useParams();
   const { data, loading } = useFetchData(
@@ -23,6 +26,10 @@ const ProductPage = () => {
   useEffect(() => {
     setProductId(data?.data?._id);
   }, [data?.data?._id]);
+
+  useEffect(() => {
+    setProductData(data?.data);
+  }, [data?.data]);
 
   const dispatch = useDispatch();
   // const { cartItems, status, error } = useSelector((state) => state.cart);
@@ -35,6 +42,16 @@ const ProductPage = () => {
     dispatch(addToCart({ productId, quantity }));
   };
 
+  const handleShowDescription = () => {
+    setShowDescription(true);
+    setShowReview(false);
+  };
+
+  const handleShowReviews = () => {
+    setShowDescription(false);
+    setShowReview(true);
+  };
+
   return (
     <div className="w-full h-auto text-left">
       <Header />
@@ -45,22 +62,22 @@ const ProductPage = () => {
         </div>
       )}
       {!loading && (
-        <div className="px-10 sm:px-20 py-10 sm:py-20 bg-[#f8f6f3]">
+        <div className="px-5 sm:px-10 md:px-20 py-10 sm:py-20 bg-[#f8f6f3]">
           <div className="flex items-start pb-14 gap-1 flex-wrap md:flex-nowrap">
             <div className="w-full xl:w-[550px] h-auto">
-              <img
-                src={
-                  data?.data?.imageUrl
-                    ? data?.data?.imageUrl
-                    : "/public/images/potato-1.webp"
-                }
-                className="w-full h-full object-fit"
-                alt=""
-              />
+              {productData?.imageUrl ? (
+                <img
+                  src={productData?.imageUrl}
+                  className="w-full h-full object-fit"
+                  alt=""
+                />
+              ) : (
+                <Image />
+              )}
             </div>
             <div className="md:px-10 text-left w-full md:w-[650px] text-[15px]">
               <h1 className="text-4xl font-semibold amiri-quarn ">
-                {data?.data?.name}
+                {productData?.name}
               </h1>
               <div className="flex items-center">
                 <div className="flex-center py-5">
@@ -73,9 +90,9 @@ const ProductPage = () => {
                 <span className="ml-2">( 1 customer Review)</span>
               </div>
               <h3 className="text-xl font-bold py-1">
-                Rs. {data?.data?.price}.00
+                Rs. {productData?.price}.00
               </h3>
-              <p>{data?.data?.description}</p>
+              <p>{productData?.description}</p>
               <div className="flex items-center gap-2 py-4 border-b">
                 <input
                   type="number"
@@ -95,7 +112,7 @@ const ProductPage = () => {
                   Categories :{" "}
                   <span className="text-[#6a9739]">
                     {" "}
-                    {data?.data?.category?.name}
+                    {productData?.category?.name}
                   </span>
                 </p>
               </div>
@@ -104,26 +121,35 @@ const ProductPage = () => {
 
           <div className="w-full h-auto border-t text-[15px]">
             <ul className="flex items-center ">
-              <li className="w-36 border flex-center h-12 font-semibold cursor-pointer">
+              <li
+                className="w-36 border flex-center h-12 font-semibold cursor-pointer"
+                onClick={handleShowDescription}
+              >
                 Description
               </li>
-              <li className="w-36 border flex-center h-12 font-semibold cursor-pointer">
+              <li
+                className="w-36 border flex-center h-12 font-semibold cursor-pointer"
+                onClick={handleShowReviews}
+              >
                 Review
               </li>
             </ul>
 
-            <div>
-              <p className="py-3">
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Sequi
-                magni, error adipisci possimus explicabo vel voluptates corporis
-                dolorum dolor reiciendis tempora inventore exercitationem
-                voluptas itaque, consequuntur minus. Necessitatibus ex, unde
-                ipsam nam ab cum consequuntur fugit expedita. Quae, inventore
-                nostrum. Reiciendis facilis porro sed enim aperiam earum quam
-                dolorum qui!
-              </p>
-            </div>
-            <ReviewForm />
+            {showDescription && (
+              <div className="mt-5">
+                <p className="py-3">
+                  Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+                  Sequi magni, error adipisci possimus explicabo vel voluptates
+                  corporis dolorum dolor reiciendis tempora inventore
+                  exercitationem voluptas itaque, consequuntur minus.
+                  Necessitatibus ex, unde ipsam nam ab cum consequuntur fugit
+                  expedita. Quae, inventore nostrum. Reiciendis facilis porro
+                  sed enim aperiam earum quam dolorum qui!
+                </p>
+              </div>
+            )}
+
+            {showReview && <ReviewForm productId={productId} />}
           </div>
         </div>
       )}

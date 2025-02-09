@@ -10,9 +10,9 @@ import StatCard from "../../components/dashboard/common/StatCard";
 import OrderTable from "../../components/dashboard/orders/OrderTable";
 import Header from "../../components/dashboard/Header";
 import DailyOrders from "../../components/dashboard/orders/DailyOrders";
-import OrderDistribution from "../../components/dashboard/orders/OrderDistribution";
 import AddUpdateOrdersPopup from "../../components/dashboard/orders/AddUpdateOrdersPopup";
 import useFetchData from "../../hooks/useFetchData";
+import OrderStatusBreakDown from "../../components/dashboard/overview/OrderStatusBreakDown";
 
 const VITE_API_URL = import.meta.env.VITE_API_URL;
 const OrdersPage = () => {
@@ -77,7 +77,7 @@ const OrdersPage = () => {
         {/* CHARTS */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <DailyOrders />
-          <OrderDistribution />
+          <OrderStatusBreakDown/>
         </div>
 
         <OrderTable onEditClick={handleEditClick} />

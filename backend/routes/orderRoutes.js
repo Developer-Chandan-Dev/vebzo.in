@@ -23,7 +23,7 @@ router.post(
   validate(orderValidationSchema),
   createOrder
 ); // Create a new order
-router.get("/", protect, admin, getOrders); // Get all orders (Admin)
+router.get("/", protect, checkRole("admin", "manager"), getOrders); // Get all orders (Admin)
 router.delete("/:id", protect, checkRole("admin", "manager"), deleteOrder); // Delete order by order _id (Admin)
 router.get("/details/:id", protect, getOrderById); // Get order by ID
 router.put(

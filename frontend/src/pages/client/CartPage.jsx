@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { XCircle } from "lucide-react";
 import Footer from "../../components/client/Footer";
 import Header from "../../components/client/Header";
@@ -5,7 +6,7 @@ import Button from "../../components/utility/Button";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchCartItems } from "../../store/features/cartSlice";
+import { fetchCartItems, removeFromCart } from "../../store/features/cartSlice";
 
 const CartPage = () => {
   const [subTotal, setSubTotal] = useState(0);
@@ -35,6 +36,15 @@ const CartPage = () => {
     setSubTotal(parseInt(grandTotal));
   }, [grandTotal]);
 
+  const handleRemoveToCart = async(productId) => {
+    const res = await dispatch(removeFromCart(productId));
+    if(res){
+      console.log(res);
+      const res2 = await dispatch(fetchCartItems());
+      console.log(res2);
+    }
+  };
+
   return (
     <div className="w-full h-auto">
       <Header />
@@ -58,7 +68,10 @@ const CartPage = () => {
                     <tr className="border-b" key={product?._id}>
                       <td className="py-3 px-5" colSpan={2}>
                         <div className="flex items-center justify-around">
-                          <XCircle className="text-gray-400 transition-all cursor-pointer hover:text-gray-600" />
+                          <XCircle
+                            className="text-gray-400 transition-all cursor-pointer hover:text-gray-600"
+                            onClick={() => handleRemoveToCart(product?._id)}
+                          />
                           <img
                             src={
                               product?.product?.imageUrl

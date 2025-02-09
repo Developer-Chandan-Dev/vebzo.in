@@ -6,7 +6,6 @@ import { Link } from "react-router-dom";
 
 const Footer = () => {
   const authUser = useSelector((state) => state.user.user);
-  console.log(authUser);
 
   return (
     <div className="w-full py-10 bg-black text-white">

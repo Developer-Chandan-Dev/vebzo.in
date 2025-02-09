@@ -13,8 +13,6 @@ const Header = ({ bg = "bg-white" }) => {
   const authUser = useSelector((state) => state.user.user);
   const { cartItems } = useSelector((state) => state.cart);
 
-  console.log(cartItems);
-
   const calculateGrandTotal = (cartItems) => {
     return (
       cartItems.length > 0 &&
@@ -96,19 +94,18 @@ const Header = ({ bg = "bg-white" }) => {
           <>
             <div className="flex item-center gap-x-4 relative">
               <p className="text-base font-semibold text-[#8bc34a] drop-shadow-sm">
-                Rs. {subTotal}
+                Rs. {subTotal || 0}
               </p>
               <Link to="/cart">
-              <div className="relative">
-                <ShoppingCart
-                  className="text-[#8bc34a] cursor-pointer"
-                  size="20"
-                />
-                <span className="flex-center text-xs px-1 py-[2px] -right-2 -top-4 text-white absolute font-serif rounded-full bg-[#8bc34a]">
-                  {cartItems?.length}
-                </span>
-
-              </div>
+                <div className="relative">
+                  <ShoppingCart
+                    className="text-[#8bc34a] cursor-pointer"
+                    size="20"
+                  />
+                  <span className="flex-center text-xs px-1 py-[2px] -right-2 -top-4 text-white absolute font-serif rounded-full bg-[#8bc34a]">
+                    {cartItems?.length}
+                  </span>
+                </div>
               </Link>
               <Link to="/profile">
                 {authUser?.imageUrl ? (

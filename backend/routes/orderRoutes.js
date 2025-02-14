@@ -19,7 +19,6 @@ const { orderValidationSchema } = require("../validations/validateOrder");
 router.post(
   "/",
   protect,
-  checkRole("admin", "manager"),
   validate(orderValidationSchema),
   createOrder
 ); // Create a new order

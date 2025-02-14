@@ -6,25 +6,31 @@ import Button from "../../components/utility/Button";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchCartItems, removeFromCart } from "../../store/features/cartSlice";
+import {
+  fetchCartItems,
+  removeFromCart,
+  updateCart,
+} from "../../store/features/cartSlice";
+import { toast } from "react-toastify";
+import CartTr from "../../components/client/cart/CartTr";
 
 const CartPage = () => {
   const [subTotal, setSubTotal] = useState(0);
   const [deliveryCharge, setDeliveryCharge] = useState(0);
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(fetchCartItems());
-  }, [dispatch]);
-
+  const authUser = useSelector((state) => state.user.user);
   const { cartItems, status, error } = useSelector((state) => state.cart);
-  console.log(cartItems, status, error);
+
+  useEffect(() => {
+    dispatch(fetchCartItems(authUser?._id));
+  }, [authUser?._id, dispatch]);
 
   const calculateGrandTotal = (cartItems) => {
     return (
-      cartItems.length > 0 &&
-      cartItems.reduce((total, item) => {
-        return total + item.quantity * item.product?.price;
+      cartItems?.items?.length > 0 &&
+      cartItems?.items?.reduce((total, item) => {
+        return total + item.quantity * item?.price;
       }, 0)
     );
   };
@@ -36,13 +42,38 @@ const CartPage = () => {
     setSubTotal(parseInt(grandTotal));
   }, [grandTotal]);
 
-  const handleRemoveToCart = async(productId) => {
-    const res = await dispatch(removeFromCart(productId));
-    if(res){
-      console.log(res);
-      const res2 = await dispatch(fetchCartItems());
-      console.log(res2);
-    }
+  const handleRemoveToCart = async (productId) => {
+    dispatch(
+      removeFromCart({ userId: authUser?._id, productId: productId })
+    ).then((data) => {
+      if (data?.payload?.success) {
+        toast({
+          title: "Cart item is deleted successfully",
+        });
+      }
+    });
+  };
+
+  const [updatedQuantities, setUpdatedQuantities] = useState(
+    cartItems?.items || []
+  );
+
+  const handleQuantityChange = (productId, newQuantity) => {
+    // Update cartItems.items correctly
+    const updatedItems = cartItems?.items?.map((item) =>
+      item.productId === productId ? { ...item, quantity: newQuantity } : item
+    );
+
+    console.log(updatedItems, "Updated Items");
+    setUpdatedQuantities(updatedItems);
+  };
+
+  console.log(updatedQuantities, cartItems?.items);
+
+  // Update Redux store & backend when "Update" button is clicked
+  const handleUpdateClick = (productId) => {
+    const newQuantity = updatedQuantities[productId];
+    dispatch(updateCart(productId, newQuantity)); // Call API & Redux
   };
 
   return (
@@ -63,45 +94,19 @@ const CartPage = () => {
               </tr>
             </thead>
             <tbody>
-              {cartItems?.length > 0 && cartItems !== null
-                ? cartItems.map((product) => (
-                    <tr className="border-b" key={product?._id}>
-                      <td className="py-3 px-5" colSpan={2}>
-                        <div className="flex items-center justify-around">
-                          <XCircle
-                            className="text-gray-400 transition-all cursor-pointer hover:text-gray-600"
-                            onClick={() => handleRemoveToCart(product?._id)}
-                          />
-                          <img
-                            src={
-                              product?.product?.imageUrl
-                                ? product?.product?.imageUrl
-                                : "/public/images/potato-1.webp"
-                            }
-                            className="size-20"
-                            alt="potato"
-                          />
-                        </div>
-                      </td>
-
-                      <td className="py-3">
-                        <Link to={`/shop/${product?.product?._id}`}>
-                          {product?.product?.name}
-                        </Link>
-                      </td>
-                      <td className="py-3">{product?.product?.price}</td>
-                      <td className="py-3">
-                        <input
-                          type="number"
-                          value={product?.quantity}
-                          className="w-16 h-10 pl-4 border outline-none "
-                        />
-                      </td>
-                      <td className="py-3">
-                        {parseInt(product?.quantity) *
-                          parseInt(product?.product?.price)}
-                      </td>
-                    </tr>
+              {updatedQuantities && updatedQuantities.length > 0
+                ? updatedQuantities.map((product) => (
+                    <CartTr
+                      key={product?.productId}
+                      productId={product?.productId}
+                      name={product?.name}
+                      price={product?.price}
+                      quantity={product?.quantity}
+                      imageUrl={product?.imageUrl}
+                      updatedQuantities={updatedQuantities[product?.productId]}
+                      handleRemoveToCart={handleRemoveToCart}
+                      handleQuantityChange={handleQuantityChange}
+                    />
                   ))
                 : ""}
             </tbody>

@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { useEffect, useState } from "react";
 import { Image, Star } from "lucide-react";
 import { useParams } from "react-router-dom";
@@ -9,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addToCart, fetchCartItems } from "../../store/features/cartSlice";
 import Spinner from "../../components/utility/Spinner";
 import ReviewForm from "../../components/client/shop/ReviewForm";
+import { toast } from "react-toastify";
 
 const VITE_API_URL = import.meta.env.VITE_API_URL;
 const ProductPage = () => {
@@ -17,6 +17,8 @@ const ProductPage = () => {
   const [productData, setProductData] = useState(null);
   const [showDescription, setShowDescription] = useState(true);
   const [showReview, setShowReview] = useState(false);
+
+  const authUser = useSelector((state) => state.user.user);
 
   const { id } = useParams();
   const { data, loading } = useFetchData(
@@ -35,11 +37,22 @@ const ProductPage = () => {
   // const { cartItems, status, error } = useSelector((state) => state.cart);
 
   useEffect(() => {
-    dispatch(fetchCartItems());
-  }, [dispatch]);
+    dispatch(fetchCartItems(authUser?._id));
+  }, [authUser?._id, dispatch]);
 
   const handleAddToCart = () => {
-    dispatch(addToCart({ productId, quantity }));
+    dispatch(
+      addToCart({
+        userId: authUser?._id,
+        productId,
+        quantity: parseInt(quantity),
+      })
+    ).then((data) => {
+      if (data?.payload?.success) {
+        dispatch(fetchCartItems(authUser?._id));
+        toast.success("Product is added to cart");
+      }
+    });
   };
 
   const handleShowDescription = () => {
@@ -51,6 +64,7 @@ const ProductPage = () => {
     setShowDescription(false);
     setShowReview(true);
   };
+
 
   return (
     <div className="w-full h-auto text-left">

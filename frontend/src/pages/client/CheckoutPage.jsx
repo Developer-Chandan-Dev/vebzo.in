@@ -24,32 +24,36 @@ const CheckoutPage = () => {
   const [orderItems, setOrderItems] = useState([]);
 
   const dispatch = useDispatch();
-
   const navigate = useNavigate();
+  const authUser = useSelector((state) => state.user.user);
 
   useEffect(() => {
-    dispatch(fetchCartItems());
-  }, [dispatch]);
+    dispatch(fetchCartItems(authUser?._id));
+  }, [authUser?._id, dispatch]);
 
   const { cartItems, status, error } = useSelector((state) => state.cart);
-
+  
   useEffect(() => {
-    if (cartItems.length > 0) {
-      const formattedOrderItems = cartItems.map((item) => ({
-        product: item.product._id, // Product ID
+    if (cartItems?.items?.length > 0) {
+      const formattedOrderItems = cartItems?.items.map((item) => ({
+        product: item.productId, // Product ID
         quantity: item.quantity,
-        price: item.product.price,
+        price: item.price,
       }));
-
+      
       setOrderItems(formattedOrderItems);
     }
   }, [cartItems]);
 
   const calculateGrandTotal = (cartItems) => {
-    return cartItems.reduce((total, item) => {
-      return total + item.quantity * item.product.price;
-    }, 0);
+    return (
+      cartItems?.items?.length > 0 &&
+      cartItems?.items?.reduce((total, item) => {
+        return total + item.quantity * item?.price;
+      }, 0)
+    );
   };
+
 
   console.log(orderItems, cartItems);
 
@@ -88,6 +92,8 @@ const CheckoutPage = () => {
           totalPrice: grandTotal,
         }
       );
+
+      console.log(response);
 
       if (response.success === true) {
         toast.success(response.message);

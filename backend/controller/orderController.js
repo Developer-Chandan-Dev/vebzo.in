@@ -59,13 +59,14 @@ const createOrder = asyncHandler(async (req, res, next) => {
 
       if (cart) {
         // Remove ordered products from the cart
-        cart.cartItems = cart.cartItems.filter(
+        cart.items = cart.items.filter(
           (cartItem) =>
             !orderItems.some(
               (orderItem) =>
                 orderItem.product.toString() === cartItem.product.toString()
             )
         );
+        console.log(cart);
 
         // Save the updated cart
         await cart.save();

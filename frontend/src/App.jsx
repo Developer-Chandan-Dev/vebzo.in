@@ -1,6 +1,6 @@
 import "./App.css";
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import { ToastContainer } from 'react-toastify'
 import "react-toastify/dist/ReactToastify.css"
@@ -11,13 +11,15 @@ import DashboardRoutes from "./routes/DashboardRoutes";
 import NotFound from "./pages/NotFound";
 import RoleProtectedRoute from "./components/utility/RoleProtectedRoute";
 import { fetchCartItems } from "./store/features/cartSlice";
+import NotAuthorized from "./pages/NotAuthorized";
 
 function App() {
   const dispatch = useDispatch();
+  const authUser = useSelector((state) => state.user.user);
 
   useEffect(() => {
-    dispatch(fetchCartItems());
-  }, [dispatch]);
+    dispatch(fetchCartItems(authUser?._id));
+  }, [authUser?._id, dispatch]);
 
   return (
     <>
@@ -39,6 +41,7 @@ function App() {
 
         {/* Fallback for Undefined Routes */}
         <Route path="*" element={<NotFound />} />
+        <Route path="/unauthorized" element={<NotAuthorized />} />
       </Routes>
     </Router>
     <ToastContainer/>

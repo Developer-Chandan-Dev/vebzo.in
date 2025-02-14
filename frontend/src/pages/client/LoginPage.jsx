@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import authService from "../../features/auth";
 import { login } from "../../store/features/userSlice";
@@ -11,6 +11,8 @@ const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const authUser = useSelector((state) => state.user.user);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -39,7 +41,7 @@ const LoginPage = () => {
       setPassword("");
       setLoading(false);
       navigate("/");
-      dispatch(fetchCartItems());
+      dispatch(fetchCartItems(authUser?._id));
     } else if (res.data.success !== true && res.data.message) {
       console.log(res.data.message);
       toast.error(res.data.message);

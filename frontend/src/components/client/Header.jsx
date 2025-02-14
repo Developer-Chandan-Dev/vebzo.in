@@ -3,21 +3,24 @@ import { useEffect, useRef, useState } from "react";
 import Button from "../utility/Button";
 import { Menu, ShoppingCart, User, X } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchCartItems } from "../../store/features/cartSlice";
 
 const Header = ({ bg = "bg-white" }) => {
   const [subTotal, setSubTotal] = useState(0);
   const [toggleMenu, setToggleMenu] = useState(false);
   const location = useLocation();
 
+  const dispatch = useDispatch();
+
   const authUser = useSelector((state) => state.user.user);
   const { cartItems } = useSelector((state) => state.cart);
 
   const calculateGrandTotal = (cartItems) => {
     return (
-      cartItems.length > 0 &&
-      cartItems.reduce((total, item) => {
-        return total + item.quantity * item.product?.price;
+      cartItems?.items?.length > 0 &&
+      cartItems?.items?.reduce((total, item) => {
+        return total + item.quantity * item?.price;
       }, 0)
     );
   };
@@ -28,6 +31,12 @@ const Header = ({ bg = "bg-white" }) => {
   useEffect(() => {
     setSubTotal(parseInt(grandTotal));
   }, [grandTotal]);
+
+  useEffect(() => {
+    if (authUser?._id) {
+      dispatch(fetchCartItems(authUser?._id));
+    }
+  }, [authUser?._id, dispatch]);
 
   return (
     <header
@@ -103,7 +112,7 @@ const Header = ({ bg = "bg-white" }) => {
                     size="20"
                   />
                   <span className="flex-center text-xs px-1 py-[2px] -right-2 -top-4 text-white absolute font-serif rounded-full bg-[#8bc34a]">
-                    {cartItems?.length}
+                    {cartItems?.items?.length}
                   </span>
                 </div>
               </Link>

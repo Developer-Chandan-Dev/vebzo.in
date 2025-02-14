@@ -55,7 +55,7 @@ const MyProfile = () => {
   const handleLogout = async () => {
     const res = await authService.logout();
     console.log(res);
-    if (res.data.sucess === true) {
+    if (res.data.success === true) {
       toast.success(res.data.message);
       <Navigate to="/"/>
     } else {

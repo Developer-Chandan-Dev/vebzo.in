@@ -1,14 +1,36 @@
-import { Heart, ShoppingCart, Star } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
+import { Heart, ShoppingCart, Star } from "lucide-react";
 import useFetchData from "../../../hooks/useFetchData";
 import Spinner from "../../utility/Spinner";
+import Button from "../../utility/Button";
+import { addToCart, fetchCartItems } from "../../../store/features/cartSlice";
+const VITE_API_URL = import.meta.env.VITE_API_URL;
 
 const BestSellingProducts = () => {
-  const VITE_API_URL = import.meta.env.VITE_API_URL;
+  const authUser = useSelector((state) => state.user.user);
 
   const { data, loading, error } = useFetchData(
     `${VITE_API_URL}/api/v1/products?bestSellingProducts=true`
   );
+
+  const dispatch = useDispatch();
+
+  function handleAddtoCart(getCurrentProductId) {
+    dispatch(
+      addToCart({
+        userId: authUser?._id,
+        productId: getCurrentProductId,
+        quantity: 1,
+      })
+    ).then((data) => {
+      if (data?.payload?.success) {
+        dispatch(fetchCartItems(authUser?._id));
+        toast.success("Product is added to cart");
+      }
+    });
+  }
 
   return (
     <div className="w-full px-5 sm:px-10 py-20 ">
@@ -79,6 +101,13 @@ const BestSellingProducts = () => {
                       />
                     </div>
                     <p className="mt-1">Rs. {product?.price}.00</p>
+                    <Button
+                      label="Add to cart"
+                      sm={true}
+                      className={"mt-2"}
+                      LeftIcon={ShoppingCart}
+                      onClick={() => handleAddtoCart(product?._id)}
+                    />
                   </div>
                 </div>
               ))

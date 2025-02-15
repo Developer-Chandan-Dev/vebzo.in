@@ -11,6 +11,7 @@ const ShopPage = () => {
   const [maxPrice, setMaxPrice] = useState(50);
   const [toggleFilter, setToggleFilter] = useState(false);
 
+
   return (
     <div>
       <Header />

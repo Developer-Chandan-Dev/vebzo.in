@@ -2,6 +2,7 @@
 /* eslint-disable react/prop-types */
 import { Filter, MoveLeft, MoveRight, Search, Star } from "lucide-react";
 import { useState } from "react";
+import { motion } from "framer-motion";
 import ItemBox from "./ItemBox";
 import useFetchData from "../../../hooks/useFetchData";
 import useFetchDataWithPagination from "../../../hooks/useFetchDataWithPagination";
@@ -41,6 +42,19 @@ const Container = ({
   for (let i = 1; i <= data?.totalPages; i++) {
     pageNumbers.push(i);
   }
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2, // Stagger delay between each child animation
+        duration: 1,
+      },
+    },
+  };
+
+
 
   return (
     <div className="w-full md:w-[800px] h-auto text-left">
@@ -84,7 +98,10 @@ const Container = ({
         </select>
       </div>
 
-      <div className="flex items-center flex-wrap gap-5 my-14 ">
+      <motion.div
+        className="flex items-center flex-wrap gap-5 my-14 "
+        variants={containerVariants}
+      >
         {loading && (
           <div className="w-full h-64 flex-center">
             <Spinner />
@@ -104,7 +121,7 @@ const Container = ({
               />
             ))
           : ""}
-      </div>
+      </motion.div>
       <div className="flex items-center gap-3">
         <button
           className={`w-10 h-10 border border-[#8bc34a] text-[#8bc34a] font-semibold text-base transition-all hover:bg-[#8bc34a] hover:text-white ${

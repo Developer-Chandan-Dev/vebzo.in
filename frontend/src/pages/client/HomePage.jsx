@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React from "react";
+import { motion } from "framer-motion";
 import Header from "../../components/client/Header";
 import HeroSection from "../../components/client/home/HeroSection";
 import BestSellingProducts from "../../components/client/home/BestSellingProducts";
@@ -8,13 +9,37 @@ import LeafSection from "../../components/client/home/LeafSection";
 import Footer from "../../components/client/Footer";
 
 const HomePage = () => {
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2, // Stagger delay between each child animation
+        duration: 1,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: { y: 0, opacity: 1 },
+  };
   return (
     <div className="w-full h-auto ">
       <Header />
       <HeroSection />
       <div className="w-full py-12 px-4 bg-black text-white flex-center">
-        <div className="flex-center flex-wrap gap-5">
-          <div className="w-11/12 sm:w-72 h-32 rounded bg-[#333333] flex items-center px-6">
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="flex-center flex-wrap gap-5"
+        >
+          <motion.div
+            variants={itemVariants}
+            whileHover={{ y: -10 }}
+            className="w-11/12 sm:w-72 h-32 rounded bg-[#333333] flex items-center px-6"
+          >
             <div className="flex items-center gap-x-5">
               <svg
                 aria-hidden="true"
@@ -29,8 +54,12 @@ const HomePage = () => {
                 <h4 className="text-md">Above $5 Only</h4>
               </div>
             </div>
-          </div>
-          <div className="w-11/12 sm:w-72 h-32 rounded bg-[#333333] flex items-center px-6">
+          </motion.div>
+          <motion.div
+            variants={itemVariants}
+            whileHover={{ y: -10 }}
+            className="w-11/12 sm:w-72 h-32 rounded bg-[#333333] flex items-center px-6"
+          >
             <div className="flex items-center gap-x-5">
               <svg
                 aria-hidden="true"
@@ -45,8 +74,12 @@ const HomePage = () => {
                 <h4 className="text-md">100% Guarantee</h4>
               </div>
             </div>
-          </div>
-          <div className="w-11/12 sm:w-72 h-32 rounded bg-[#333333] flex items-center px-6">
+          </motion.div>
+          <motion.div
+            variants={itemVariants}
+            whileHover={{ y: -10 }}
+            className="w-11/12 sm:w-72 h-32 rounded bg-[#333333] flex items-center px-6"
+          >
             <div className="flex items-center gap-x-5">
               <svg
                 aria-hidden="true"
@@ -61,8 +94,12 @@ const HomePage = () => {
                 <h4 className="text-md">At Lowest Price</h4>
               </div>
             </div>
-          </div>
-          <div className="w-11/12 sm:w-72 h-32 rounded bg-[#333333] flex items-center px-6">
+          </motion.div>
+          <motion.div
+            variants={itemVariants}
+            whileHover={{ y: -10 }}
+            className="w-11/12 sm:w-72 h-32 rounded bg-[#333333] flex items-center px-6"
+          >
             <div className="flex items-center gap-x-5">
               <svg
                 aria-hidden="true"
@@ -77,8 +114,8 @@ const HomePage = () => {
                 <h4 className="text-md">No Questions Asked</h4>
               </div>
             </div>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </div>
       <BestSellingProducts />
       <LeafSection />

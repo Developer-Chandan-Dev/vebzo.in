@@ -26,19 +26,23 @@ const useHandleSendingRequest = (initialState) => {
         data: formData, //
         withCredentials: true,
         headers: {
-          "Content-Type":
-            bool ? "multipart/form-data" : "application/json",
+          "Content-Type": bool ? "multipart/form-data" : "application/json",
         },
       });
 
       setLoading(false);
       setFormData(initialState);
       return response.data;
+
     } catch (error) {
-      console.log(error);
+      if (error?.response?.data?.message) {
+        setLoading(false);
+        setError(error.response?.data?.message || "Something went wrong");
+        return error.response?.data?.message || "Something went wrong";
+      }
       setLoading(false);
-      setError(error.response?.data?.message || "Something went wrong");
-      return error.response?.data?.message || "Something went wrong";
+      setError(error.response?.statusText || "Something went wrong");
+      return error.response?.statusText || "Something went wrong";
     }
   };
 

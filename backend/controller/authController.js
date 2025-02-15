@@ -230,12 +230,19 @@ const updateUserByAdmin = asyncHandler(async (req, res, next) => {
 });
 
 const updatePassword = asyncHandler(async (req, res, next) => {
-  const { username, email, oldPassword, newPassword } = req.body;
+  const { email, oldPassword, newPassword, confirmPassword } = req.body;
 
   try {
     // Check if all required fields are provided
-    if (!username || !email || !oldPassword || !newPassword) {
+    if (!email || !oldPassword || !newPassword || !confirmPassword) {
       return next(new ErrorResponse("All fields are required", 400));
+    }
+
+    // Check newPassword and confirmPassword are same or not
+    if (newPassword !== confirmPassword) {
+      return next(
+        new ErrorResponse("New and confirm password are not same. ", 400)
+      );
     }
 
     // Find the user by username and email

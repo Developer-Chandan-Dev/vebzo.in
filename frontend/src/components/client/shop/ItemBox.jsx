@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 import "./style.css";
+import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Image, ShoppingCart, Star } from "lucide-react";
 import Button from "../../utility/Button";
@@ -28,8 +29,13 @@ const ItemBox = ({ _id, name, category, price, imageUrl, rating }) => {
     });
   }
 
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: { y: 0, opacity: 1 },
+  };
+
   return (
-    <div className="itemBox w-44 lg:w-52 xl:w-60 h-auto">
+    <motion.div variants={itemVariants} className="itemBox w-44 lg:w-52 xl:w-60 h-auto">
       <Link to={`/shop/${_id}`}>
         <div className="w-44 h-44 lg:w-52 lg:h-52 xl:w-60 xl:h-60 border mx-auto overflow-hidden itemImgBox">
           {imageUrl ? (
@@ -62,7 +68,7 @@ const ItemBox = ({ _id, name, category, price, imageUrl, rating }) => {
           onClick={() => handleAddtoCart(_id)}
         />
       </div>
-    </div>
+    </motion.div>
   );
 };
 

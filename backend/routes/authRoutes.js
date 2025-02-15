@@ -28,6 +28,7 @@ router.post("/logout", logout); // Logout from current account
 router.get("/me", protect, me); // Get profile data from current account
 router.put(
   "/me/:id",
+  rateLimiter,
   validate(userUpdateValidationSchema),
   protect,
   upload.single("imageUrl"),

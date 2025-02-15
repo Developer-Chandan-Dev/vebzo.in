@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { ensureUncategorizedExists } = require("../utils/categoryUtils");
+const { ensureUncategorizedExists } = require("../utils/ensureUncategorizedExists");
 
 const productSchema = new mongoose.Schema(
   {

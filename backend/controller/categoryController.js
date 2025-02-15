@@ -121,6 +121,7 @@ const updateCategory = asyncHandler(async (req, res, next) => {
 // @access Admin
 const deleteCategory = asyncHandler(async (req, res, next) => {
   try {
+    console.log(req.params.id);
     const category = await Category.findByIdAndDelete(req.params.id);
 
     if (!category) {

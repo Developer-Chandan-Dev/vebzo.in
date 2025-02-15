@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 import { UserIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Navigate } from 'react-router-dom'
+import { Navigate } from "react-router-dom";
 import Button from "../../utility/Button";
 import SmallSpinner from "../../utility/SmallSpinner";
 import authService from "../../../features/auth";
@@ -57,7 +57,7 @@ const MyProfile = () => {
     console.log(res);
     if (res.data.success === true) {
       toast.success(res.data.message);
-      <Navigate to="/"/>
+      <Navigate to="/" />;
     } else {
       toast.error(res.data.message);
     }
@@ -70,31 +70,33 @@ const MyProfile = () => {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
 
-    const formData = new FormData();
+    try {
+      setLoading(true);
 
-    formData.append("username", username);
-    formData.append("email", email);
-    formData.append("phone", phone);
-    formData.append("address", address);
-    formData.append("imageUrl", image);
+      const formData = new FormData();
 
-    const res = await handleSubmit(
-      "PUT",
-      `${VITE_API_URL}/api/v1/auth/me/${user?._id}`,
-      formData,
-      true
-    );
+      formData.append("username", username);
+      formData.append("email", email);
+      formData.append("phone", phone);
+      formData.append("address", address);
+      formData.append("imageUrl", image);
 
-    if (res.success === true) {
-      toast.success(res?.message);
-      setFilePreview(res?.user.imageUrl);
-      setLoading(false);
-    } else {
-      console.log(res);
-      toast.error(res?.message);
-      setLoading(false);
+      const res = await handleSubmit(
+        "PUT",
+        `${VITE_API_URL}/api/v1/auth/me/${user?._id}`,
+        formData,
+        true
+      );
+
+      if (res.success === true) {
+        toast.success(res?.message);
+        setFilePreview(res?.user.imageUrl);
+        setLoading(false);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error || "Something went wrong");
     }
   };
 

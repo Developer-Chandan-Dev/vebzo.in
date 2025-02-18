@@ -14,7 +14,6 @@ const SettingPage = () => {
   };
 
   
-
   return (
     <div className="flex-1 overflow-y-auto relative z-10 pb-6 bg-gray-900">
       <Header title="Settings" />

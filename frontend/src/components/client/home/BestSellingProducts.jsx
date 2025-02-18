@@ -6,6 +6,7 @@ import useFetchData from "../../../hooks/useFetchData";
 import Spinner from "../../utility/Spinner";
 import Button from "../../utility/Button";
 import { addToCart, fetchCartItems } from "../../../store/features/cartSlice";
+import useHandleSwitchRoutes from "../../../hooks/useHandleSwitchRoutes";
 const VITE_API_URL = import.meta.env.VITE_API_URL;
 
 const BestSellingProducts = () => {
@@ -16,6 +17,8 @@ const BestSellingProducts = () => {
   );
 
   const dispatch = useDispatch();
+
+  const { handleGoToLoginPage } = useHandleSwitchRoutes();
 
   function handleAddtoCart(getCurrentProductId) {
     dispatch(
@@ -106,7 +109,11 @@ const BestSellingProducts = () => {
                       sm={true}
                       className={"mt-2"}
                       LeftIcon={ShoppingCart}
-                      onClick={() => handleAddtoCart(product?._id)}
+                      onClick={() =>
+                        authUser
+                          ? handleAddtoCart(product?._id)
+                          : handleGoToLoginPage()
+                      }
                     />
                   </div>
                 </div>

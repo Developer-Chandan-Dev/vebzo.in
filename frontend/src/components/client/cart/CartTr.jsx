@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 /* eslint-disable react/prop-types */
-import { XCircle } from "lucide-react";
+import { Check, CheckCircle, CheckCircle2, XCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const CartTr = ({
@@ -12,6 +12,7 @@ const CartTr = ({
   updatedQuantities,
   handleRemoveToCart,
   handleQuantityChange,
+  handleUpdateClick,
 }) => {
   return (
     <>
@@ -37,6 +38,7 @@ const CartTr = ({
           <input
             type="number"
             value={quantity}
+            min={1}
             onChange={(e) =>
               handleQuantityChange(productId, Number(e.target.value))
             }
@@ -44,6 +46,12 @@ const CartTr = ({
           />
         </td>
         <td className="py-3">{parseInt(quantity) * parseInt(price)}</td>
+        <td className="">
+          <CheckCircle2
+            className={`size-7 text-white fill-green-400 opacity-45 hover:opacity-100 cursor-pointer`}
+            onClick={() => handleUpdateClick(productId, quantity)}
+          />
+        </td>
       </tr>
     </>
   );

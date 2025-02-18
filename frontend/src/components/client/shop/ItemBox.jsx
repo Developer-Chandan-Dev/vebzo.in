@@ -2,17 +2,20 @@
 /* eslint-disable no-unused-vars */
 import "./style.css";
 import { motion } from "framer-motion";
+import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import { Image, ShoppingCart, Star } from "lucide-react";
 import Button from "../../utility/Button";
-import { useDispatch, useSelector } from "react-redux";
 import { addToCart, fetchCartItems } from "../../../store/features/cartSlice";
-import { toast } from "react-toastify";
+import useHandleSwitchRoutes from "../../../hooks/useHandleSwitchRoutes";
 
 const ItemBox = ({ _id, name, category, price, imageUrl, rating }) => {
   const authUser = useSelector((state) => state.user.user);
 
   const dispatch = useDispatch();
+
+  const { handleGoToLoginPage } = useHandleSwitchRoutes();
 
   function handleAddtoCart(getCurrentProductId) {
     dispatch(
@@ -35,7 +38,10 @@ const ItemBox = ({ _id, name, category, price, imageUrl, rating }) => {
   };
 
   return (
-    <motion.div variants={itemVariants} className="itemBox w-44 lg:w-52 xl:w-60 h-auto">
+    <motion.div
+      variants={itemVariants}
+      className="itemBox w-44 lg:w-52 xl:w-60 h-auto"
+    >
       <Link to={`/shop/${_id}`}>
         <div className="w-44 h-44 lg:w-52 lg:h-52 xl:w-60 xl:h-60 border mx-auto overflow-hidden itemImgBox">
           {imageUrl ? (
@@ -65,7 +71,9 @@ const ItemBox = ({ _id, name, category, price, imageUrl, rating }) => {
           sm={true}
           className={"mt-2"}
           LeftIcon={ShoppingCart}
-          onClick={() => handleAddtoCart(_id)}
+          onClick={() =>
+            authUser ? handleAddtoCart(_id) : handleGoToLoginPage()
+          }
         />
       </div>
     </motion.div>

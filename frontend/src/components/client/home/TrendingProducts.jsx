@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addToCart, fetchCartItems } from "../../../store/features/cartSlice";
 import { toast } from "react-toastify";
 import Button from "../../utility/Button";
+import useHandleSwitchRoutes from "../../../hooks/useHandleSwitchRoutes";
 const VITE_API_URL = import.meta.env.VITE_API_URL;
 
 const TrendingProducts = () => {
@@ -16,6 +17,9 @@ const TrendingProducts = () => {
   );
 
   const dispatch = useDispatch();
+
+  const { handleGoToLoginPage } = useHandleSwitchRoutes();
+
   function handleAddtoCart(getCurrentProductId) {
     dispatch(
       addToCart({
@@ -46,7 +50,7 @@ const TrendingProducts = () => {
           <Spinner />
         </div>
       )}
-      
+
       {!loading && (
         <div className="flex items-center justify-center flex-wrap gap-5 my-14">
           {data?.data.length > 0 && data?.data !== null
@@ -104,7 +108,7 @@ const TrendingProducts = () => {
                       sm={true}
                       className={"mt-2"}
                       LeftIcon={ShoppingCart}
-                      onClick={() => handleAddtoCart(product?._id)}
+                      onClick={() => authUser ? handleAddtoCart(product?._id) : handleGoToLoginPage()}
                     />
                   </div>
                 </div>

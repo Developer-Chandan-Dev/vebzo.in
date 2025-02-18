@@ -113,6 +113,7 @@ const fetchCartItems = async (req, res) => {
 const updateCartItemQty = async (req, res) => {
   try {
     const { userId, productId, quantity } = req.body;
+    console.log(userId, productId, quantity);
 
     if (!userId || !productId || quantity <= 0) {
       return res.status(400).json({
@@ -145,17 +146,18 @@ const updateCartItemQty = async (req, res) => {
 
     await cart.populate({
       path: "items.productId",
-      select: "image title price salePrice",
+      select: "imageUrl name price",
     });
 
     const populateCartItems = cart.items.map((item) => ({
       productId: item.productId ? item.productId._id : null,
-      image: item.productId ? item.productId.image : null,
-      title: item.productId ? item.productId.title : "Product not found",
+      imageUrl: item.productId ? item.productId.imageUrl : null,
+      name: item.productId ? item.productId.name : "Product not found",
       price: item.productId ? item.productId.price : null,
-      salePrice: item.productId ? item.productId.salePrice : null,
+      // salePrice: item.productId ? item.productId.salePrice : null,
       quantity: item.quantity,
     }));
+    console.log(populateCartItems);
 
     res.status(200).json({
       success: true,

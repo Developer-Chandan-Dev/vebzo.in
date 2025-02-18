@@ -13,7 +13,6 @@ export const fetchCartItems = createAsyncThunk(
   "cart/fetchCartItems",
   async (userId, { rejectWithValue }) => {
     try {
-
       const response = await axios.get(
         `${VITE_API_URL}/api/v1/cart/${userId}`,
         {
@@ -75,13 +74,22 @@ export const updateCart = createAsyncThunk(
   "cart/updateCart",
   async ({ userId, productId, quantity }, { rejectWithValue }) => {
     try {
-      const response = await axios.put(`${VITE_API_URL}/api/v1/update-cart/`, {
-        userId,
-        productId,
-        quantity,
-      });
+      console.log(userId, productId, quantity);
+      const response = await axios.put(
+        `${VITE_API_URL}/api/v1/cart/update-cart`,
+        {
+          userId,
+          productId,
+          quantity,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+      console.log(response);
       return response.data; // Backend returns updated cart item
     } catch (error) {
+      console.log(error);
       return rejectWithValue(error.response.data);
     }
   }
@@ -125,7 +133,7 @@ const cartSlice = createSlice({
       })
       .addCase(removeFromCart.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.cartItems = action.payload.data;
+        state.cartItems = action.payload.data?.items;
       })
       .addCase(removeFromCart.rejected, (state) => {
         state.isLoading = false;
@@ -139,6 +147,7 @@ const cartSlice = createSlice({
       .addCase(updateCart.fulfilled, (state, action) => {
         state.isLoading = false;
         state.cartItems = action.payload.data;
+        console.log(action.payload.data)
       })
       .addCase(updateCart.rejected, (state) => {
         state.isLoading = false;

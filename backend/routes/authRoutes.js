@@ -23,7 +23,8 @@ const upload = require("../middlewares/fileUploadMiddleware");
 
 // Auth Routes
 router.post("/register", rateLimiter, validate(userValidationSchema), signup); // Register with new account
-router.post("/login", rateLimiter, validate(loginValidationSchema), login); // Login with existing account
+// router.post("/login", rateLimiter, validate(loginValidationSchema), login); // Login with existing account
+router.post("/login", validate(loginValidationSchema), login); // Login with existing account
 router.post("/logout", logout); // Logout from current account
 router.get("/me", protect, me); // Get profile data from current account
 router.put(
@@ -34,7 +35,7 @@ router.put(
   upload.single("imageUrl"),
   updateProfile
 ); // Route for updating user details
-router.put("/update-password", rateLimiter, protect, updatePassword); // Route for updating user password
+router.put("/update-password/:id", rateLimiter, protect, updatePassword); // Route for updating user password
 
 // Admin-only route for updating user details
 router.put("/user/:id", rateLimiter, protect, admin, updateUserByAdmin);

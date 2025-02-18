@@ -15,16 +15,21 @@ import { toast } from "react-toastify";
 import CartTr from "../../components/client/cart/CartTr";
 
 const CartPage = () => {
+  const [userId, setUserId] = useState("");
   const [subTotal, setSubTotal] = useState(0);
   const [deliveryCharge, setDeliveryCharge] = useState(0);
   const dispatch = useDispatch();
 
   const authUser = useSelector((state) => state.user.user);
   const { cartItems, status, error } = useSelector((state) => state.cart);
-
+  console.log(cartItems);
   useEffect(() => {
     dispatch(fetchCartItems(authUser?._id));
   }, [authUser?._id, dispatch]);
+
+  useEffect(() => {
+    setUserId(authUser?._id);
+  }, [authUser]);
 
   const calculateGrandTotal = (cartItems) => {
     return (
@@ -47,16 +52,17 @@ const CartPage = () => {
       removeFromCart({ userId: authUser?._id, productId: productId })
     ).then((data) => {
       if (data?.payload?.success) {
-        toast({
-          title: "Cart item is deleted successfully",
-        });
+        dispatch(fetchCartItems(authUser?._id));
+        toast.success("Cart item is deleted successfully");
       }
     });
   };
 
-  const [updatedQuantities, setUpdatedQuantities] = useState(
-    cartItems?.items || []
-  );
+  const [updatedQuantities, setUpdatedQuantities] = useState([]);
+
+  useEffect(() => {
+    setUpdatedQuantities(cartItems?.items ? cartItems?.items : cartItems);
+  }, [cartItems]);
 
   const handleQuantityChange = (productId, newQuantity) => {
     // Update cartItems.items correctly
@@ -71,9 +77,13 @@ const CartPage = () => {
   console.log(updatedQuantities, cartItems?.items);
 
   // Update Redux store & backend when "Update" button is clicked
-  const handleUpdateClick = (productId) => {
-    const newQuantity = updatedQuantities[productId];
-    dispatch(updateCart(productId, newQuantity)); // Call API & Redux
+  const handleUpdateClick = (productId, quantity) => {
+    console.log(quantity, productId);
+    dispatch(updateCart({ userId, productId, quantity })).then((data) => {
+      if (data?.payload?.success) {
+        toast.success("Item updated successfully");
+      }
+    }); // Call API & Redux
   };
 
   return (
@@ -90,7 +100,10 @@ const CartPage = () => {
                 <th className="px-5 py-4">Product</th>
                 <th className="px-5 py-4">Price</th>
                 <th className="px-5 py-4">Quantity</th>
-                <th className="px-5 py-4">Subtotal</th>
+                <th className="px-5 py-4 text-left" colSpan={2}>
+                  Subtotal
+                </th>
+                {/* <th className="px-5 py-4">Action</th> */}
               </tr>
             </thead>
             <tbody>
@@ -106,6 +119,7 @@ const CartPage = () => {
                       updatedQuantities={updatedQuantities[product?.productId]}
                       handleRemoveToCart={handleRemoveToCart}
                       handleQuantityChange={handleQuantityChange}
+                      handleUpdateClick={handleUpdateClick}
                     />
                   ))
                 : ""}

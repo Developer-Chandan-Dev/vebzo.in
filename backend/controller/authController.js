@@ -230,11 +230,18 @@ const updateUserByAdmin = asyncHandler(async (req, res, next) => {
 });
 
 const updatePassword = asyncHandler(async (req, res, next) => {
-  const { email, oldPassword, newPassword, confirmPassword } = req.body;
+  const { id: userId } = req.params; // ID of the user to be updated
+  const { oldPassword, newPassword, confirmPassword } = req.body;
+  console.log(userId, req.user.id);
 
   try {
+
+    if (userId !== req.user.id) {
+      return next(new ErrorResponse("Not Authorized", 403));
+    }
+
     // Check if all required fields are provided
-    if (!email || !oldPassword || !newPassword || !confirmPassword) {
+    if (!oldPassword || !newPassword || !confirmPassword) {
       return next(new ErrorResponse("All fields are required", 400));
     }
 
@@ -246,7 +253,8 @@ const updatePassword = asyncHandler(async (req, res, next) => {
     }
 
     // Find the user by username and email
-    const user = await User.findOne({ username, email });
+    const user = await User.findOne({_id: userId});
+    
     if (!user) {
       return next(new ErrorResponse("Invalid username or email", 404));
     }
@@ -256,9 +264,11 @@ const updatePassword = asyncHandler(async (req, res, next) => {
     if (!isMatch) {
       return next(new ErrorResponse("Old password is incorrect", 401));
     }
+    console.log(isMatch, '266');
 
     // Update the password (no manual hashing required, pre-save will handle it)
     user.password = newPassword;
+    console.log(user);
     await user.save();
 
     res.status(200).json({

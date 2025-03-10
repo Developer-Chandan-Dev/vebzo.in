@@ -21,16 +21,13 @@ const HeroSection = () => {
             className="pb-5 leaf"
           />
           <h5 className="text-base lg:text-md xl:text-lg font-semibold text-gray-700">
-            Best Quality Products
+            Welcome to Apna Store
           </h5>
           <h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl head-line-1 leading-[50px] lg:leading-[60px] xl:leading-[70px] text-gray-700">
-            Join The Organic Movement!
+            Your Trusted Organic Marketplace
           </h1>
           <p className="mt-7 text-gray-600 text-base">
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Labore,
-            maxime blanditiis veritatis repudiandae veniam rem aliquam
-            voluptatem laboriosam suscipit ullam velit quod minima nam,
-            laudantium placeat excepturi numquam autem debitis?
+            Bringing nature&apos;s best to your doorstep! Shop fresh, healthy, and chemical-free organic products directly from farms.
           </p>
           <Link to="/shop">
             <Button label="SHOP NOW" LeftIcon={ShoppingCart} className="mt-5" />

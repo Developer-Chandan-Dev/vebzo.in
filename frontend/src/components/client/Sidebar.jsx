@@ -1,13 +1,15 @@
 /* eslint-disable react/prop-types */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./style.css";
 import { Search, X } from "lucide-react";
 import ToggleSwitch from "../utility/ToggleSwitch";
+import useFetchData from "../../hooks/useFetchData";
+import { Link } from "react-router-dom";
+const URL = import.meta.env.VITE_API_URL;
 
 const Sidebar = ({
   toggleSidebar,
   setToggleSidebar,
-  searchText = "",
   setSearchText,
   minPrice,
   maxPrice,
@@ -15,11 +17,14 @@ const Sidebar = ({
   setMaxPrice,
   toggleFilter,
   setToggleFilter,
+  setCurrentPage,
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [categories, setCategories] = useState(null);
 
   const handleSetSearchText = () => {
     setSearchText(searchTerm.trim());
+    setCurrentPage(1);
   };
 
   const handleKeyPress = (event) => {
@@ -27,6 +32,20 @@ const Sidebar = ({
       handleSetSearchText(); // Trigger the search function when Enter key is pressed
     }
   };
+
+  useEffect(() => {
+    if (searchTerm === "" || searchTerm === null) {
+      handleSetSearchText();
+    }
+  }, [setSearchText, searchTerm]);
+
+  const { data, loading, error } = useFetchData(`${URL}/api/v1/category`);
+
+  useEffect(() => {
+    setCategories(data?.data);
+  }, [data?.data]);
+
+  console.log(error);
   return (
     <div
       className={`${
@@ -79,17 +98,24 @@ const Sidebar = ({
           />
         </div>
       </div>
-      <div className="px-3 py-4 text-left text-base">
+      <div className="px-3 pb-2 text-left text-base">
         <ul>
-          <li className="py-2 text-[#8bc34a]">
+          {/* <li className="py-2 text-[#8bc34a]">
             Uncategories <span className="text-gray-700">(1)</span>
-          </li>
-          <li className="py-2 text-[#8bc34a]">
-            Groceries <span className="text-gray-700">(10)</span>
-          </li>
-          <li className="py-2 text-[#8bc34a]">
-            Juice <span className="text-gray-700">(9)</span>
-          </li>
+          </li> */}
+          {loading && <p>Loading...</p>}
+          {categories?.length > 0 && categories !== null && !loading
+            ? categories?.map((item, index) => (
+                <Link to={`/shop/category/${item?._id}`} key={index}>
+                  <li className="py-2 text-[#8bc34a]">
+                    {item?.name}{" "}
+                    <span className="text-gray-700">
+                      ({item?.productCount})
+                    </span>
+                  </li>
+                </Link>
+              ))
+            : "Categories not found"}
         </ul>
       </div>
     </div>

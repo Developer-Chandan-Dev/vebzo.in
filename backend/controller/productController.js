@@ -1,4 +1,5 @@
 const Product = require("../models/product.model");
+const Category = require("../models/category.model");
 const asyncHandler = require("../utils/asyncHandler");
 const ErrorResponse = require("../utils/errorResponse");
 const {
@@ -10,7 +11,6 @@ const {
 const createProduct = asyncHandler(async (req, res, next) => {
   try {
     const { name, description, price, stock, category } = req.body;
-    console.log(name, description, price, stock, category);
 
     // Validate required fields
     if (!name || !price || !stock || !category) {
@@ -45,7 +45,7 @@ const productImageUpload = asyncHandler(async (req, res, next) => {
   try {
     const productId = req.params.productId; // Get product ID from route parameters
     const newImagePath = req.file?.path; // Path of the uploaded image from Multer
-    console.log(newImagePath, req.file, '48');
+    console.log(newImagePath, req.file, "48");
     // Find the product in the database
     const product = await Product.findById(productId);
     if (!product) {
@@ -97,6 +97,8 @@ const getProducts = asyncHandler(async (req, res, next) => {
       isFeatured,
       bestSellingProducts,
     } = req.query;
+
+    console.log(query, "101");
 
     const filters = {};
 
@@ -212,6 +214,7 @@ const getProductById = asyncHandler(async (req, res, next) => {
       { new: true } // Return the updated product
     ).populate("category", "name");
 
+
     if (!product) {
       return next(new ErrorResponse("Product not found", 404));
     }
@@ -226,7 +229,7 @@ const getProductById = asyncHandler(async (req, res, next) => {
 // @desc Update a product (PUT - /api/v1/products/:id, [Admin])
 const updateProduct = asyncHandler(async (req, res, next) => {
   try {
-    const { name, description, price, stock, category } = req.body;
+    const { name, description, price, salesPrice, stock, category } = req.body;
     const productId = req.params.id;
 
     // Find the existing product by ID
@@ -240,6 +243,7 @@ const updateProduct = asyncHandler(async (req, res, next) => {
       ...(name && { name }), // Add name only if provided
       ...(description && { description }),
       ...(price && { price }),
+      ...(salesPrice > 0 && { salesPrice }),
       ...(stock && { stock }),
       ...(category && { category }),
     };
@@ -296,16 +300,80 @@ const deleteProduct = asyncHandler(async (req, res, next) => {
 const productsByCategory = asyncHandler(async (req, res, next) => {
   try {
     const categoryId = req.params.categoryId;
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 8;
 
-    const products = await Product.find({ category: categoryId }).populate(
-      "category",
-      "name description"
-    );
+    const { query, minPrice, maxPrice, inStock, sortBy } = req.query;
 
-    if (!products) {
-      return next(new ErrorResponse("Products not found", 404));
+    const filters = {};
+
+    // Filtering logic
+    if (query) {
+      filters.$or = [
+        { name: { $regex: query, $options: "i" } },
+        { description: { $regex: query, $options: "i" } },
+      ];
     }
-    res.status(200).json({ success: true, data: products });
+    if (minPrice) filters.price = { ...filters.price, $gte: minPrice };
+    if (maxPrice) filters.price = { ...filters.price, $lte: maxPrice };
+    if (categoryId) filters.category = { ...filters.category, $eq: categoryId };
+    if (inStock === "true") filters.stock = { $gt: 0 };
+
+    // Sorting logic
+    let sortOption = {};
+    if (sortBy) {
+      switch (sortBy) {
+        case "latest": // Sort by creation date (latest first)
+          sortOption = { createdAt: -1 };
+          break;
+        case "oldest": // Sort by creation date (oldest first)
+          sortOption = { createdAt: 1 };
+          break;
+        case "price-asc": // Sort by price (low to high)
+          sortOption = { price: 1 };
+          break;
+        case "price-desc": // Sort by price (high to low)
+          sortOption = { price: -1 };
+          break;
+        case "name-asc": // Sort alphabetically by name (A-Z)
+          sortOption = { name: 1 };
+          break;
+        case "name-desc": // Sort alphabetically by name (Z-A)
+          sortOption = { name: -1 };
+          break;
+        case "popularity": // Sort by popularity (e.g., purchase count)
+          sortOption = { sold: -1 };
+          break;
+        case "average-rating": // Sort by average rating (highest first)
+          sortOption = { averageRating: -1 };
+          break;
+        default: // Default to latest products
+          sortOption = { createdAt: -1 };
+      }
+    } else {
+      // Default sort option (latest products)
+      sortOption = { createdAt: -1 };
+    }
+
+    const totalProducts = await Product.countDocuments(filters);
+    const totalPages = Math.ceil(totalProducts / limit);
+
+    const category = await Category.findOne({ _id: categoryId });
+    console.log(category);
+
+    const products = await Product.find(filters)
+      .sort(sortOption)
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .populate("category", "name description");
+
+    res.status(200).json({
+      success: true,
+      data: products,
+      totalPages,
+      totalProducts,
+      category,
+    });
   } catch (error) {
     console.log(error);
     return next(new ErrorResponse("Internal Server Error", 500));

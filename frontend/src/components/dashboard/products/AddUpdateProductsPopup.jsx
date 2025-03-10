@@ -11,10 +11,13 @@ const VITE_API_URL = import.meta.env.VITE_API_URL;
 const AddUpdateProductsPopup = ({ product, onClose }) => {
   const [name, setName] = useState(product?.name || "");
   const [description, setDescription] = useState(product?.description || "");
-  const [price, setPrice] = useState(product?.price || "");
+  const [price, setPrice] = useState(product?.price || 0);
+  const [salesPrice, setSalesPrice] = useState(product?.salesPrice || 0);
   const [category, setCategory] = useState(product?.categoryId || "");
-  const [stock, setStock] = useState(product?.stock || "");
+  const [stock, setStock] = useState(product?.stock || 0);
   const [isFeatured, setIsFeatured] = useState(product?.isFeatured || false);
+
+  console.log(product);
 
   const [newProductId, setNewProductId] = useState("");
 
@@ -36,11 +39,13 @@ const AddUpdateProductsPopup = ({ product, onClose }) => {
         name,
         description,
         price,
+        salesPrice,
         category,
         stock,
         isFeatured,
       }
     );
+
     if (response.success === true) {
       toast.success(response.message);
       setSecondPage(true);
@@ -48,27 +53,30 @@ const AddUpdateProductsPopup = ({ product, onClose }) => {
       setName("");
       setDescription("");
       setPrice(0);
+      setSalesPrice(0);
       setCategory("");
       setStock(0);
       setIsFeatured(false);
     } else {
       toast.error(response.message);
       setSecondPage(false);
-      console.log(response);
+    }
+    if(response){
+      toast.error(response);
     }
   };
 
-    useEffect(() => {
-      const handleKeyDown = (event) => {
-        if (event.key === "Escape") {
-          onClose(false);
-        }
-      };
-  
-      window.addEventListener("keydown", handleKeyDown);
-  
-      return () => window.removeEventListener("keydown", handleKeyDown);
-    },[]);
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") {
+        onClose(false);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   return (
     <motion.div
@@ -139,6 +147,21 @@ const AddUpdateProductsPopup = ({ product, onClose }) => {
                       required
                       value={price}
                       onChange={(e) => setPrice(e.target.value)}
+                      className="w-24 sm:w-32 h-10 py-1 px-[10px] border rounded-md border-slate-500 outline-slate-500 my-2 bg-gray-700"
+                      placeholder="Price"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label htmlFor="salesPrice" className="ml-1">
+                    Sales Price
+                  </label>
+                  <div className="py-1">
+                    <input
+                      type="number"
+                      id="salesPrice"
+                      value={salesPrice}
+                      onChange={(e) => setSalesPrice(e.target.value)}
                       className="w-24 sm:w-32 h-10 py-1 px-[10px] border rounded-md border-slate-500 outline-slate-500 my-2 bg-gray-700"
                       placeholder="Price"
                     />

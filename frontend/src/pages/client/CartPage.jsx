@@ -17,12 +17,12 @@ import CartTr from "../../components/client/cart/CartTr";
 const CartPage = () => {
   const [userId, setUserId] = useState("");
   const [subTotal, setSubTotal] = useState(0);
-  const [deliveryCharge, setDeliveryCharge] = useState(0);
+  const [deliveryCharge, setDeliveryCharge] = useState(10);
   const dispatch = useDispatch();
 
   const authUser = useSelector((state) => state.user.user);
   const { cartItems, status, error } = useSelector((state) => state.cart);
-  console.log(cartItems);
+
   useEffect(() => {
     dispatch(fetchCartItems(authUser?._id));
   }, [authUser?._id, dispatch]);
@@ -70,15 +70,11 @@ const CartPage = () => {
       item.productId === productId ? { ...item, quantity: newQuantity } : item
     );
 
-    console.log(updatedItems, "Updated Items");
     setUpdatedQuantities(updatedItems);
   };
 
-  console.log(updatedQuantities, cartItems?.items);
-
   // Update Redux store & backend when "Update" button is clicked
   const handleUpdateClick = (productId, quantity) => {
-    console.log(quantity, productId);
     dispatch(updateCart({ userId, productId, quantity })).then((data) => {
       if (data?.payload?.success) {
         toast.success("Item updated successfully");
@@ -124,39 +120,34 @@ const CartPage = () => {
                   ))
                 : ""}
             </tbody>
-            <tfoot>
-              <tr className="">
-                <td colSpan={6} className="py-3">
-                  <div className=" flex items-center justify-end">
-                    <Button label="UPDATE CART" className="mr-5" />
-                  </div>
-                </td>
-              </tr>
-            </tfoot>
           </table>
         </div>
         <div className="flex w-full items-center justify-end text-gray-800">
-          <div className="w-[550px] h-auto border-2 text-base">
+          <div className="w-[350px] h-auto border-2 text-base">
             <div className="border-b px-5 py-4">
               <h1 className="text-lg font-semibold">Cart Total</h1>
             </div>
             <table className="my-3 mx-3">
               <tr className="border-b">
                 <td className="px-4 py-4 w-40">Sub Total</td>
-                <td className="px-4 py-4 w-auto">Rs. {subTotal}</td>
+                <td className="px-4 py-4 w-auto">Rs. {subTotal || 0}</td>
               </tr>
               <tr className="border-b">
+                <td className="px-4 py-4 w-40">Delivery Charge</td>
+                <td className="px-4 py-4 w-auto">Rs. {deliveryCharge || 0}</td>
+              </tr>
+              {/* <tr className="border-b">
                 <td className="px-4 py-4 w-40">Shipping</td>
                 <td className="px-4 py-4 w-auto">
                   Free shipping <br /> Shipping to Bhogwara, Ugrasenpur,
                   Prayagraj, Prayagraj 212405, Uttar Pradesh.
                   <br /> Change addres
                 </td>
-              </tr>
+              </tr> */}
               <tr className="border-b">
                 <td className="px-4 py-4 w-40">Total</td>
                 <td className="px-4 py-4 w-auto">
-                  Rs. {subTotal + deliveryCharge}
+                  Rs. {subTotal + deliveryCharge || 0}
                 </td>
               </tr>
             </table>

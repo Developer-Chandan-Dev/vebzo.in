@@ -19,7 +19,7 @@ const CheckoutPage = () => {
   const [phone, setPhone] = useState("");
   const [notes, setNotes] = useState("");
   const [subTotal, setSubTotal] = useState(0);
-  const [deliveryCharge, setDeliveryCharge] = useState(0);
+  const [deliveryCharge, setDeliveryCharge] = useState(10);
   const [grandTotal, setGrandTotal] = useState(0);
   const [orderItems, setOrderItems] = useState([]);
 
@@ -93,7 +93,7 @@ const CheckoutPage = () => {
         }
       );
 
-      console.log(response);
+      console.log(response?.Error);
 
       if (response.success === true) {
         toast.success(response.message);
@@ -109,7 +109,7 @@ const CheckoutPage = () => {
   return (
     <div className="w-full h-auto">
       <Header />
-      <div className="w-full py-10 px-10 bg-[#f8f6f3] text-left">
+      <div className="w-full py-10 px-5 sm:px-10 bg-[#f8f6f3] text-left">
         <div className="py-5 border-b-4">
           <h1 className="text-5xl font-semibold amiri-quarn py-5">Checkout</h1>
         </div>
@@ -228,7 +228,7 @@ const CheckoutPage = () => {
             </form>
           </div>
           <div className="flex w-full items-center xl:justify-end text-gray-800">
-            <div className="w-[550px] h-auto border-2 text-base">
+            <div className="w-[350px] h-auto border-2 text-base">
               <div className="border-b px-5 py-4">
                 <h1 className="text-lg font-semibold">Cart Total</h1>
               </div>
@@ -238,13 +238,17 @@ const CheckoutPage = () => {
                   <td className="px-4 py-4 w-auto">Rs. {subTotal}</td>
                 </tr>
                 <tr className="border-b">
+                  <td className="px-4 py-4 w-40">Delivery Charge</td>
+                  <td className="px-4 py-4 w-auto">Rs. {deliveryCharge}</td>
+                </tr>
+                {/* <tr className="border-b">
                   <td className="px-4 py-4 w-40">Shipping</td>
                   <td className="px-4 py-4 w-auto">
                     Free shipping <br /> Shipping to Bhogwara, Ugrasenpur,
                     Prayagraj, Prayagraj 212405, Uttar Pradesh.
                     <br /> Change addres
                   </td>
-                </tr>
+                </tr> */}
                 <tr className="border-b">
                   <td className="px-4 py-4 w-40">Total</td>
                   <td className="px-4 py-4 w-auto">

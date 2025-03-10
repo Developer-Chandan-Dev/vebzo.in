@@ -14,6 +14,6 @@ const { wishlistValidationSchema } = require("../validations/validateWishList");
 // Wishlist Routes
 router.post("/", protect, addToWishList); // Add a product to the user's wishlist
 router.delete("/:productId", protect, removeFromWishList); // Removes a product from teh user's wishlist
-router.get("/", protect, getWishlist); // Fetches all products in the user's wishlist
+router.get("/:userId", protect, getWishlist); // Fetches all products in the user's wishlist
 
 module.exports = router;

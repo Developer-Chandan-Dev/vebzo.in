@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Image, Star } from "lucide-react";
+import { Image, Star, IndianRupee } from "lucide-react";
 import { useParams } from "react-router-dom";
 import Footer from "../../components/client/Footer";
 import Header from "../../components/client/Header";
@@ -9,6 +9,7 @@ import { addToCart, fetchCartItems } from "../../store/features/cartSlice";
 import Spinner from "../../components/utility/Spinner";
 import ReviewForm from "../../components/client/shop/ReviewForm";
 import { toast } from "react-toastify";
+import RelatedProducts from "../../components/client/shop/RelatedProducts";
 
 const VITE_API_URL = import.meta.env.VITE_API_URL;
 const ProductPage = () => {
@@ -34,7 +35,6 @@ const ProductPage = () => {
   }, [data?.data]);
 
   const dispatch = useDispatch();
-  // const { cartItems, status, error } = useSelector((state) => state.cart);
 
   useEffect(() => {
     dispatch(fetchCartItems(authUser?._id));
@@ -65,7 +65,6 @@ const ProductPage = () => {
     setShowReview(true);
   };
 
-
   return (
     <div className="w-full h-auto text-left">
       <Header />
@@ -95,17 +94,44 @@ const ProductPage = () => {
               </h1>
               <div className="flex items-center">
                 <div className="flex-center py-5">
-                  <Star className="text-yellow-500 fill-yellow-300" size="18" />
-                  <Star className="text-yellow-500 fill-yellow-300" size="18" />
-                  <Star className="text-yellow-500 fill-yellow-300" size="18" />
-                  <Star className="text-yellow-500 fill-yellow-300" size="18" />
-                  <Star className="text-yellow-500 fill-yellow-300" size="18" />
+                  {[...Array(parseInt(5))].map((_, index) => {
+                    index += 1;
+                    return (
+                      <Star
+                        key={index}
+                        className={`${
+                          index <= productData?.averageRating
+                            ? "fill-yellow-300 text-yellow-500"
+                            : "text-gray-400"
+                        }`}
+                        size="18"
+                      />
+                    );
+                  })}
                 </div>
-                <span className="ml-2">( 1 customer Review)</span>
+                <span className="ml-2">
+                  ( {productData?.totalRatings} customer Review)
+                </span>
               </div>
-              <h3 className="text-xl font-bold py-1">
-                Rs. {productData?.price}.00
-              </h3>
+              <div className="flex items-center gap-2">
+                <h3
+                  className={`font-bold py-1 flex items-center gap-1 ${
+                    productData?.salesPrice && "opacity-50 line-through"
+                  }`}
+                >
+                  <IndianRupee className="size-[18px]" />
+                  <span className="text-xl "> {productData?.price}.00</span>
+                </h3>
+                {productData?.salesPrice && (
+                  <h3 className="font-bold py-1 flex items-center gap-1">
+                    <IndianRupee className="size-[18px]" />
+                    <span className="text-xl ">
+                      {" "}
+                      {productData?.salesPrice}.00
+                    </span>
+                  </h3>
+                )}
+              </div>
               <p>{productData?.description}</p>
               <div className="flex items-center gap-2 py-4 border-b">
                 <input
@@ -151,15 +177,7 @@ const ProductPage = () => {
 
             {showDescription && (
               <div className="mt-5">
-                <p className="py-3">
-                  Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                  Sequi magni, error adipisci possimus explicabo vel voluptates
-                  corporis dolorum dolor reiciendis tempora inventore
-                  exercitationem voluptas itaque, consequuntur minus.
-                  Necessitatibus ex, unde ipsam nam ab cum consequuntur fugit
-                  expedita. Quae, inventore nostrum. Reiciendis facilis porro
-                  sed enim aperiam earum quam dolorum qui!
-                </p>
+                <p className="py-3">{productData?.description}</p>
               </div>
             )}
 
@@ -168,6 +186,7 @@ const ProductPage = () => {
         </div>
       )}
 
+      <RelatedProducts categoryId={data?.data?.category?._id} />
       <Footer />
     </div>
   );

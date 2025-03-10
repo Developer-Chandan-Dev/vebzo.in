@@ -37,6 +37,7 @@ const ClientRoutes = () => {
           element={authUser ? <CheckoutPage /> : <Navigate to="/" />}
         />
         <Route path="/shop" element={<ShopPage />} />
+        <Route path="/shop/category/:id" element={<ShopPage />} />
         <Route path="/shop/:id" element={<ProductPage />} />
         <Route
           path="/signup"

@@ -11,21 +11,20 @@ const AboutUs = () => {
       <div className="flex gap-20 flex-wrap justify-between">
         <div className="text-left w-full sm:w-[500px] mx-auto">
           <h2 className="py-6 text-3xl font-semibold  text-gray-700 amiri-quarn">
-            We Are Your Favourite Store.
+            Our Mission
           </h2>
           <p className="text-[15px] text-gray-700">
-            Tuas quisquam quo gravida proident harum, aptent ligula anim
-            consequuntur, ultrices mauris, nunc voluptates lobortis, varius,
-            potenti placeat! Fuga omnis. Cubilia congue. Recusandae. Vero
-            penatibus quasi! Nostra tenetur dignissimos ultrices natus
-            distinctio ultrices consequuntur numqu.
+            At <b>Organic Store</b>, we are dedicated to bringing you the
+            freshest, healthiest and 100% organic products. Our goal is to
+            promote a healthier lifestyle by providing natural, chemical-free,
+            and sustainably sourced food straight from trusted farms.
           </p>
           <br />
           <p className="text-[15px] text-gray-700">
-            Officiis fuga harum porro et? Similique rhoncus atque! Netus
-            blanditiis provident nunc posuere. Rem sequi, commodo, lorem tellus
-            elit, hic sem tenetur anim amet quas, malesuada proident platea
-            corrupti expedita.
+            We are a passionate team of nature lovers, farmers, and
+            health-conscious individuals who believe in the power of organic
+            living. Our journey started with a simple version:{" "}
+            <b>to make organic food accessible and affordable for everyone.</b>
           </p>
         </div>
         <div className="w-full sm:w-[550px] mx-auto">

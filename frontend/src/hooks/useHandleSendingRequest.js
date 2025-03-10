@@ -33,12 +33,17 @@ const useHandleSendingRequest = (initialState) => {
       setLoading(false);
       setFormData(initialState);
       return response.data;
-
     } catch (error) {
+      console.log(error);
       if (error?.response?.data?.message) {
         setLoading(false);
         setError(error.response?.data?.message || "Something went wrong");
         return error.response?.data?.message || "Something went wrong";
+      }
+      if (error?.response?.data?.errors) {
+        setLoading(false);
+        setError(error?.response?.data?.errors[0] || "Something went wrong");
+        return error?.response?.data?.errors[0] || "Something went wrong";
       }
       setLoading(false);
       setError(error.response?.statusText || "Something went wrong");

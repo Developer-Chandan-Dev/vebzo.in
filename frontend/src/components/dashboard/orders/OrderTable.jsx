@@ -23,6 +23,7 @@ const OrderTable = ({ onEditClick }) => {
     8,
     searchText
   );
+  console.log(data, loading);
 
   useEffect(()=>{
     setOrderItems(data?.data)

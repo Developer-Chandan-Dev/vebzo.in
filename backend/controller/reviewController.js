@@ -56,7 +56,7 @@ exports.getProductReviews = asyncHandler(async (req, res, next) => {
   try {
     const reviews = await Review.find({ productId }).populate(
       "userId",
-      "username email"
+      "username email imageUrl"
     );
     res.status(200).json({ success: true, data: reviews });
   } catch (error) {

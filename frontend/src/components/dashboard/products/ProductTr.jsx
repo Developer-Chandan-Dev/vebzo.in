@@ -1,7 +1,6 @@
 /* eslint-disable react/prop-types */
 import { motion } from "framer-motion";
 import { Edit, Image, IndianRupee, Trash2 } from "lucide-react";
-import useHandleDeletewithSweetAlert from "../../../hooks/useHandleDeleteWithSweetAlert";
 const VITE_API_URL = import.meta.env.VITE_API_URL;
 
 const ProductTr = ({
@@ -11,6 +10,7 @@ const ProductTr = ({
   category,
   categoryId,
   price,
+  salesPrice,
   description,
   stock,
   sold,
@@ -38,15 +38,30 @@ const ProductTr = ({
           <Image className="size-10 text-gray-400" />
         )}
 
-        {name}
+        {name.length > 20 ? name.slice(0, 20) + "..." : name}
       </td>
 
       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
         {category}
       </td>
-      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300 flex items-center ">
-        <IndianRupee className="size-[14px]" />
-        <span>{price.toFixed(2)}</span>
+      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
+        <span className="flex items-center">
+          <IndianRupee className="size-[14px]" />
+          {price.toFixed(2)}
+        </span>
+      </td>
+
+      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
+        <span className="flex items-center">
+          {salesPrice ? (
+            <>
+              <IndianRupee className="size-[14px]" />
+              {salesPrice?.toFixed(2)}
+            </>
+          ) : (
+            "Not Added"
+          )}
+        </span>
       </td>
       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
         {stock}

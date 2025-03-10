@@ -8,6 +8,7 @@ const {
   updateOrderStatus,
   getMyOrders,
   deleteOrder,
+  getMyOrderStatus
 } = require("../controller/orderController");
 const { protect, admin, checkRole } = require("../middlewares/authMiddleware");
 
@@ -23,7 +24,8 @@ router.post(
   createOrder
 ); // Create a new order
 router.get("/", protect, checkRole("admin", "manager"), getOrders); // Get all orders (Admin)
-router.delete("/:id", protect, checkRole("admin", "manager"), deleteOrder); // Delete order by order _id (Admin)
+// router.delete("/:id", protect, checkRole("admin", "manager"), deleteOrder); // Delete order by order _id (Admin)
+router.delete("/:id", protect, deleteOrder); // Delete order by order _id (Admin)
 router.get("/details/:id", protect, getOrderById); // Get order by ID
 router.put(
   "/:id/payment-status",
@@ -37,6 +39,8 @@ router.put(
   checkRole("admin", "manager"),
   updateOrderStatus
 ); // Update Order Status
+
 router.get("/my-orders", protect, getMyOrders);
+router.get("/my-orders/order-status/:id", protect, getMyOrderStatus);
 
 module.exports = router;

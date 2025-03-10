@@ -77,30 +77,26 @@ const TrendingProducts = () => {
                     <p>{product?.category?.name}</p>
                     <Link to={`/shop/${product?._id}`}>
                       <h4 className="text-lg font-semibold py-1">
-                        {product?.name}
+                        {product?.name?.length > 18
+                          ? product?.name?.slice(0, 18) + "..."
+                          : product?.name}
                       </h4>
                     </Link>
                     <div className="flex-center">
-                      <Star
-                        className="text-yellow-500 fill-yellow-300"
-                        size="18"
-                      />
-                      <Star
-                        className="text-yellow-500 fill-yellow-300"
-                        size="18"
-                      />
-                      <Star
-                        className="text-yellow-500 fill-yellow-300"
-                        size="18"
-                      />
-                      <Star
-                        className="text-yellow-500 fill-yellow-300"
-                        size="18"
-                      />
-                      <Star
-                        className="text-yellow-500 fill-yellow-300"
-                        size="18"
-                      />
+                      {[...Array(parseInt(5))].map((_, index) => {
+                        index += 1;
+                        return (
+                          <Star
+                            key={index}
+                            className={`${
+                              index <= product?.averageRating
+                                ? "fill-yellow-300 text-yellow-500"
+                                : "text-gray-400"
+                            }`}
+                            size="18"
+                          />
+                        );
+                      })}
                     </div>
                     <p className="mt-1">Rs. {product?.price}.00</p>
                     <Button
@@ -108,7 +104,11 @@ const TrendingProducts = () => {
                       sm={true}
                       className={"mt-2"}
                       LeftIcon={ShoppingCart}
-                      onClick={() => authUser ? handleAddtoCart(product?._id) : handleGoToLoginPage()}
+                      onClick={() =>
+                        authUser
+                          ? handleAddtoCart(product?._id)
+                          : handleGoToLoginPage()
+                      }
                     />
                   </div>
                 </div>

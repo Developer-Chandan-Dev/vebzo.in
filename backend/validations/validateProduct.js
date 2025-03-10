@@ -11,6 +11,10 @@ const createProductValidationSchema = Joi.object({
     "number.base": "Price must be a number.",
     "number.positive": "Price must be greater than zero.",
   }),
+  salesPrice: Joi.number().positive().optional().messages({
+    "number.base": "Price must be a number.",
+    "number.positive": "Price must be greater than zero.",
+  }),
   stock: Joi.number().integer().min(0).default(0).required().messages({
     "number.base": "Stock must be a number.",
     "number.min": "Stock must be at least 0.",
@@ -30,6 +34,7 @@ const updateProductValidationSchema = Joi.object({
   name: Joi.string().trim().optional(),
   description: Joi.string().trim().optional(),
   price: Joi.number().positive().optional(),
+  salesPrice: Joi.number().optional(),
   stock: Joi.number().integer().min(0).optional(),
   sold: Joi.number().integer().min(0).optional(),
   category: Joi.string().optional(),

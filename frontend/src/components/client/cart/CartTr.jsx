@@ -1,6 +1,5 @@
-/* eslint-disable no-undef */
 /* eslint-disable react/prop-types */
-import { Check, CheckCircle, CheckCircle2, XCircle } from "lucide-react";
+import { CheckCircle2, XCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const CartTr = ({
@@ -9,7 +8,6 @@ const CartTr = ({
   price,
   quantity,
   imageUrl,
-  updatedQuantities,
   handleRemoveToCart,
   handleQuantityChange,
   handleUpdateClick,

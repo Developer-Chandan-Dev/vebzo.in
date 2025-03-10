@@ -14,7 +14,7 @@ const VITE_API_URL = import.meta.env.VITE_API_URL;
 const UsersPage = () => {
   document.title = "Admin Dashboard - Users";
 
-  const [isPopupActive, setIsPopupActive] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
 
   const { data, loading } = useFetchData(
@@ -23,11 +23,16 @@ const UsersPage = () => {
 
   const handleEditClick = (user) => {
     setSelectedUser(user); // Set the selected user details
-    setIsPopupActive(true); // Activate the popup
+    setIsOpen(true); // Activate the popup
   };
 
   const handlePopupModelClose = () => {
-    setIsPopupActive(false);
+    setSelectedUser(null); // Set the selected user details
+    setIsOpen(false); // Activate the popup
+  };
+
+  const togglePopup = () => {
+    setIsOpen(!isOpen);
   };
 
   return (
@@ -83,9 +88,11 @@ const UsersPage = () => {
         </div>
         <UserDemograpichsChart />
 
-        {isPopupActive && (
+        {isOpen && (
           <ChangeUserDetailsPopup
             user={selectedUser}
+            isOpen={isOpen}
+            togglePopup={togglePopup}
             onClose={handlePopupModelClose}
           />
         )}

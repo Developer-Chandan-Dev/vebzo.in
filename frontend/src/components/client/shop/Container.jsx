@@ -1,12 +1,12 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import { Filter, MoveLeft, MoveRight, Search, Star } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import ItemBox from "./ItemBox";
-import useFetchData from "../../../hooks/useFetchData";
 import useFetchDataWithPagination from "../../../hooks/useFetchDataWithPagination";
 import Spinner from "../../utility/Spinner";
+import { useParams } from "react-router-dom";
 
 const Container = ({
   toggleSidebar,
@@ -17,13 +17,20 @@ const Container = ({
   maxPrice,
   toggleFilter,
   setToggleFilter,
+  currentPage,
+  setCurrentPage,
 }) => {
   const VITE_API_URL = import.meta.env.VITE_API_URL;
-  const [currentPage, setCurrentPage] = useState(1);
+
   const [sortBy, setSortBy] = useState("");
+  const [products, setProducts] = useState([]);
+
+  const { id } = useParams();
 
   const { data, error, loading } = useFetchDataWithPagination(
-    `${VITE_API_URL}/api/v1/products`,
+    id
+      ? `${VITE_API_URL}/api/v1/products/category/${id}`
+      : `${VITE_API_URL}/api/v1/products`,
     currentPage,
     9,
     searchText.length > 0 ? searchText : "",
@@ -32,12 +39,20 @@ const Container = ({
     toggleFilter ? maxPrice : ""
   );
 
+  useEffect(() => {
+    setProducts(data?.data);
+  }, [data?.data]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [id, minPrice, maxPrice]);
+
   // Function to handle page change
   const handlePageClick = (page) => {
     setCurrentPage(page);
   };
 
-  // Create an array of page numbers (e.g., [1, 2, 3])
+  // Create an array of page numbers (e.g., [1, 2, 3])1
   const pageNumbers = [];
   for (let i = 1; i <= data?.totalPages; i++) {
     pageNumbers.push(i);
@@ -54,12 +69,16 @@ const Container = ({
     },
   };
 
-
-
+  console.log(products);
   return (
     <div className="w-full md:w-[800px] h-auto text-left">
       <div className="flex-between">
-        <h1 className="text-4xl font-semibold py-3 text-[#8bc34a]">Shop</h1>
+        <div>
+          <h1 className="text-4xl font-semibold py-3 text-[#8bc34a]">
+            {id ? data?.category?.name || "Category" : "Shop"}
+          </h1>
+          {id && <p className="pb-3">{data?.category?.description}</p>}
+        </div>
         <div className="flex md:hidden items-center gap-3">
           <div
             className="w-9 h-9 rounded-md border flex-center cursor-pointer text-gray-500 opacity-50 hover:opacity-100"
@@ -108,19 +127,20 @@ const Container = ({
           </div>
         )}
 
-        {!loading && data?.data.length > 0 && data?.data !== null
-          ? data?.data.map((item, index) => (
+        {!loading && products?.length > 0 && products !== null
+          ? products.map((item, index) => (
               <ItemBox
                 key={index}
                 _id={item?._id}
                 name={item?.name}
                 category={item?.category?.name}
                 price={item?.price}
+                salesPrice={item?.salesPrice}
                 imageUrl={item?.imageUrl}
-                rating={item.rating}
+                rating={item.averageRating}
               />
             ))
-          : ""}
+          : "Products not found"}
       </motion.div>
       <div className="flex items-center gap-3">
         <button

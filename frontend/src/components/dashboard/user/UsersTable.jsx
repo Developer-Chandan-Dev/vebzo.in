@@ -15,7 +15,7 @@ const UsersTable = ({ onEditClick }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [activeSearchBox, setActiveSearchBox] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  // const []
+  const [checkRoleFilter, setCheckRoleFilter] = useState(false);
 
   const { data, loading, error, refreshData } = useFetchDataWithPagination(
     `${VITE_API_URL}/api/v1/users`,
@@ -24,9 +24,9 @@ const UsersTable = ({ onEditClick }) => {
     searchText
   );
 
-  useEffect(()=>{
-    setUsersData(data?.data)
-  },[data?.data])
+  useEffect(() => {
+    setUsersData(data?.data);
+  }, [data?.data]);
 
   // Function to handle page change
   const handlePageClick = (page) => {
@@ -119,8 +119,22 @@ const UsersTable = ({ onEditClick }) => {
                 <th className="px-6 py-3 text-left font-medium text-gray-400 uppercase tracking-wider">
                   Email
                 </th>
-                <th className="px-6 py-3 text-left font-medium text-gray-400 uppercase tracking-wider">
-                  Role
+                <th className="px-4 py-3 text-left font-medium text-gray-400 uppercase tracking-wider flex items-center gap-1">
+                  <input
+                    type="checkbox"
+                    className="size-4 cursor-pointer"
+                    onChange={() => setCheckRoleFilter(!checkRoleFilter)}
+                    checked={checkRoleFilter}
+                  />
+                  {!checkRoleFilter && <span>Role</span>}
+
+                  {checkRoleFilter && (
+                    <select className="bg-gray-700 px-1 outline-gray-500 py-1 rounded-md text-[14px]">
+                      <option value="user">User</option>
+                      <option value="admin">Admin</option>
+                      <option value="manager">Manager</option>
+                    </select>
+                  )}
                 </th>
                 <th className="px-6 py-3 text-left font-medium text-gray-400 uppercase tracking-wider">
                   Created At

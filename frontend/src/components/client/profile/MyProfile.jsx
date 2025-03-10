@@ -16,13 +16,18 @@ const MyProfile = () => {
   const { data, error } = useFetchData(`${VITE_API_URL}/api/v1/auth/me`);
 
   const [user, setUser] = useState(null);
-  const [username, setUsername] = useState(user?.username);
-  const [loading, setLoading] = useState(false);
-  const [email, setEmail] = useState(data?.user?.email || "");
-  const [address, setAddress] = useState(data?.user?.address || "");
-  const [phone, setPhone] = useState(data?.user?.phone || "");
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [address, setAddress] = useState("");
+  const [phone, setPhone] = useState("");
   const [image, setImage] = useState(null);
+  
+  const [loading, setLoading] = useState(false);
   const [filePreview, setFilePreview] = useState(null);
+
+  useEffect(() => {
+    setUser(data?.user);
+  }, [data?.user]);
 
   useEffect(() => {
     setUsername(user?.username);
@@ -30,8 +35,7 @@ const MyProfile = () => {
     setPhone(user?.phone);
     setAddress(user?.address);
     setFilePreview(user?.imageUrl);
-    setUser(data?.user);
-  }, [data?.user, image, user]);
+  }, [user, image]);
 
   const dispatch = useDispatch();
   const authUser = useSelector((state) => state.user.user);
@@ -109,7 +113,7 @@ const MyProfile = () => {
           backgroundSize: "cover",
         }}
       ></div>
-      <div className="flex items-start justify-start px-10 gap-10">
+      <div className="flex items-start justify-start px-10 gap-1 sm:gap-10 flex-wrap sm:flex-nowrap">
         <div className="w-32 h-32 relative">
           <div
             className="w-28 h-28 border-4 border-slate-50 bg-white flex-center rounded-full absolute -top-5 overflow-hidden"
@@ -128,7 +132,7 @@ const MyProfile = () => {
             )}
           </div>
         </div>
-        <div className="flex items-center w-full justify-between gap-x-7 relative pt-4">
+        <div className="flex items-center w-full justify-between gap-x-7 relative sm:pt-4 flex-wrap gap-1">
           <div>
             <h3 className="text-lg font-semibold">Profile</h3>
             <p>User profile route is this.</p>

@@ -10,6 +10,7 @@ const ShopPage = () => {
   const [minPrice, setMinPrice] = useState(20);
   const [maxPrice, setMaxPrice] = useState(50);
   const [toggleFilter, setToggleFilter] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
 
 
   return (
@@ -27,6 +28,8 @@ const ShopPage = () => {
           setMaxPrice={setMaxPrice}
           toggleFilter={toggleFilter}
           setToggleFilter={setToggleFilter}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
         />
         <Container
           toggleSidebar={toggleSidebar}
@@ -39,6 +42,8 @@ const ShopPage = () => {
           setMaxPrice={setMaxPrice}
           toggleFilter={toggleFilter}
           setToggleFilter={setToggleFilter}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
         />
       </div>
 

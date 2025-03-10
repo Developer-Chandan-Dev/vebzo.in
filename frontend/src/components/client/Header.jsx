@@ -1,14 +1,15 @@
 /* eslint-disable react/prop-types */
+import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
-import Button from "../utility/Button";
 import { Menu, ShoppingCart, User, X } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCartItems } from "../../store/features/cartSlice";
+import Button from "../utility/Button";
 
 const Header = ({ bg = "bg-white" }) => {
   const [subTotal, setSubTotal] = useState(0);
-  const [toggleMenu, setToggleMenu] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
 
   const dispatch = useDispatch();
@@ -37,6 +38,10 @@ const Header = ({ bg = "bg-white" }) => {
       dispatch(fetchCartItems(authUser?._id));
     }
   }, [authUser?._id, dispatch]);
+
+  const toggleMenu = () => {
+    setIsOpen(!isOpen);
+  };
 
   return (
     <header
@@ -112,7 +117,7 @@ const Header = ({ bg = "bg-white" }) => {
                     size="20"
                   />
                   <span className="flex-center text-xs px-1 py-[2px] -right-2 -top-4 text-white absolute font-serif rounded-full bg-[#8bc34a]">
-                    {cartItems?.items?.length}
+                    {cartItems?.items?.length || 0}
                   </span>
                 </div>
               </Link>
@@ -158,7 +163,7 @@ const Header = ({ bg = "bg-white" }) => {
           {authUser ? (
             <>
               <p className="text-base font-semibold text-[#8bc34a] drop-shadow-sm mr-1 sm:mr-3">
-                Rs. 100
+                Rs. {subTotal || 0}
               </p>
               <Link to="/cart">
                 <ShoppingCart
@@ -166,12 +171,12 @@ const Header = ({ bg = "bg-white" }) => {
                   size="22"
                 />
                 <span className="px-1 py-[2px] flex-center text-xs right-12 -top-1 text-white absolute font-serif rounded-full bg-[#8bc34a]">
-                  {cartItems?.length}
+                  {cartItems?.items?.length}
                 </span>
               </Link>
               <button
                 className="w-10 flex-center h-10 bg-[#6a9739]"
-                onClick={() => setToggleMenu(!toggleMenu)}
+                onClick={toggleMenu}
               >
                 <Menu className="text-white" />
               </button>
@@ -186,23 +191,48 @@ const Header = ({ bg = "bg-white" }) => {
           )}
         </div>
       </nav>
-      <SideMenu toggleMenu={toggleMenu} setToggleMenu={setToggleMenu} />
+      <SideMenu toggleMenu={toggleMenu} isOpen={isOpen} setIsOpen={setIsOpen} />
     </header>
   );
 };
 
 export default Header;
 
-const SideMenu = ({ toggleMenu, setToggleMenu }) => {
+const SideMenu = ({ isOpen, toggleMenu, setIsOpen }) => {
   const sideMenuRef = useRef();
 
+  const menuVariants = {
+    open: { x: 0, opacity: 1, transition: { type: "spring", stiffness: 100 } },
+    closed: {
+      x: "-100%",
+      opacity: 0,
+      transition: { type: "spring", stiffness: 100 },
+    },
+  };
+
+    useEffect(() => {
+      const handleKeyDown = (event) => {
+        if (event.key === "Escape") {
+          setIsOpen(false);
+        }
+      };
+  
+      window.addEventListener("keydown", handleKeyDown);
+  
+      return () => window.removeEventListener("keydown", handleKeyDown);
+    }, []);
+  
+
   return (
-    <div
-      className={`w-full md:hidden absolute h-[450px] pb-4 -top-1 -right-7 ${
+    <motion.div
+      className={`w-full md:hidden absolute h-[450px] pb-4 -top-1 left-0 ${
         toggleMenu ? "flex" : "hidden"
       } items-start justify-center bg-slate-50`}
       style={{ boxShadow: "0px 25px 50px silver" }}
       ref={sideMenuRef}
+      initial="closed"
+      animate={isOpen ? "open" : "closed"}
+      variants={menuVariants}
     >
       <div className="w-11/12 h-full bg-white">
         <div className="flex-between py-4 px-5">
@@ -213,7 +243,7 @@ const SideMenu = ({ toggleMenu, setToggleMenu }) => {
           </Link>
           <div
             className="w-10 h-10 rounded-lg flex-center transition-all text-gray-800 opacity-50 hover:opacity-100 hover:shadow cursor-pointer hover:border "
-            onClick={() => setToggleMenu(false)}
+            onClick={toggleMenu}
           >
             <X className="" />
           </div>
@@ -265,6 +295,6 @@ const SideMenu = ({ toggleMenu, setToggleMenu }) => {
           </Link>
         </ul>
       </div>
-    </div>
+    </motion.div>
   );
 };

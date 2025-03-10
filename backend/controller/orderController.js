@@ -55,20 +55,11 @@ const createOrder = asyncHandler(async (req, res, next) => {
     const createdOrder = await order.save();
     if (createdOrder) {
       // Find the user's cart
-      const cart = await Cart.findOne({ user: req.user.id });
+      const cart = await Cart.findOne({ userId: req.user.id });
 
       if (cart) {
-        // Remove ordered products from the cart
-        cart.items = cart.items.filter(
-          (cartItem) =>
-            !orderItems.some(
-              (orderItem) =>
-                orderItem.product.toString() === cartItem.product.toString()
-            )
-        );
-        console.log(cart);
-
-        // Save the updated cart
+        // Correct way to clear the cart
+        cart.items = [];
         await cart.save();
       }
     }
@@ -254,6 +245,24 @@ const getMyOrders = asyncHandler(async (req, res, next) => {
   }
 });
 
+const getMyOrderStatus = asyncHandler(async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    const order = await Order.findById({ _id: id }).select("status");
+
+    if (!order) {
+      return next(new ErrorResponse("Order not found"));
+    }
+
+    console.log(order);
+    res.status(200).json({ order });
+  } catch (error) {
+    console.log(error);
+    return next(new ErrorResponse("Failed to fetch order status", 500));
+  }
+});
+
 module.exports = {
   createOrder,
   getOrders,
@@ -262,4 +271,5 @@ module.exports = {
   updateOrderStatus,
   getMyOrders,
   deleteOrder,
+  getMyOrderStatus,
 };

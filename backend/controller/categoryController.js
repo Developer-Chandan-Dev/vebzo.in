@@ -54,13 +54,36 @@ const getCategories = asyncHandler(async (req, res, next) => {
 
     // Fetch paginated, filtered and sorted data
 
-    const category = await Category.find(filters)
-      .skip((page - 1) * limit)
-      .limit(limit);
+    // const category = await Category.find(filters)
+    //   .skip((page - 1) * limit)
+    //   .limit(limit);
+
+    const categories = await Category.aggregate([
+      { $match: filters },
+      {
+        $lookup: {
+          from: "products",
+          localField: "_id",
+          foreignField: "category",
+          as: "products",
+        },
+      },
+      {
+        $project: {
+          name: 1,
+          description: 1,
+          createdAt: 1,
+          productCount: { $size: "$products" },
+        },
+      },
+      { $skip: (page - 1) * limit },
+      { $limit: limit },
+    ]);
+    console.log(categories)
 
     res
       .status(200)
-      .json({ success: true, data: category, totalCategories, totalPages });
+      .json({ success: true, data: categories, totalCategories, totalPages });
   } catch (error) {
     console.log(error);
     return next(new ErrorResponse("Internal Server Error", 500));

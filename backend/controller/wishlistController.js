@@ -54,19 +54,24 @@ const removeFromWishList = asyncHandler(async (req, res, next) => {
 
 const getWishlist = asyncHandler(async (req, res, next) => {
   try {
-    const wishlist = await Wishlist.findOne({ user: req.user.id }).populate(
-      "products"
-    );
+    const wishlist = await Wishlist.findOne({ user: req.user.id }).populate({
+      path: "products",
+      select: "imageUrl, name price",
+    });
 
     if (!wishlist) {
       return res.status(200).json({ success: true, products: [] });
     }
 
-    res.status(200).json({ success: true, products: wishlist.products });
+    res.status(200).json({ success: true, data: wishlist });
   } catch (error) {
     console.log(error);
     return next(new ErrorResponse("Internal Server Error", 500));
   }
 });
 
-module.exports = { addToWishList, removeFromWishList, getWishlist };
+module.exports = {
+  addToWishList,
+  removeFromWishList,
+  getWishlist,
+};

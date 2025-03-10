@@ -1,5 +1,6 @@
 import React from "react";
 import Button from "../../utility/Button";
+import { Link } from 'react-router-dom'
 import { MoveRight } from "lucide-react";
 
 const LeafSection = () => {
@@ -22,12 +23,14 @@ const LeafSection = () => {
           />
           <div className="!z-10 px-8 text-left py-10  relative">
             <h2 className="text-left text-lg font-semibold py-1">
-              Farm Fresh Fruits
+              Farm Fresh Vegitables
             </h2>
             <p className="py-1 text-base">
               Ut sollicitudin quam vel purus tempus, vel eleifend felis varius.
             </p>
-            <Button label="SHOP NOW" RightIcon={MoveRight} className="mt-4" />
+            <Link to="/shop/category/677e1d30c58485b68fef1a36">
+              <Button label="SHOP NOW" RightIcon={MoveRight} className="mt-4" />
+            </Link>
           </div>
         </div>
         <div className="w-96 h-96 rounded-lg bg-white shadow-lg shadow-gray-200 relative">
@@ -37,13 +40,13 @@ const LeafSection = () => {
             alt="product Image"
           />
           <div className="!z-10 px-8 text-left py-10  relative">
-            <h2 className="text-left text-lg font-semibold py-1">
-              Farm Fresh Fruits
-            </h2>
+            <h2 className="text-left text-lg font-semibold py-1">Vegitables</h2>
             <p className="py-1 text-base">
               Ut sollicitudin quam vel purus tempus, vel eleifend felis varius.
             </p>
-            <Button label="SHOP NOW" RightIcon={MoveRight} className="mt-4" />
+            <Link to="/shop/category/677e1d30c58485b68fef1a36">
+              <Button label="SHOP NOW" RightIcon={MoveRight} className="mt-4" />
+            </Link>
           </div>
         </div>
         <div className="w-96 h-96 rounded-lg bg-white shadow-lg shadow-gray-200 relative">
@@ -59,7 +62,9 @@ const LeafSection = () => {
             <p className="py-1 text-base">
               Ut sollicitudin quam vel purus tempus, vel eleifend felis varius.
             </p>
-            <Button label="SHOP NOW" RightIcon={MoveRight} className="mt-4" />
+            <Link to="/shop/category/67c59339d3eae75f6ef0a26e">
+              <Button label="SHOP NOW" RightIcon={MoveRight} className="mt-4" />
+            </Link>
           </div>
         </div>
         {/* <div className="w-72 h-80 rounded bg-white"></div> */}

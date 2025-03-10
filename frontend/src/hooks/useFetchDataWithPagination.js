@@ -1,5 +1,8 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { logout } from "../store/features/userSlice";
 
 const useFetchDataWithPagination = (
   url,
@@ -15,9 +18,13 @@ const useFetchDataWithPagination = (
   const [data, setData] = useState(null);
   const [refresh, setRefresh] = useState(0); // Add a state to trigger re-fetch
 
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
+      console.log(searchTerm);
       try {
         const response = await axios.get(url, {
           params: {
@@ -41,7 +48,13 @@ const useFetchDataWithPagination = (
           setLoading(false);
           setData(null);
         }
-        console.log(error);
+        if (
+          error?.response?.data?.message === "Not authrorized , no token" ||
+          error?.response?.data?.message.includes("Not authrorized")
+        ) {
+          dispatch(logout());
+          navigate("/login");
+        }
         setError(error.response.data.message);
         setLoading(false);
       }

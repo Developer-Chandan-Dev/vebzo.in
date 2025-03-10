@@ -1,12 +1,12 @@
 /* eslint-disable react/prop-types */
 import "./style.css";
-import { toast } from 'react-toastify'
+import { toast } from "react-toastify";
 import { motion } from "framer-motion";
 import { Edit2, User2Icon, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import useHandleSendingRequest from "../../../hooks/useHandleSendingRequest";
 
-const ChangeUserDetailsPopup = ({ user, onClose }) => {
+const ChangeUserDetailsPopup = ({ user, isOpen, onClose,togglePopup }) => {
   const [username, setUsername] = useState(user.username || "");
   const [email, setEmail] = useState(user.email || "");
   const [role, setRole] = useState(user.role || "");
@@ -15,6 +15,8 @@ const ChangeUserDetailsPopup = ({ user, onClose }) => {
   const [filePreview, setFilePreview] = useState(null);
 
   const fileInputRef = useRef(null);
+  const popupRef = useRef();
+  console.log(isOpen);
 
   const { handleSubmit } = useHandleSendingRequest();
 
@@ -43,37 +45,49 @@ const ChangeUserDetailsPopup = ({ user, onClose }) => {
         isBlocked: blocked,
       }
     );
-    if(response.success === true){
-      toast.success(response.message)
-    }else{
+    if (response.success === true) {
+      toast.success(response.message);
+    } else {
       console.log(response);
     }
   };
 
-    useEffect(() => {
-      const handleKeyDown = (event) => {
-        if (event.key === "Escape") {
-          onClose(false);
-        }
-      };
-  
-      window.addEventListener("keydown", handleKeyDown);
-  
-      return () => window.removeEventListener("keydown", handleKeyDown);
-    },[]);
+  const popupVariants = {
+    open: { y: 0, opacity: 1, transition: { type: "spring", stiffness: 100 } },
+    closed: {
+      y: "-100%",
+      opacity: 0,
+      transition: { duration: 0.3 },
+    },
+  };
 
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") {
+        onClose(false);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
+  console.log(popupVariants, popupRef);
   return (
     <motion.div
       className="fixed flex-center left-0 top-0 w-full h-full z-10 drop-shadow text-slate-100 backdrop-filter backdrop-blur-sm bg-opacity-5 "
-      initial={{ opacity: 0, y: 200 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.1 }}
+      ref={popupRef}
+      initial="closed"
+      animate={"open"}
+      exit="closed"
+      variants={popupVariants}
     >
       <div className=" w-11/12  sm:w-[600px] md:w-[800px] px-6 py-4 h-auto sm:h-[550px] bg-gray-800 bg-opacity-90 backdrop-blur-md shadow-lg rounded-xl p-6 border border-gray-400 mb-6">
         <div className=" flex items-center justify-between">
           <h1 className="text-white">Change User Details</h1>
           <div className="py-1 flex-center transition-all rounded-md hover:bg-red-500 w-7 cursor-pointer hover:text-white">
-            <X size={18} className="" onClick={onClose} />
+            <X size={18} className="" onClick={togglePopup} />
           </div>
         </div>
 

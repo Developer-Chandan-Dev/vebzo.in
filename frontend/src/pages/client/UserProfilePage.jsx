@@ -11,7 +11,7 @@ const UserProfilePage = () => {
   return (
     <div className="w-full h-auto">
       <Header />
-      <div className="h-auto md:py-10 px-5 sm:px-10 md:flex justify-center text-left text-gray-700 gap-10 relative">
+      <div className="h-auto md:py-10 sm:px-5 md:px-10 md:flex justify-center text-left text-gray-700 gap-10 relative">
         <div className="w-full md:w-56 z-10 h-auto md:h-44 sticky top-[72px] md:top-32 p-2 bg-slate-50 ">
           <ul className="px-3 md:py-3 flex-center gap-2 md:block">
             <Link to="/profile">
@@ -36,7 +36,7 @@ const UserProfilePage = () => {
                 My Orders
               </li>
             </Link>
-            <Link to="/profile/wishlist">
+            {/* <Link to="/profile/wishlist">
               <li
                 className={`cursor-pointer px-3 transition-all rounded-md text-gray-600 font-semibold ${
                   location.pathname.includes("/wishlist")
@@ -46,7 +46,7 @@ const UserProfilePage = () => {
               >
                 Wishlist
               </li>
-            </Link>
+            </Link> */}
           </ul>
         </div>
         <div className="w-full md:w-[850px] h-auto pb-10 border md:rounded-3xl overflow-hidden">

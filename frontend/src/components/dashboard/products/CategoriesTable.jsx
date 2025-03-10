@@ -1,11 +1,18 @@
 /* eslint-disable react/prop-types */
 import { motion } from "framer-motion";
-import { Plus, RefreshCwIcon, Search, X } from "lucide-react";
+import {
+  MoveLeft,
+  MoveRight,
+  Plus,
+  RefreshCwIcon,
+  Search,
+  X,
+} from "lucide-react";
 import CategoryBox from "./CategoryBox";
-import useFetchData from "../../../hooks/useFetchData";
 import { useEffect, useState } from "react";
 import useFetchDataWithPagination from "../../../hooks/useFetchDataWithPagination";
 import useHandleDeletewithSweetAlert from "../../../hooks/useHandleDeleteWithSweetAlert";
+import Spinner from "../../utility/Spinner";
 
 const VITE_API_URL = import.meta.env.VITE_API_URL;
 
@@ -18,17 +25,18 @@ const CategoriesTable = ({ onEditClick }) => {
 
   const { data, loading, error, refreshData } = useFetchDataWithPagination(
     `${VITE_API_URL}/api/v1/category/`,
-    1,
-    9,
+    currentPage,
+    6,
     searchText
   );
 
-  useEffect(()=>{
+  useEffect(() => {
     setCategories(data?.data);
-  },[data?.data])
+  }, [data?.data]);
 
   const handleSetSearchText = () => {
     setSearchText(searchTerm.trim());
+    setCurrentPage(1);
   };
 
   const handleKeyPress = (event) => {
@@ -37,7 +45,24 @@ const CategoriesTable = ({ onEditClick }) => {
     }
   };
 
+  useEffect(() => {
+    if (searchTerm === "" || searchTerm === null) {
+      handleSetSearchText();
+    }
+  }, [setSearchText, searchTerm]);
+
+  // Function to handle page change
+  const handlePageClick = (page) => {
+    setCurrentPage(page);
+  };
+
   const { handleDelete } = useHandleDeletewithSweetAlert();
+
+  // Create an array of page numbers (e.g., [1, 2, 3])
+  const pageNumbers = [];
+  for (let i = 1; i <= data?.totalPages; i++) {
+    pageNumbers.push(i);
+  }
 
   return (
     <motion.div
@@ -103,22 +128,59 @@ const CategoriesTable = ({ onEditClick }) => {
           </div>
         </div>
       </div>
+      {loading && (
+        <div className="w-full h-72 flex-center">
+          <Spinner />
+        </div>
+      )}
+      {!loading && (
+        <div className=" flex items-center flex-wrap gap-4">
+          {categories?.length > 0 && categories !== null
+            ? categories.map((item) => (
+                <CategoryBox
+                  key={item._id}
+                  _id={item._id}
+                  name={item.name}
+                  description={item.description}
+                  onEditClick={onEditClick}
+                  handleDelete={handleDelete}
+                  setCategories={setCategories}
+                  categories={categories}
+                />
+              ))
+            : "No categories found"}
+        </div>
+      )}
+      <div className="px-5 py-2 flex items-center w-full gap-3 mt-5">
+        <button
+          className={`w-10 h-10 border border-gray-600 text-gray-400 font-semibold text-base transition-all hover:bg-gray-700 hover:text-white flex-center `}
+          disabled={currentPage > 1 && currentPage - 1}
+          onClick={() => setCurrentPage(currentPage > 1 && currentPage - 1)}
+        >
+          <MoveLeft size="16" />
+        </button>
+        {pageNumbers.map((page) => (
+          <button
+            key={page}
+            className={`w-10 h-10 border border-gray-600 text-gray-400 font-semibold text-base transition-all hover:bg-gray-700 hover:text-white ${
+              page === currentPage ? "bg-gray-700 text-white" : "text-gray-400"
+            }`}
+            onClick={() => handlePageClick(page)}
+          >
+            {page}
+          </button>
+        ))}
 
-      <div className=" flex items-center flex-wrap gap-4">
-        {categories?.length > 0 && categories !== null
-          ? categories.map((item) => (
-              <CategoryBox
-                key={item._id}
-                _id={item._id}
-                name={item.name}
-                description={item.description}
-                onEditClick={onEditClick}
-                handleDelete={handleDelete}
-                setCategories={setCategories}
-                categories={categories}
-              />
-            ))
-          : "No categories found"}
+        <button
+          className={`w-10 h-10 border border-gray-600 text-gray-400 font-semibold text-base transition-all hover:bg-gray-700 hover:text-white ${
+            currentPage < pageNumbers.length ? "flex-center" : "hidden"
+          }`}
+          onClick={() =>
+            setCurrentPage(currentPage < pageNumbers.length && currentPage + 1)
+          }
+        >
+          <MoveRight size="16" />
+        </button>
       </div>
     </motion.div>
   );

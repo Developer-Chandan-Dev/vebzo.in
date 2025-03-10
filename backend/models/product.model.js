@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
-const { ensureUncategorizedExists } = require("../utils/ensureUncategorizedExists");
+const {
+  ensureUncategorizedExists,
+} = require("../utils/ensureUncategorizedExists");
 
 const productSchema = new mongoose.Schema(
   {
@@ -15,6 +17,9 @@ const productSchema = new mongoose.Schema(
     price: {
       type: Number,
       required: true,
+    },
+    salesPrice: {
+      type: Number,
     },
     stock: {
       type: Number,

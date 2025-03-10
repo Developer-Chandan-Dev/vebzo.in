@@ -38,19 +38,25 @@ const ProductsTable = ({ onEditClick }) => {
     setProductData(data?.data);
   }, [data?.data]);
 
-  // Function to handle page change
-  const handlePageClick = (page) => {
-    setCurrentPage(page);
-  };
-
   const handleSetSearchText = () => {
     setSearchText(searchTerm.trim());
+    setCurrentPage(1);
   };
-
   const handleKeyPress = (event) => {
     if (event.key === "Enter") {
       handleSetSearchText(); // Trigger the search function when Enter key is pressed
     }
+  };
+  
+  useEffect(() => {
+    if (searchTerm === "" || searchTerm === null) {
+      handleSetSearchText();
+    }
+  }, [setSearchText, searchTerm]);
+
+  // Function to handle page change
+  const handlePageClick = (page) => {
+    setCurrentPage(page);
   };
 
   const { handleDelete } = useHandleDeletewithSweetAlert();
@@ -60,8 +66,6 @@ const ProductsTable = ({ onEditClick }) => {
   for (let i = 1; i <= data?.totalPages; i++) {
     pageNumbers.push(i);
   }
-
-  console.log(data?.data);
 
   return (
     <motion.div
@@ -145,6 +149,9 @@ const ProductsTable = ({ onEditClick }) => {
                   Price
                 </th>
                 <th className="px-6 py-3 text-left font-medium text-gray-400 uppercase tracking-wider">
+                  Sales Price
+                </th>
+                <th className="px-6 py-3 text-left font-medium text-gray-400 uppercase tracking-wider">
                   Stock
                 </th>
                 <th className="px-6 py-3 text-left font-medium text-gray-400 uppercase tracking-wider">
@@ -168,6 +175,7 @@ const ProductsTable = ({ onEditClick }) => {
                       imageUrl,
                       category,
                       price,
+                      salesPrice,
                       description,
                       stock,
                       sold,
@@ -181,6 +189,7 @@ const ProductsTable = ({ onEditClick }) => {
                         category={category?.name}
                         categoryId={category?._id}
                         price={price}
+                        salesPrice={salesPrice}
                         description={description}
                         stock={stock}
                         sold={sold}

@@ -6,6 +6,7 @@ import { login } from "../../store/features/userSlice";
 import SmallSpinner from "../../components/utility/SmallSpinner";
 import { fetchCartItems } from "../../store/features/cartSlice";
 import { toast } from "react-toastify";
+import GoogleLoginComponent from "../../components/GoogleLoginComponent";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -114,6 +115,9 @@ const LoginPage = () => {
                   Sign up
                 </Link>
               </p>
+            {/* <div className="mt-3">
+              <GoogleLoginComponent />
+            </div> */}
             </form>
           </div>
         </div>

@@ -2,6 +2,7 @@ import Header from "../../components/client/Header";
 import Footer from "../../components/client/Footer";
 import ContactInfoBox from "../../components/client/contact/ContactInfoBox";
 import FrequentlyAskedQuestions from "../../components/client/contact/FrequentlyAskedQuestions";
+import ContactUsForm from "../../components/client/contact/ContactUsForm";
 
 const ContactPage = () => {
   return (
@@ -14,6 +15,7 @@ const ContactPage = () => {
       <div className="w-full px-5 sm:px-10 py-20 h-auto bg-white accordianBlock">
         <ContactInfoBox />
         <FrequentlyAskedQuestions />
+        <ContactUsForm/>
       </div>
 
       <Footer />

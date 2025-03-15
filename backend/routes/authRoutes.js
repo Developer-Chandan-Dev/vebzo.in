@@ -1,7 +1,9 @@
 const express = require("express");
+const passport = require("passport");
 const router = express.Router();
 
 const {
+  googleAuth,
   signup,
   login,
   logout,
@@ -10,6 +12,8 @@ const {
   updateUserByAdmin,
   updatePassword,
 } = require("../controller/authController");
+
+require("../config/passportConfig")
 
 const rateLimiter = require("../middlewares/rateLimiterMiddleware");
 const { protect, admin } = require("../middlewares/authMiddleware");
@@ -21,11 +25,17 @@ const {
 const { loginValidationSchema } = require("../validations/auth.validation");
 const upload = require("../middlewares/fileUploadMiddleware");
 
-// Auth Routes
+// Google Authentication Routes
+router.get("/google", passport.authenticate('google', { scope: ['profile', 'email'] }));
+router.get("/google/callback", passport.authenticate('google', { failureRedirect: "/" }), googleAuth);
+
+// Normal Auth Routes
 router.post("/register", rateLimiter, validate(userValidationSchema), signup); // Register with new account
 // router.post("/login", rateLimiter, validate(loginValidationSchema), login); // Login with existing account
 router.post("/login", validate(loginValidationSchema), login); // Login with existing account
 router.post("/logout", logout); // Logout from current account
+
+
 router.get("/me", protect, me); // Get profile data from current account
 router.put(
   "/me/:id",

@@ -4,19 +4,11 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { logout } from "../store/features/userSlice";
 
-const useFetchDataWithPagination = (
-  url,
-  currentPage,
-  itemsPerPage,
-  searchTerm,
-  sortBy,
-  minPrice,
-  maxPrice
-) => {
+const useFetchDataWithPagination = (url, params = null) => { // Accept params as null by default
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [data, setData] = useState(null);
-  const [refresh, setRefresh] = useState(0); // Add a state to trigger re-fetch
+  const [refresh, setRefresh] = useState(0);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -24,22 +16,14 @@ const useFetchDataWithPagination = (
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      console.log(searchTerm);
       try {
         const response = await axios.get(url, {
-          params: {
-            page: currentPage,
-            limit: itemsPerPage,
-            query: searchTerm,
-            sortBy: sortBy,
-            minPrice: minPrice,
-            maxPrice: maxPrice,
-          },
+          params: params || {}, // If params is null, use an empty object
           withCredentials: true,
-        }); // Waiting for get requests
+        });
         const resData = response.data;
-
-        setData(resData); // Set fetched data in state
+        
+        setData(resData);
         setLoading(false);
         setError(null);
       } catch (error) {
@@ -55,21 +39,12 @@ const useFetchDataWithPagination = (
           dispatch(logout());
           navigate("/login");
         }
-        setError(error.response.data.message);
+        setError(error.response?.data?.message || "Something went wrong");
         setLoading(false);
       }
     };
     fetchData();
-  }, [
-    currentPage,
-    itemsPerPage,
-    maxPrice,
-    minPrice,
-    searchTerm,
-    sortBy,
-    url,
-    refresh,
-  ]);
+  }, [url, params, refresh]); // Now it's safe to include params in dependencies
 
   const refreshData = () => setRefresh((prev) => prev + 1);
 

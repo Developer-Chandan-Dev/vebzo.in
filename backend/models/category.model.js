@@ -23,6 +23,7 @@ categorySchema.pre("findOneAndDelete", async function (next) {
   try {
     const categoryId = this.getQuery()._id;
 
+    console.log(categoryId, '26');
     if (typeof ensureUncategorizedExists !== "function") {
       throw new Error("ensureUncategorizedExists is not a function. Check your imports and exports!");
     }

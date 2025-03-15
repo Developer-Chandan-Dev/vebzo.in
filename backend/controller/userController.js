@@ -6,7 +6,7 @@ const getAllUsers = asyncHandler(async (req, res, next) => {
   try {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 8;
-    const { query, role, isBlocked } = req.query;
+    const { query, role, isBlocked, createdAt } = req.query;
 
     const filters = {};
 
@@ -21,6 +21,8 @@ const getAllUsers = asyncHandler(async (req, res, next) => {
 
     if (role) filters.role = { ...filters.role, $eq: role };
     if (isBlocked) filters.isBlocked = { ...filters.isBlocked, $eq: isBlocked };
+    if (createdAt) filters.createdAt = { ...filters.createdAt, $eq: createdAt };
+    
 
     const totalUsers = await User.countDocuments(filters);
     const totalPages = Math.ceil(totalUsers / limit);

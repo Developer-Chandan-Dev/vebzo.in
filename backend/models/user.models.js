@@ -8,6 +8,12 @@ const userSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+    name: {
+      type: String,
+    },
+    googleId: {
+      type: String,
+    },
     email: {
       type: String,
       required: true,
@@ -34,7 +40,7 @@ const userSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ["user","manager", "admin"],
+      enum: ["user", "manager", "admin"],
       default: "user",
     },
     isBlocked: {

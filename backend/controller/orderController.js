@@ -12,9 +12,9 @@ const generateOrderNumber = () => {
   return `ORD-${date.getFullYear()}${(date.getMonth() + 1)
     .toString()
     .padStart(2, "0")}${date
-    .getDate()
-    .toString()
-    .padStart(2, "0")}-${Math.floor(1000 + Math.random() * 9000)}`;
+      .getDate()
+      .toString()
+      .padStart(2, "0")}-${Math.floor(1000 + Math.random() * 9000)}`;
 };
 
 // @desc Create a new order
@@ -82,9 +82,15 @@ const getOrders = asyncHandler(async (req, res, next) => {
   try {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 8;
-    const { status, paymentMethod, paymentStatus } = req.query;
+    const { status, paymentMethod, paymentStatus, startDate, endDate } = req.query;
 
     const filters = {};
+    if (startDate && endDate) {
+      filters.createdAt = {
+        $gte: new Date(startDate),
+        $lte: new Date(endDate),
+      }
+    }
 
     if (status) filters.status = { ...filters.status, $eq: status };
     if (paymentMethod)
@@ -229,10 +235,11 @@ const getMyOrders = asyncHandler(async (req, res, next) => {
   try {
     const { id } = req.user;
 
-    const order = await Order.find({ user: id }).populate(
+    const order = await Order.find({ $and: [{ user: id }, { disabledByUser: false }] }).populate(
       "orderItems.product",
       "name imageUrl"
     );
+    console.log(order, '242');
 
     if (!order) {
       return next(new ErrorResponse("Order not found", 404));
@@ -244,6 +251,29 @@ const getMyOrders = asyncHandler(async (req, res, next) => {
     return next(new ErrorResponse("Failed to fetch my orders", 500));
   }
 });
+
+const disableMyOrder = asyncHandler(async (req, res, next) => {
+  try {
+
+    const { orderId } = req.params;
+
+    const order = await Order.findById({ _id: orderId });
+
+    if (!order) {
+      return next(new ErrorResponse("Order not found", 404));
+    }
+
+    order.disabledByUser = true;
+
+    await order.save();
+    res
+      .status(200)
+      .json({ success: true, message: "Order deleted successfully" });
+  } catch (error) {
+    console.log(error);
+    return next(new ErrorResponse("Failed to disable my order"));
+  }
+})
 
 const getMyOrderStatus = asyncHandler(async (req, res, next) => {
   try {
@@ -272,4 +302,5 @@ module.exports = {
   getMyOrders,
   deleteOrder,
   getMyOrderStatus,
+  disableMyOrder
 };

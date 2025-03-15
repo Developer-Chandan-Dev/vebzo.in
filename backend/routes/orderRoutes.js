@@ -8,7 +8,8 @@ const {
   updateOrderStatus,
   getMyOrders,
   deleteOrder,
-  getMyOrderStatus
+  getMyOrderStatus,
+  disableMyOrder
 } = require("../controller/orderController");
 const { protect, admin, checkRole } = require("../middlewares/authMiddleware");
 
@@ -41,6 +42,7 @@ router.put(
 ); // Update Order Status
 
 router.get("/my-orders", protect, getMyOrders);
+router.delete("/my-orders/:orderId", protect, disableMyOrder);
 router.get("/my-orders/order-status/:id", protect, getMyOrderStatus);
 
 module.exports = router;

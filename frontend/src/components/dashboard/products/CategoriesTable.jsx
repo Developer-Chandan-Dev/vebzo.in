@@ -9,7 +9,7 @@ import {
   X,
 } from "lucide-react";
 import CategoryBox from "./CategoryBox";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import useFetchDataWithPagination from "../../../hooks/useFetchDataWithPagination";
 import useHandleDeletewithSweetAlert from "../../../hooks/useHandleDeleteWithSweetAlert";
 import Spinner from "../../utility/Spinner";
@@ -23,13 +23,21 @@ const CategoriesTable = ({ onEditClick }) => {
   const [activeSearchBox, setActiveSearchBox] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
 
-  const { data, loading, error, refreshData } = useFetchDataWithPagination(
-    `${VITE_API_URL}/api/v1/category/`,
-    currentPage,
-    6,
-    searchText
+  const params = useMemo(
+    () => ({
+      page: currentPage,
+      limit: 6,
+      query: searchText.length > 0 ? searchText : "",
+    }),
+    [currentPage, searchText]
   );
 
+  const { data, loading, error, refreshData } = useFetchDataWithPagination(
+    `${VITE_API_URL}/api/v1/category/`,
+    params
+  );
+  console.log(error);
+  
   useEffect(() => {
     setCategories(data?.data);
   }, [data?.data]);

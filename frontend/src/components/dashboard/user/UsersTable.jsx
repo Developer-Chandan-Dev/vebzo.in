@@ -1,12 +1,12 @@
-/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import { motion } from "framer-motion";
 import { MoveLeft, MoveRight, RefreshCwIcon, Search, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import UserTr from "./UserTr";
 import useFetchDataWithPagination from "../../../hooks/useFetchDataWithPagination";
 import Spinner from "../../utility/Spinner";
 import useHandleDeletewithSweetAlert from "../../../hooks/useHandleDeleteWithSweetAlert";
+import useUsersTable from "../../../hooks/users/useUsersTable";
 
 const VITE_API_URL = import.meta.env.VITE_API_URL;
 const UsersTable = ({ onEditClick }) => {
@@ -15,40 +15,59 @@ const UsersTable = ({ onEditClick }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [activeSearchBox, setActiveSearchBox] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+
+  const [role, setRole] = useState("");
   const [checkRoleFilter, setCheckRoleFilter] = useState(false);
+  const [status, setStatus] = useState("");
+  const [checkStatusFilter, setCheckStatusFilter] = useState(false);
+
+  const params = useMemo(
+    () => ({
+      page: currentPage,
+      limit: 8,
+      query: searchText.length > 0 ? searchText : "",
+      role: role.length > 0 ? role : "",
+      isBlocked: status.length > 0 ? status : "",
+    }),
+    [currentPage, searchText, role, status]
+  );
 
   const { data, loading, error, refreshData } = useFetchDataWithPagination(
     `${VITE_API_URL}/api/v1/users`,
-    currentPage,
-    8,
-    searchText
+    params
   );
+
+  const {
+    handlePageClick,
+    handleEnterKeyPress,
+    handleToggleRoleFilter,
+    handleFilterByRole,
+    handleToggleStatusFilter,
+    handleFilterByStatus
+  } = useUsersTable({
+    currentPage,
+    setCurrentPage,
+    searchTerm,
+    setSearchText,
+    checkRoleFilter,
+    setRole,
+    setCheckRoleFilter,
+    checkStatusFilter,
+    setStatus,
+    setCheckStatusFilter
+  });
 
   useEffect(() => {
     setUsersData(data?.data);
   }, [data?.data]);
 
-  // Function to handle page change
-  const handlePageClick = (page) => {
-    setCurrentPage(page);
-  };
-
-  const handleSetSearchText = () => {
-    setSearchText(searchTerm.trim());
-  };
-
-  const handleKeyPress = (event) => {
-    if (event.key === "Enter") {
-      handleSetSearchText(); //Trigger the search function when Enter key pressed
-    }
-  };
-
-  const { handleDelete } = useHandleDeletewithSweetAlert();
   // Create an array of page numbers (e.g., [1, 2, 3])
   const pageNumbers = [];
   for (let i = 1; i <= data?.totalPages; i++) {
     pageNumbers.push(i);
   }
+
+  const { handleDelete } = useHandleDeletewithSweetAlert();
 
   return (
     <motion.div
@@ -86,7 +105,7 @@ const UsersTable = ({ onEditClick }) => {
                 className="bg-gray-700 text-white placeholder-gray-400 rounded-lg pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 onChange={(e) => setSearchTerm(e.target.value)}
                 value={searchTerm}
-                onKeyDown={handleKeyPress}
+                onKeyDown={handleEnterKeyPress}
               />
               <Search
                 className="absolute left-3 top-2.5 text-gray-400"
@@ -103,12 +122,14 @@ const UsersTable = ({ onEditClick }) => {
         </div>
       </div>
 
-      {loading && (
+      {loading && !error && (
         <div className="w-full h-72 flex-center">
           <Spinner />
         </div>
       )}
-      {!loading && (
+      {error && !loading && <p className="text-red-400">{error}</p>}
+
+      {!loading && !error && (
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-700">
             <thead>
@@ -123,13 +144,18 @@ const UsersTable = ({ onEditClick }) => {
                   <input
                     type="checkbox"
                     className="size-4 cursor-pointer"
-                    onChange={() => setCheckRoleFilter(!checkRoleFilter)}
+                    onChange={handleToggleRoleFilter}
                     checked={checkRoleFilter}
                   />
                   {!checkRoleFilter && <span>Role</span>}
 
                   {checkRoleFilter && (
-                    <select className="bg-gray-700 px-1 outline-gray-500 py-1 rounded-md text-[14px]">
+                    <select
+                      className="bg-gray-700 px-1 outline-gray-500 py-1 rounded-md text-[14px]"
+                      value={role}
+                      onChange={handleFilterByRole}
+                    >
+                      <option value="">Role</option>
                       <option value="user">User</option>
                       <option value="admin">Admin</option>
                       <option value="manager">Manager</option>
@@ -139,8 +165,26 @@ const UsersTable = ({ onEditClick }) => {
                 <th className="px-6 py-3 text-left font-medium text-gray-400 uppercase tracking-wider">
                   Created At
                 </th>
-                <th className="px-6 py-3 text-left font-medium text-gray-400 uppercase tracking-wider">
-                  Status
+                <th className="px-4 py-3 text-left font-medium text-gray-400 uppercase tracking-wider flex items-center gap-1">
+                  <input
+                    type="checkbox"
+                    className="size-4 cursor-pointer"
+                    onChange={handleToggleStatusFilter}
+                    checked={checkStatusFilter}
+                  />
+                  {!checkStatusFilter && <span>Status</span>}
+
+                  {checkStatusFilter && (
+                    <select
+                      className="bg-gray-700 px-1 outline-gray-500 py-1 rounded-md text-[14px]"
+                      value={status}
+                      onChange={handleFilterByStatus}
+                    >
+                      <option value="">Status</option>
+                      <option value="false">Active</option>
+                      <option value="true">InActive</option>
+                     </select>
+                  )}
                 </th>
               </tr>
             </thead>

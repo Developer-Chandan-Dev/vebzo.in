@@ -14,23 +14,27 @@ const AboutUs = () => {
             Our Mission
           </h2>
           <p className="text-[15px] text-gray-700">
-            At <b>Organic Store</b>, we are dedicated to bringing you the
-            freshest, healthiest and 100% organic products. Our goal is to
-            promote a healthier lifestyle by providing natural, chemical-free,
-            and sustainably sourced food straight from trusted farms.
+            At <b>ApnaMarket</b>, we bring you to purest and freshest products
+            directly from our local farms and trusted suppliers. Our mission is
+            to provide high-quality, organic, and natural products to our
+            beloved community, ensuring you receive only the best and healthiest
+            options.
           </p>
           <br />
           <p className="text-[15px] text-gray-700">
-            We are a passionate team of nature lovers, farmers, and
-            health-conscious individuals who believe in the power of organic
-            living. Our journey started with a simple version:{" "}
-            <b>to make organic food accessible and affordable for everyone.</b>
+            We understand the importance of freshness and quality, which is why
+            every product at ApnaMarket is carefully selected and delivered with
+            love. From farm-fresh vegetables and fruits to authentic
+            village-made products, we strive to bring the goodness of nature
+            right to your doorstep.
           </p>
         </div>
         <div className="w-full sm:w-[550px] mx-auto">
           <img src="/public/images/banner-01.jpg" alt="" />
         </div>
       </div>
+
+      
     </div>
   );
 };

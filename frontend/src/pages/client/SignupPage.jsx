@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import authService from "../../features/auth";
 import SmallSpinner from "../../components/utility/SmallSpinner";
 import { toast } from "react-toastify";
+import GoogleLoginComponent from "../../components/GoogleLoginComponent";
 
 const SignupPage = () => {
   const [username, setUsername] = useState("");
@@ -24,7 +25,7 @@ const SignupPage = () => {
 
     if (password.length < 6) {
       setLoading(false);
-      return toast.error("Password must be atleast 6 characters");;
+      return toast.error("Password must be atleast 6 characters");
     }
 
     const res = await authService.createAccount(username, email, password);
@@ -113,6 +114,9 @@ const SignupPage = () => {
                   Login
                 </Link>
               </p>
+              {/* <div className="mt-3">
+                <GoogleLoginComponent />
+              </div> */}
             </form>
           </div>
         </div>

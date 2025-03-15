@@ -19,11 +19,9 @@ const MyOrders = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [order_id, setOrder_id] = useState(null);
 
-  const { data, loading, error,refreshData } = useFetchDataWithPagination(
+  const { data, loading, error, refreshData } = useFetchDataWithPagination(
     `${VITE_API_URL}/api/v1/orders/my-orders`
   );
-
-  // console.log(data?.order, loading, error);
 
   useEffect(() => {
     setMyOrders(data?.order);
@@ -131,7 +129,7 @@ const MyOrders = () => {
                         className="ml-3 opacity-50 hover:opacity-90 cursor-pointer"
                         onClick={() =>
                           handleDelete(
-                            `${VITE_API_URL}/api/v1/orders/${item?._id}`,
+                            `${VITE_API_URL}/api/v1/orders/my-orders/${item?._id}`,
                             item?.orderId,
                             item?._id,
                             setMyOrders,

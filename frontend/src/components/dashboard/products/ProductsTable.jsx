@@ -10,7 +10,7 @@ import {
   MoveRight,
   RefreshCwIcon,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import ProductTr from "./ProductTr";
 import useFetchDataWithPagination from "../../../hooks/useFetchDataWithPagination";
 import SearchBox from "../../utility/SearchBox";
@@ -26,12 +26,19 @@ const ProductsTable = ({ onEditClick }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [sortBy, setSortBy] = useState("");
 
+  const params = useMemo(
+    () => ({
+      page: currentPage,
+      limit: 8,
+      query: searchText.length > 0 ? searchText : "",
+      sortBy: sortBy,
+    }),
+    [currentPage, searchText, sortBy]
+  );
+
   const { data, loading, error, refreshData } = useFetchDataWithPagination(
     `${VITE_API_URL}/api/v1/products`,
-    currentPage,
-    8,
-    searchText,
-    sortBy
+    params
   );
 
   useEffect(() => {
@@ -47,7 +54,7 @@ const ProductsTable = ({ onEditClick }) => {
       handleSetSearchText(); // Trigger the search function when Enter key is pressed
     }
   };
-  
+
   useEffect(() => {
     if (searchTerm === "" || searchTerm === null) {
       handleSetSearchText();
@@ -67,6 +74,7 @@ const ProductsTable = ({ onEditClick }) => {
     pageNumbers.push(i);
   }
 
+  console.log(error);
   return (
     <motion.div
       className="bg-gray-800 bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-6 border border-gray-700 mb-6"

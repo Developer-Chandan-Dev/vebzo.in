@@ -4,6 +4,8 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const rateLimit = require("express-rate-limit");
 const morgan = require("morgan");
+const passport = require('passport');
+const session = require("express-session")
 const http = require("http"); // Required for Socket.IO
 const { Server } = require("socket.io"); // Import Socket.IO
 
@@ -22,13 +24,13 @@ const productStockRoutes = require("./routes/productStockRoutes.js");
 const analyticsRoutes = require("./routes/analyticsRoutes.js");
 const reviewRoutes = require("./routes/reviewRoutes.js");
 const notificationRoutes = require("./routes/notificationsRoutes.js");
+const messagesRoutes = require("./routes/messageRoutes.js")
 
 const app = express();
 const PORT = process.env.PORT || 8000;
 
 // <============== Middleware ==============>
 // Logger
-
 app.use(morgan("dev"));
 app.use(
   cors({
@@ -40,13 +42,10 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Apply rate limiting to API routes only
-// const globalLimiter = rateLimit({
-//   windowMs: 15 * 60 * 1000,
-//   max: 100,
-//   message: "Too many requests from this IP, please try again later",
-// });
-// app.use("/api", globalLimiter);
+// app.use(session({ secrect: "secret", resave: true, saveUninitialized: true }));
+
+// app.use(passport.initialize());
+// app.use(passport.session());
 
 // Connect to database
 db();
@@ -82,6 +81,7 @@ app.use("/api/v1/stock", productStockRoutes);
 app.use("/api/v1/analytics", analyticsRoutes);
 app.use("/api/v1/reviews", reviewRoutes);
 app.use("/api/v1/notifications", notificationRoutes);
+app.use("/api/v1/contact-messages", messagesRoutes);
 
 // Error handling
 app.use(errorHandler);

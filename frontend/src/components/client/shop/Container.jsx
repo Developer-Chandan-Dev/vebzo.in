@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import { Filter, MoveLeft, MoveRight, Search, Star } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import ItemBox from "./ItemBox";
 import useFetchDataWithPagination from "../../../hooks/useFetchDataWithPagination";
@@ -27,16 +27,20 @@ const Container = ({
 
   const { id } = useParams();
 
+  const params = useMemo(() => ({
+    page: currentPage,
+    limit: 9,
+    query: searchText.length > 0 ? searchText : "",
+    sortBy: sortBy,
+    minPrice: toggleFilter ? minPrice : "",
+    maxPrice: toggleFilter ? maxPrice : "",
+  }), [currentPage, searchText, sortBy, toggleFilter, minPrice, maxPrice]);
+
   const { data, error, loading } = useFetchDataWithPagination(
     id
       ? `${VITE_API_URL}/api/v1/products/category/${id}`
       : `${VITE_API_URL}/api/v1/products`,
-    currentPage,
-    9,
-    searchText.length > 0 ? searchText : "",
-    sortBy,
-    toggleFilter ? minPrice : "",
-    toggleFilter ? maxPrice : ""
+    params
   );
 
   useEffect(() => {

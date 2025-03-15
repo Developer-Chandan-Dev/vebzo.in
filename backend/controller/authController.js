@@ -5,6 +5,13 @@ const asyncHandler = require("../utils/asyncHandler");
 const ErrorResponse = require("../utils/errorResponse");
 const { handleImageUpload } = require("../helper/cloudinary.helper.js");
 
+// Google Auth Success
+const googleAuth = (req, res) => {
+  console.log(req.user);
+  // const token = generateTokenAndSetCookie(req.user);
+}
+
+
 const signup = asyncHandler(async (req, res, next) => {
   try {
     const { username, email, password } = req.body;
@@ -253,8 +260,8 @@ const updatePassword = asyncHandler(async (req, res, next) => {
     }
 
     // Find the user by username and email
-    const user = await User.findOne({_id: userId});
-    
+    const user = await User.findOne({ _id: userId });
+
     if (!user) {
       return next(new ErrorResponse("Invalid username or email", 404));
     }
@@ -282,6 +289,7 @@ const updatePassword = asyncHandler(async (req, res, next) => {
 });
 
 module.exports = {
+  googleAuth,
   signup,
   login,
   logout,

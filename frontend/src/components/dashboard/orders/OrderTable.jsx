@@ -1,12 +1,15 @@
 /* eslint-disable react/prop-types */
 import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { MoveLeft, MoveRight, RefreshCwIcon, Search, X } from "lucide-react";
 import OrderTr from "./OrderTr";
 import OrderList from "./OrderList";
 import useFetchDataWithPagination from "../../../hooks/useFetchDataWithPagination";
 import Spinner from "../../utility/Spinner";
 import useHandleDeletewithSweetAlert from "../../../hooks/useHandleDeleteWithSweetAlert";
+import useUsersTable from "../../../hooks/users/useUsersTable";
+import useOrderTable from "../../../hooks/orders/useOrderTable";
+import Empty from "../../utility/Empty";
 
 const VITE_API_URL = import.meta.env.VITE_API_URL;
 const OrderTable = ({ onEditClick }) => {
@@ -17,31 +20,61 @@ const OrderTable = ({ onEditClick }) => {
   const [activeSearchBox, setActiveSearchBox] = useState(false);
   const [orderItems, setOrderItems] = useState(null);
 
+  const [status, setStatus] = useState("");
+  const [paymentStatus, setPaymentStatus] = useState("");
+  const [checkStatusFilter, setCheckStatusFilter] = useState(false);
+  const [checkPaymentStatusFilter, setCheckPaymentStatusFilter] =
+    useState(false);
+  const [startData, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [checkDateFilter, setCheckDateFilter] = useState(false);
+
+  const params = useMemo(
+    () => ({
+      page: currentPage,
+      limit: 8,
+      query: searchText.length > 0 ? searchText : "",
+      status: status.length > 0 ? status : "",
+      paymentStatus: paymentStatus.length > 0 ? paymentStatus : "",
+    }),
+    [currentPage, paymentStatus, searchText, status]
+  );
+
   const { data, loading, refreshData } = useFetchDataWithPagination(
     `${VITE_API_URL}/api/v1/orders`,
-    currentPage,
-    8,
-    searchText
+    params
   );
-  console.log(data, loading);
 
-  useEffect(()=>{
-    setOrderItems(data?.data)
-  },[data?.data])
+  const { handlePageClick, handleEnterKeyPress } = useUsersTable({
+    currentPage,
+    setCurrentPage,
+    searchTerm,
+    setSearchText,
+  });
+
+  const {
+    handleToggleStatusFilter,
+    handleFilterByStatus,
+    handleTogglePaymentStatusFilter,
+    handleFilterByPaymentStatus,
+  } = useOrderTable({
+    setCurrentPage,
+    checkStatusFilter,
+    setStatus,
+    setCheckStatusFilter,
+    checkPaymentStatusFilter,
+    setPaymentStatus,
+    setCheckPaymentStatusFilter,
+    setStartDate,
+    setEndDate,
+    setCheckDateFilter,
+    checkDateFilter,
+  });
+
+  useEffect(() => {
+    setOrderItems(data?.data);
+  }, [data?.data]);
   // Function to handle page change
-  const handlePageClick = (page) => {
-    setCurrentPage(page);
-  };
-
-  const handleSetSearchText = () => {
-    setSearchText(searchTerm.trim());
-  };
-
-  const handleKeyPress = (event) => {
-    if (event.key === "Enter") {
-      handleSetSearchText(); // Trigger the search function when Enter key is pressed
-    }
-  };
 
   // Create an array of page numbers (e.g., [1, 2, 3])
   const pageNumbers = [];
@@ -107,7 +140,7 @@ const OrderTable = ({ onEditClick }) => {
                 className="bg-gray-700 text-white placeholder-gray-400 rounded-lg pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 onChange={(e) => setSearchTerm(e.target.value)}
                 value={searchTerm}
-                onKeyDown={handleKeyPress}
+                onKeyDown={handleEnterKeyPress}
               />
               <Search
                 className="absolute left-3 top-2.5 text-gray-400"
@@ -143,14 +176,69 @@ const OrderTable = ({ onEditClick }) => {
                 <th className="px-6 py-3 text-left font-medium text-gray-400 uppercase tracking-wider">
                   Total
                 </th>
-                <th className="px-6 py-3 text-left font-medium text-gray-400 uppercase tracking-wider">
-                  Status
+                <th className="px-4 py-3 text-left font-medium text-gray-400 uppercase tracking-wider flex items-center gap-1">
+                  <input
+                    type="checkbox"
+                    className="size-4 cursor-pointer"
+                    onChange={handleToggleStatusFilter}
+                    checked={checkStatusFilter}
+                  />
+                  {!checkStatusFilter && <span>Status</span>}
+
+                  {checkStatusFilter && (
+                    <select
+                      className="bg-gray-700 px-1 outline-gray-500 py-1 rounded-md text-[14px]"
+                      value={status}
+                      onChange={handleFilterByStatus}
+                    >
+                      <option value="">Status</option>
+                      <option value="Pending">Pending</option>
+                      <option value="Confirmed">Confirmed</option>
+                      <option value="Out for Delivery">OFD</option>
+                      <option value="Delivered">Delivered</option>
+                      <option value="Cancelled">Cancelled</option>
+                    </select>
+                  )}
                 </th>
-                <th className="px-6 py-3 text-left font-medium text-gray-400 uppercase tracking-wider">
-                  Payment Status
+                <th className="px-4 py-3 text-left font-medium text-gray-400 uppercase tracking-wider">
+                  <input
+                    type="checkbox"
+                    className="size-4 cursor-pointer ml-1"
+                    onChange={handleTogglePaymentStatusFilter}
+                    checked={checkPaymentStatusFilter}
+                  />
+                  {!checkPaymentStatusFilter && (
+                    <span className="ml-1">Payment Status</span>
+                  )}
+
+                  {checkPaymentStatusFilter && (
+                    <select
+                      className="bg-gray-700 px-1 outline-gray-500 py-1 mr-1 rounded-md text-[14px]"
+                      value={paymentStatus}
+                      onChange={handleFilterByPaymentStatus}
+                    >
+                      <option value="">Payment Status</option>
+                      <option value="Pending">Pending</option>
+                      <option value="Paid">Paid</option>
+                      <option value="Failed">Failed</option>
+                    </select>
+                  )}
                 </th>
-                <th className="px-6 py-3 text-left font-medium text-gray-400 uppercase tracking-wider">
-                  Order Date
+                <th className="px-6 py-3 text-left font-medium text-gray-300 uppercase tracking-wider flex items-center gap-2">
+                  <input type="checkbox" className="size-4 cursor-pointer" />
+                  {!checkDateFilter && <span>Order Date</span>}
+                  {checkDateFilter && (
+                    <div>
+                      <input
+                        type="date"
+                        className="text-gray-300 rounded-md border border-gray-500 px-1 py-1 bg-gray-600 mb-1"
+                      />
+                      <input
+                        type="date"
+                        className="text-gray-300 rounded-md border border-gray-500 px-1 py-1 bg-gray-600"
+                      />
+                    </div>
+                  )}
                 </th>
                 <th className="px-6 py-3 text-left font-medium text-gray-400 uppercase tracking-wider">
                   Actions
@@ -159,30 +247,34 @@ const OrderTable = ({ onEditClick }) => {
             </thead>
 
             <tbody className="divide-y divide-gray-700">
-              {orderItems !== null && orderItems?.length > 0
-                ? orderItems.map((order, index) => (
-                    <OrderTr
-                      key={index}
-                      _id={order?._id}
-                      orderId={order?.orderId}
-                      username={order?.user?.username}
-                      firstname={order?.firstname}
-                      lastname={order?.lastname}
-                      orderItems={order?.orderItems}
-                      shippingAddress={order?.shippingAddress}
-                      totalPrice={order?.totalPrice}
-                      paymentMethod={order?.paymentMethod}
-                      paymentStatus={order?.paymentStatus}
-                      deliveredAt={order?.deliveredAt}
-                      status={order?.status}
-                      createdAt={order?.createdAt}
-                      onEditClick={onEditClick}
-                      handleDelete={handleDelete}
-                      setOrderItems={setOrderItems}
-                      orderItems2={orderItems}
-                    />
-                  ))
-                : "Nothing found"}
+              {orderItems !== null && orderItems?.length > 0 ? (
+                orderItems.map((order, index) => (
+                  <OrderTr
+                    key={index}
+                    _id={order?._id}
+                    orderId={order?.orderId}
+                    username={order?.user?.username}
+                    firstname={order?.firstname}
+                    lastname={order?.lastname}
+                    orderItems={order?.orderItems}
+                    shippingAddress={order?.shippingAddress}
+                    totalPrice={order?.totalPrice}
+                    paymentMethod={order?.paymentMethod}
+                    paymentStatus={order?.paymentStatus}
+                    deliveredAt={order?.deliveredAt}
+                    status={order?.status}
+                    createdAt={order?.createdAt}
+                    onEditClick={onEditClick}
+                    handleDelete={handleDelete}
+                    setOrderItems={setOrderItems}
+                    orderItems2={orderItems}
+                  />
+                ))
+              ) : (
+                <tr className="text-center">
+                  <Empty />
+                </tr>
+              )}
             </tbody>
           </table>
         )}

@@ -2,74 +2,77 @@ const express = require("express");
 const dotenv = require("dotenv").config();
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
-const rateLimit = require("express-rate-limit");
+const session = require("express-session");
+const passport = require("passport");
 const morgan = require("morgan");
-const passport = require('passport');
-const session = require("express-session")
-const http = require("http"); // Required for Socket.IO
-const { Server } = require("socket.io"); // Import Socket.IO
+const http = require("http");
+const { Server } = require("socket.io");
 
-const db = require("./config/db.js");
-const errorHandler = require("./middlewares/errorHandler");
+const db = require("./config/db");
 
-// <============== Route Imports ==============>
-const authRoutes = require("./routes/authRoutes.js");
-const userRoutes = require("./routes/userRoutes.js");
-const productRoutes = require("./routes/productRoutes.js");
-const categoryRoutes = require("./routes/categoryRoutes.js");
+// <===== Routes Import =====>
+const authRoutes = require("./routes/authRoutes");
+const userRoutes = require("./routes/userRoutes");
+const productRoutes = require("./routes/productRoutes");
+const categoryRoutes = require("./routes/categoryRoutes");
 const orderRoutes = require("./routes/orderRoutes");
-const cartRoutes = require("./routes/cartRoutes.js");
-const wishlistRoutes = require("./routes/wishlistRoutes.js");
-const productStockRoutes = require("./routes/productStockRoutes.js");
-const analyticsRoutes = require("./routes/analyticsRoutes.js");
-const reviewRoutes = require("./routes/reviewRoutes.js");
-const notificationRoutes = require("./routes/notificationsRoutes.js");
-const messagesRoutes = require("./routes/messageRoutes.js")
+const cartRoutes = require("./routes/cartRoutes");
+const wishlistRoutes = require("./routes/wishlistRoutes");
+const productStockRoutes = require("./routes/productStockRoutes");
+const analyticsRoutes = require("./routes/analyticsRoutes");
+const reviewRoutes = require("./routes/reviewRoutes");
+const notificationRoutes = require("./routes/notificationsRoutes");
+const messagesRoutes = require("./routes/messageRoutes");
 
 const app = express();
 const PORT = process.env.PORT || 8000;
 
-// <============== Middleware ==============>
-// Logger
-app.use(morgan("dev"));
+// ✅ **Check .env is Loading**
+console.log("Allowed Frontend URL:", process.env.CLIENT_URL);
+
+// **Step 1: CORS Middleware (Sabse Pehle)**
 app.use(
   cors({
-    origin: [process.env.CLIENT_URL, "http://localhost:3000"],
+    origin: process.env.CLIENT_URL || "http://localhost:5173",
+    methods: "GET, POST, PUT, DELETE, OPTIONS",
+    allowedHeaders: "Origin, X-Requested-With, Content-Type, Accept, Authorization",
     credentials: true,
   })
 );
+
+// **Step 2: Custom CORS Headers (Backup Solution)**
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", process.env.CLIENT_URL || "http://localhost:5173");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+  res.header("Access-Control-Allow-Credentials", "true");
+  if (req.method === "OPTIONS") {
+    return res.status(200).json({});
+  }
+  next();
+});
+
+
+// **Step 3: Middleware**
+app.use(morgan("dev"));
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-// app.use(session({ secrect: "secret", resave: true, saveUninitialized: true }));
+// app.use(session({ secret: process.env.SECRET_KEY, resave: true, saveUninitialized: true }));
 
 // app.use(passport.initialize());
 // app.use(passport.session());
 
-// Connect to database
+// ✅ **Check .env Working (Debugging Route)**
+app.get("/test-env", (req, res) => {
+  res.json({ CLIENT_URL: process.env.CLIENT_URL });
+});
+
+// ✅ **Database Connection**
 db();
 
-// Socket.IO setup
-const server = http.createServer(app);
-const io = new Server(server, {
-  cors: {
-    origin: process.env.CLIENT_URL || "http://localhost:4000",
-    methods: ["GET", "POST", "PUT", "DELETE"],
-  },
-});
 
-// Middleware to make io available in controllers
-app.use((req, res, next) => {
-  req.io = io;
-  next();
-});
-
-// Root Route
-app.get("/", (req, res) => {
-  res.send("Welcome on Home Page");
-});
-// Route Definitions
+// **Step 4: Routes**
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/products", productRoutes);
@@ -83,22 +86,38 @@ app.use("/api/v1/reviews", reviewRoutes);
 app.use("/api/v1/notifications", notificationRoutes);
 app.use("/api/v1/contact-messages", messagesRoutes);
 
-// Error handling
-app.use(errorHandler);
 
-// Socket.IO event listeners
+// **Step 5: Socket.io Setup**
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: [process.env.CLIENT_URL, "http://localhost:5173"],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  },
+});
+
+// ✅ **Make io available in controllers**
+app.use((req, res, next) => {
+  req.io = io;
+  next();
+});
+
+// ✅ **Socket.IO Listeners**
 io.on("connection", (socket) => {
   console.log(`A user connected: ${socket.id}`);
+
   socket.on("sendNotification", (notification) => {
     console.log("Notification received:", notification);
     io.emit("receiveNotification", notification);
   });
+
   socket.on("disconnect", () => {
     console.log(`A user disconnected: ${socket.id}`);
   });
 });
 
-// Start server
+// **Step 6: Start Server**
 server.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`🚀 Server running at http://localhost:${PORT}`);
 });

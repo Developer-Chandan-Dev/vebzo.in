@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 
 const Profile = ({ onEditClick }) => {
   const authUser = useSelector((state) => state.user.user);
-  console.log(authUser);
+
   return (
     <SettingSection icon={User} title={"Profile"}>
       <div className="flex flex-col sm:flex-row items-center mb-6 ">

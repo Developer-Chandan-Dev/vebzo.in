@@ -17,7 +17,6 @@ export const fetchReviews = createAsyncThunk(
         `${VITE_API_URL}/api/v1/reviews/${productId}`
       );
 
-      console.log("Response Fetched Reviews : ", res.data);
       return res.data;
     } catch (error) {
       console.log(error);
@@ -37,7 +36,6 @@ export const addNewReview = createAsyncThunk(
         { withCredentials: true }
       );
 
-      console.log(res);
       return res.data;
     } catch (error) {
       console.log(error);
@@ -55,7 +53,7 @@ export const removeReview = createAsyncThunk(
         `${VITE_API_URL}/api/v1/reviews/${reviewId}`,
         { withCredentials: true }
       );
-      console.log(res);
+
       return res.data;
     } catch (error) {
       console.log(error);
@@ -74,7 +72,6 @@ export const updateReview = createAsyncThunk(
         { rating, comment },
         { withCredentials: true }
       );
-      console.log(res);
 
       return res.data;
     } catch (error) {

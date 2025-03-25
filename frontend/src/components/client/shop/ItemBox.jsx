@@ -1,5 +1,4 @@
 /* eslint-disable react/prop-types */
-/* eslint-disable no-unused-vars */
 import "./style.css";
 import { motion } from "framer-motion";
 import { toast } from "react-toastify";
@@ -17,6 +16,7 @@ const ItemBox = ({
   price,
   salesPrice,
   imageUrl,
+  stock,
   rating,
 }) => {
   const authUser = useSelector((state) => state.user.user);
@@ -63,11 +63,17 @@ const ItemBox = ({
           )}
         </Link>
         <div className="absolute w-auto h-10 top-1 right-1 flex items-center gap-3 px-3">
-          <Heart
+          {parseInt(stock) <= 5 && (
+            <p className="px-3 py-1 text-xs rounded-full bg-orange-500 text-white">
+              Low Stock
+            </p>
+          )}
+
+          {/* <Heart
             className="drop-shadow text-pink-500 cursor-pointer ring-pink-600"
             onClick={() => alert("Clicked")}
           />
-          <ShoppingCart className="text-white drop-shadow cursor-pointer" />
+          <ShoppingCart className="text-white drop-shadow cursor-pointer" /> */}
         </div>
       </div>
       <div className="flex-center flex-col py-5">
@@ -92,30 +98,37 @@ const ItemBox = ({
           })}
         </div>
         <div className="mt-1 flex items-center gap-2 text-gray-800  font-semibold">
-          <div
-            className={`flex items-center ${
-              salesPrice && "opacity-50 line-through"
-            }`}
-          >
-            <IndianRupee className="size-[14px]" />
-            <span className="text-[14px] ml-[2px]">{price.toFixed(2)}</span>
-          </div>
           {salesPrice && (
-            <div className="flex items-center">
+            <div
+              className={`flex items-center ${
+                salesPrice && "opacity-50 line-through"
+              }`}
+            >
               <IndianRupee className="size-[14px]" />
-              <span className="text-[14px] ml-[2px] font-semibold">
+              <span className="text-[14px] ml-[2px]">
                 {salesPrice?.toFixed(2)}
               </span>
             </div>
           )}
+
+          <div className="flex items-center">
+            <IndianRupee className="size-[14px]" />
+            <span className="text-[14px] ml-[2px] font-semibold">
+              {price?.toFixed(2)}
+            </span>
+          </div>
         </div>
+
         <Button
           label="Add to cart"
           sm={true}
           className={"mt-2"}
+          disable={parseInt(stock) <= 5}
           LeftIcon={ShoppingCart}
           onClick={() =>
-            authUser ? handleAddtoCart(_id) : handleGoToLoginPage()
+            authUser && parseInt(stock) > 5
+              ? handleAddtoCart(_id)
+              : handleGoToLoginPage()
           }
         />
       </div>

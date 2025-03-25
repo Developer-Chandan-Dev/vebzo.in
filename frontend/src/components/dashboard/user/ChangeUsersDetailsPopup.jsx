@@ -16,7 +16,6 @@ const ChangeUserDetailsPopup = ({ user, isOpen, onClose,togglePopup }) => {
 
   const fileInputRef = useRef(null);
   const popupRef = useRef();
-  console.log(isOpen);
 
   const { handleSubmit } = useHandleSendingRequest();
 
@@ -73,7 +72,6 @@ const ChangeUserDetailsPopup = ({ user, isOpen, onClose,togglePopup }) => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
-  console.log(popupVariants, popupRef);
   return (
     <motion.div
       className="fixed flex-center left-0 top-0 w-full h-full z-10 drop-shadow text-slate-100 backdrop-filter backdrop-blur-sm bg-opacity-5 "

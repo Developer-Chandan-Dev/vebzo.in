@@ -1,0 +1,6 @@
+.table-container {
+    cursor: grab;
+  }
+  .table-container:active {
+    cursor: grabbing;
+  }

@@ -34,15 +34,12 @@ const SignupPage = () => {
       setLoading(false);
       navigate("/login");
     } else if (res.data.success !== true && res.data.message) {
-      console.log(res.data.message);
       toast.error(res.data.message);
       setLoading(false);
     } else if (res.data?.errors) {
-      console.log(res);
       toast.error(res.data.errors[0]);
       setLoading(false);
     } else {
-      console.log(res.data);
       toast.error(res.data || "Something went wrong");
       setLoading(false);
     }
@@ -106,7 +103,7 @@ const SignupPage = () => {
               </button>
 
               <p>
-                Don&apos;t have an account?{" "}
+                Already have an account! {` `}
                 <Link
                   to="/login"
                   className="text-blue-400 hover:text-blue-500 hover:underline"

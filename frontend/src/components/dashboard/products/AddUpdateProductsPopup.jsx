@@ -11,15 +11,15 @@ const VITE_API_URL = import.meta.env.VITE_API_URL;
 const AddUpdateProductsPopup = ({ product, onClose }) => {
   const [name, setName] = useState(product?.name || "");
   const [description, setDescription] = useState(product?.description || "");
+  const [purchasePrice, setPurchasePrice] = useState(product?.purchasePrice || 0);
   const [price, setPrice] = useState(product?.price || 0);
   const [salesPrice, setSalesPrice] = useState(product?.salesPrice || 0);
   const [category, setCategory] = useState(product?.categoryId || "");
   const [stock, setStock] = useState(product?.stock || 0);
   const [isFeatured, setIsFeatured] = useState(product?.isFeatured || false);
 
-  console.log(product);
-
   const [newProductId, setNewProductId] = useState("");
+  console.log(product);
 
   const { data, loading } = useFetchData(`${VITE_API_URL}/api/v1/category`);
 
@@ -38,6 +38,7 @@ const AddUpdateProductsPopup = ({ product, onClose }) => {
       {
         name,
         description,
+        purchasePrice,
         price,
         salesPrice,
         category,
@@ -61,7 +62,7 @@ const AddUpdateProductsPopup = ({ product, onClose }) => {
       toast.error(response.message);
       setSecondPage(false);
     }
-    if(response){
+    if (response) {
       toast.error(response);
     }
   };
@@ -134,7 +135,24 @@ const AddUpdateProductsPopup = ({ product, onClose }) => {
                   />
                 </div>
               </div>
-              <div className="flex items-center gap-x-4 gap-y-2 flex-wrap">
+              <div className="flex items-center gap-x-3 gap-y-2 flex-wrap">
+                <div>
+                  <label htmlFor="price" className="ml-1">
+                    Purchase Price
+                    <span className="text-red-400 ml-1">*</span>
+                  </label>
+                  <div className="py-1">
+                    <input
+                      type="number"
+                      id="purchasePrice"
+                      required
+                      value={purchasePrice}
+                      onChange={(e) => setPurchasePrice(e.target.value)}
+                      className="w-16 sm:w-24 h-10 py-1 px-[10px] border rounded-md border-slate-500 outline-slate-500 my-2 bg-gray-700"
+                      placeholder="Price"
+                    />
+                  </div>
+                </div>
                 <div>
                   <label htmlFor="price" className="ml-1">
                     Price
@@ -147,7 +165,7 @@ const AddUpdateProductsPopup = ({ product, onClose }) => {
                       required
                       value={price}
                       onChange={(e) => setPrice(e.target.value)}
-                      className="w-24 sm:w-32 h-10 py-1 px-[10px] border rounded-md border-slate-500 outline-slate-500 my-2 bg-gray-700"
+                      className="w-16 sm:w-24 h-10 py-1 px-[10px] border rounded-md border-slate-500 outline-slate-500 my-2 bg-gray-700"
                       placeholder="Price"
                     />
                   </div>
@@ -162,7 +180,7 @@ const AddUpdateProductsPopup = ({ product, onClose }) => {
                       id="salesPrice"
                       value={salesPrice}
                       onChange={(e) => setSalesPrice(e.target.value)}
-                      className="w-24 sm:w-32 h-10 py-1 px-[10px] border rounded-md border-slate-500 outline-slate-500 my-2 bg-gray-700"
+                      className="w-16 sm:w-24 h-10 py-1 px-[10px] border rounded-md border-slate-500 outline-slate-500 my-2 bg-gray-700"
                       placeholder="Price"
                     />
                   </div>
@@ -179,7 +197,7 @@ const AddUpdateProductsPopup = ({ product, onClose }) => {
                       required
                       value={stock}
                       onChange={(e) => setStock(e.target.value)}
-                      className="w-24 sm:w-32 h-10 py-1 px-[10px] border rounded-md border-slate-500 outline-slate-500 my-2 bg-gray-700"
+                      className="w-16 sm:w-24 h-10 py-1 px-[10px] border rounded-md border-slate-500 outline-slate-500 my-2 bg-gray-700"
                       placeholder="Stock"
                     />
                   </div>

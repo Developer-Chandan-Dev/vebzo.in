@@ -44,15 +44,12 @@ const LoginPage = () => {
       navigate("/");
       dispatch(fetchCartItems(authUser?._id));
     } else if (res.data.success !== true && res.data.message) {
-      console.log(res.data.message);
       toast.error(res.data.message);
       setLoading(false);
     } else if (res.data?.errors) {
-      console.log(res);
       toast.error(res.data.errors[0]);
       setLoading(false);
     } else {
-      console.log(res.data);
       toast.error(res.data || "Something went wrong");
       setLoading(false);
     }
@@ -115,9 +112,9 @@ const LoginPage = () => {
                   Sign up
                 </Link>
               </p>
-            {/* <div className="mt-3">
-              <GoogleLoginComponent />
-            </div> */}
+              {/* <div className="mt-3">
+                <GoogleLoginComponent />
+              </div> */}
             </form>
           </div>
         </div>

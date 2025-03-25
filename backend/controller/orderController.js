@@ -195,7 +195,6 @@ const updatePaymentStatus = asyncHandler(async (req, res, next) => {
 const updateOrderStatus = asyncHandler(async (req, res, next) => {
   const { status } = req.body;
 
-  // console.log(status);
   if (
     ![
       "Pending",
@@ -239,7 +238,6 @@ const getMyOrders = asyncHandler(async (req, res, next) => {
       "orderItems.product",
       "name imageUrl"
     );
-    console.log(order, '242');
 
     if (!order) {
       return next(new ErrorResponse("Order not found", 404));

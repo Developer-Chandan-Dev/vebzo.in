@@ -13,7 +13,7 @@ export const fetchCartItems = createAsyncThunk(
   "cart/fetchCartItems",
   async (userId, { rejectWithValue }) => {
     try {
-      const response = await axios.get(
+      const response = await axios.get(userId &&
         `${VITE_API_URL}/api/v1/cart/${userId}`,
         {
           withCredentials: true,
@@ -41,7 +41,6 @@ export const addToCart = createAsyncThunk(
         },
         { withCredentials: true }
       );
-      console.log(response);
       return response.data; // Backend should return the newly added cart item with full details
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -54,14 +53,12 @@ export const removeFromCart = createAsyncThunk(
   "cart/removeFromCart",
   async ({ userId, productId }, { rejectWithValue }) => {
     try {
-      console.log(userId, productId);
       const response = await axios.delete(
         `${VITE_API_URL}/api/v1/cart/${userId}/${productId}`,
         {
           withCredentials: true,
         }
       );
-      console.log(response.data);
       return response.data; // Return the productId to remove it from Redux state
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -74,7 +71,6 @@ export const updateCart = createAsyncThunk(
   "cart/updateCart",
   async ({ userId, productId, quantity }, { rejectWithValue }) => {
     try {
-      console.log(userId, productId, quantity);
       const response = await axios.put(
         `${VITE_API_URL}/api/v1/cart/update-cart`,
         {
@@ -86,7 +82,6 @@ export const updateCart = createAsyncThunk(
           withCredentials: true,
         }
       );
-      console.log(response);
       return response.data; // Backend returns updated cart item
     } catch (error) {
       console.log(error);
@@ -147,7 +142,6 @@ const cartSlice = createSlice({
       .addCase(updateCart.fulfilled, (state, action) => {
         state.isLoading = false;
         state.cartItems = action.payload.data;
-        console.log(action.payload.data)
       })
       .addCase(updateCart.rejected, (state) => {
         state.isLoading = false;

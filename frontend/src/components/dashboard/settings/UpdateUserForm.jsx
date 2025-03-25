@@ -12,7 +12,6 @@ const UpdateUserForm = () => {
   const [userId, setUserId] = useState("");
 
   const { data, loading } = useFetchData(`${VITE_API_URL}/api/v1/auth/me`);
-  console.log(data, loading);
 
   const { handleSubmit } = useHandleSendingRequest();
 
@@ -38,10 +37,8 @@ const UpdateUserForm = () => {
         }
       );
       
-      console.log(res);
       if (res) {
         toast.success(res?.message);
-        console.log(res?.user);
       }
     } catch (error) {
       console.log(error);

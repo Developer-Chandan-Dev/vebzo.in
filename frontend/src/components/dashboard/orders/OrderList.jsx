@@ -55,7 +55,6 @@ const OrderList = ({
       }
     );
     if (response.success === true) {
-      console.log(response);
       setNewPaymentStatus(response?.paymentStatus);
     } else {
       console.log(response);
@@ -64,7 +63,7 @@ const OrderList = ({
 
   return (
     <>
-      <div className="w-full h-auto p-5 border border-gray-600 bg-gray-700 rounded-md flex items-start flex-wrap gap-5 justify-between relative">
+      <div className="w-full h-auto px-5 py-7 border border-gray-600 bg-gray-800 rounded-md flex items-start flex-wrap gap-5 justify-between relative mb-5">
         <div className="flex items-start gap-5">
           <div className="border w-10 h-10 flex-center rounded-md border-gray-600">
             <Origami />

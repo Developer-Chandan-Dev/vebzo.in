@@ -9,21 +9,34 @@ const GoogleLoginComponent = () => {
       const { credential } = credentialResponse;
       const decoded = jwt_decode(credential);
       console.log("Google Profile:", decoded);
-
+  
       // Send token to your backend for verification & registration
-      const response = await axios.post(`${VITE_API_URL}/api/v1/auth/google`, { token: credential }, { withCredentials: true });
-
+      const response = await axios.get(
+        `${VITE_API_URL}/api/v1/auth/google`,
+        {
+          headers: {
+            Authorization: `Bearer ${credential}`, // Send the token via headers
+          },
+          withCredentials: true,
+        }
+      );
+  
       if (response.data.success) {
         alert("Login Successful!");
       }
     } catch (error) {
-      console.error("Login Error:", error);
+      console.log(error);
+      console.error("Login Error:", error.response ? error.response.data : error.message);
     }
   };
+  
 
   const handleFailure = (error) => {
     console.log("Google Login Failed:", error);
   };
+
+
+  console.log(import.meta.env.VITE_API_GOOGLE_CLIENT_ID);
 
   return (
     <GoogleOAuthProvider clientId={import.meta.env.VITE_API_GOOGLE_CLIENT_ID}>

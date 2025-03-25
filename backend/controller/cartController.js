@@ -6,7 +6,6 @@ const ErrorResponse = require("../utils/errorResponse");
 const addToCart = async (req, res) => {
   try {
     const { userId, productId, quantity } = req.body;
-    console.log(userId, productId, quantity);
 
     if (!userId || !productId || quantity <= 0) {
       return res.status(400).json({
@@ -67,7 +66,7 @@ const fetchCartItems = async (req, res) => {
 
     const cart = await Cart.findOne({ userId }).populate({
       path: "items.productId",
-      select: "imageUrl name price",
+      select: "imageUrl name price salesPrice",
     });
 
     if (!cart) {
@@ -91,8 +90,10 @@ const fetchCartItems = async (req, res) => {
       imageUrl: item.productId.imageUrl,
       name: item.productId.name,
       price: item.productId.price,
+      salesPrice: item.productId?.salesPrice,
       quantity: item.quantity,
     }));
+
 
     res.status(200).json({
       success: true,
@@ -113,7 +114,6 @@ const fetchCartItems = async (req, res) => {
 const updateCartItemQty = async (req, res) => {
   try {
     const { userId, productId, quantity } = req.body;
-    console.log(userId, productId, quantity);
 
     if (!userId || !productId || quantity <= 0) {
       return res.status(400).json({
@@ -157,7 +157,6 @@ const updateCartItemQty = async (req, res) => {
       // salePrice: item.productId ? item.productId.salePrice : null,
       quantity: item.quantity,
     }));
-    console.log(populateCartItems);
 
     res.status(200).json({
       success: true,
@@ -178,7 +177,6 @@ const updateCartItemQty = async (req, res) => {
 const deleteCartItem = async (req, res) => {
   try {
     const { userId, productId } = req.params;
-    console.log(userId, productId);
     if (!userId || !productId) {
       return res.status(400).json({
         success: false,
@@ -216,8 +214,6 @@ const deleteCartItem = async (req, res) => {
       price: item.productId ? item.productId.price : null,
       quantity: item.quantity,
     }));
-
-    console.log(populateCartItems);
 
     res.status(200).json({
       success: true,

@@ -1,47 +1,25 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import { motion } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { Menu, ShoppingCart, User, X } from "lucide-react";
-import { Link, useLocation } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchCartItems } from "../../store/features/cartSlice";
+import { Link } from "react-router-dom";
 import Button from "../utility/Button";
+import useHeader from "../../hooks/client/useHeader";
 
 const Header = ({ bg = "bg-white" }) => {
-  const [subTotal, setSubTotal] = useState(0);
-  const [isOpen, setIsOpen] = useState(false);
-  const location = useLocation();
-
-  const dispatch = useDispatch();
-
-  const authUser = useSelector((state) => state.user.user);
-  const { cartItems } = useSelector((state) => state.cart);
-
-  const calculateGrandTotal = (cartItems) => {
-    return (
-      cartItems?.items?.length > 0 &&
-      cartItems?.items?.reduce((total, item) => {
-        return total + item.quantity * item?.price;
-      }, 0)
-    );
-  };
-
-  // Usage
-  const grandTotal = calculateGrandTotal(cartItems);
-
-  useEffect(() => {
-    setSubTotal(parseInt(grandTotal));
-  }, [grandTotal]);
-
-  useEffect(() => {
-    if (authUser?._id) {
-      dispatch(fetchCartItems(authUser?._id));
-    }
-  }, [authUser?._id, dispatch]);
-
-  const toggleMenu = () => {
-    setIsOpen(!isOpen);
-  };
+  const {
+    subTotal,
+    setSubTotal,
+    isOpen,
+    setIsOpen,
+    location,
+    authUser,
+    cartItems,
+    calculateGrandTotal,
+    grandTotal,
+    toggleMenu,
+  } = useHeader();
 
   return (
     <header
@@ -210,18 +188,17 @@ const SideMenu = ({ isOpen, toggleMenu, setIsOpen }) => {
     },
   };
 
-    useEffect(() => {
-      const handleKeyDown = (event) => {
-        if (event.key === "Escape") {
-          setIsOpen(false);
-        }
-      };
-  
-      window.addEventListener("keydown", handleKeyDown);
-  
-      return () => window.removeEventListener("keydown", handleKeyDown);
-    }, []);
-  
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") {
+        setIsOpen(false);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   return (
     <motion.div

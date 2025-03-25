@@ -7,6 +7,7 @@ import ItemBox from "./ItemBox";
 import useFetchDataWithPagination from "../../../hooks/useFetchDataWithPagination";
 import Spinner from "../../utility/Spinner";
 import { useParams } from "react-router-dom";
+import Empty from "../../utility/Empty";
 
 const Container = ({
   toggleSidebar,
@@ -27,14 +28,17 @@ const Container = ({
 
   const { id } = useParams();
 
-  const params = useMemo(() => ({
-    page: currentPage,
-    limit: 9,
-    query: searchText.length > 0 ? searchText : "",
-    sortBy: sortBy,
-    minPrice: toggleFilter ? minPrice : "",
-    maxPrice: toggleFilter ? maxPrice : "",
-  }), [currentPage, searchText, sortBy, toggleFilter, minPrice, maxPrice]);
+  const params = useMemo(
+    () => ({
+      page: currentPage,
+      limit: 9,
+      query: searchText.length > 0 ? searchText : "",
+      sortBy: sortBy,
+      minPrice: toggleFilter ? minPrice : "",
+      maxPrice: toggleFilter ? maxPrice : "",
+    }),
+    [currentPage, searchText, sortBy, toggleFilter, minPrice, maxPrice]
+  );
 
   const { data, error, loading } = useFetchDataWithPagination(
     id
@@ -73,7 +77,6 @@ const Container = ({
     },
   };
 
-  console.log(products);
   return (
     <div className="w-full md:w-[800px] h-auto text-left">
       <div className="flex-between">
@@ -131,20 +134,23 @@ const Container = ({
           </div>
         )}
 
-        {!loading && products?.length > 0 && products !== null
-          ? products.map((item, index) => (
-              <ItemBox
-                key={index}
-                _id={item?._id}
-                name={item?.name}
-                category={item?.category?.name}
-                price={item?.price}
-                salesPrice={item?.salesPrice}
-                imageUrl={item?.imageUrl}
-                rating={item.averageRating}
-              />
-            ))
-          : "Products not found"}
+        {!loading && products?.length > 0 && products !== null ? (
+          products.map((item, index) => (
+            <ItemBox
+              key={index}
+              _id={item?._id}
+              name={item?.name}
+              category={item?.category?.name}
+              price={item?.price}
+              salesPrice={item?.salesPrice}
+              imageUrl={item?.imageUrl}
+              stock={item?.stock}
+              rating={item.averageRating}
+            />
+          ))
+        ) : (
+          <Empty />
+        )}
       </motion.div>
       <div className="flex items-center gap-3">
         <button

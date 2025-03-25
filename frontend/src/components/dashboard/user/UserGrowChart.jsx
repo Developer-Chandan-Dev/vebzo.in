@@ -25,8 +25,6 @@ const UserGrowChart = () => {
     `${VITE_API_URL}/api/v1/analytics/chart/users-growth`
   );
 
-  console.log(data?.data);
-
   return (
     <motion.div
       className="bg-gray-800 bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-6 border border-gray-700"

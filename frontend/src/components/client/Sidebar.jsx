@@ -45,7 +45,6 @@ const Sidebar = ({
     setCategories(data?.data);
   }, [data?.data]);
 
-  console.log(error);
   return (
     <div
       className={`${
@@ -100,6 +99,7 @@ const Sidebar = ({
       </div>
       <div className="px-3 pb-2 text-left text-base">
         <ul>
+          {error && !loading && <p>{error}</p>}
           {/* <li className="py-2 text-[#8bc34a]">
             Uncategories <span className="text-gray-700">(1)</span>
           </li> */}

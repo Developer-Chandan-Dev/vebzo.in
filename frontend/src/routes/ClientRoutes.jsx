@@ -16,10 +16,12 @@ import MyProfile from "../components/client/profile/MyProfile";
 import WishList from "../components/client/profile/WishList";
 import MyOrders from "../components/client/profile/MyOrders";
 import ScrollToTop from "../components/utility/ScrollToTop";
+import PrivacyPolicyPage from "../pages/client/PrivacyPolicyPage";
+import TermsConditionsPage from "../pages/client/TermsConditionsPage";
 
 const ClientRoutes = () => {
   // Retrive authenticated user information from Redux state
-  const authUser = useSelector((state) => state.user.user);
+  const authUser = useSelector((state) => state?.user?.user);
 
   return (
     <>
@@ -55,6 +57,8 @@ const ClientRoutes = () => {
           <Route path="my-orders" element={<MyOrders />} />
           <Route path="wishlist" element={<WishList />} />
         </Route>
+        <Route path="/privacy-policy" element={<PrivacyPolicyPage/>} />
+        <Route path="/terms-conditions" element={<TermsConditionsPage/>} />
       </Routes>
     </>
   );

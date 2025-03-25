@@ -39,7 +39,6 @@ export const addListItems = createAsyncThunk(
         },
         { withCredentials: true }
       );
-      console.log(response);
       return response.data; // Backend should return the newly added wishlist item with full details
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -52,14 +51,12 @@ export const removeListItems = createAsyncThunk(
   "wishlist/removeListItems",
   async ({ userId, productId }, { rejectWithValue }) => {
     try {
-      console.log(userId, productId);
       const response = await axios.delete(
         `${VITE_API_URL}/api/v1/wishlist/${productId}`,
         {
           withCredentials: true,
         }
       );
-      console.log(response.data);
       return response.data; // Return the productId to remove it from Redux state
     } catch (error) {
       return rejectWithValue(error.response.data);

@@ -12,7 +12,7 @@ const AddUpdateCategoriesPopup = ({ category, onClose }) => {
   const [description, setDescription] = useState(category?.description || "");
   const [newCategoryId, setNewCategoryId] = useState("");
   const [loading, setLoading] = useState(false);
-  console.log(category);
+
   const { handleSubmit } = useHandleSendingRequest();
 
   const onSubmit = async (e) => {
@@ -30,7 +30,6 @@ const AddUpdateCategoriesPopup = ({ category, onClose }) => {
       }
     );
     if (response.success === true) {
-      console.log(response);
       toast.success(response.message);
       setNewCategoryId(response?.data._id);
       setName("");

@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
+import "./style.css";
 import { motion } from "framer-motion";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { MoveLeft, MoveRight, RefreshCwIcon, Search, X } from "lucide-react";
 import OrderTr from "./OrderTr";
 import OrderList from "./OrderList";
@@ -10,6 +11,7 @@ import useHandleDeletewithSweetAlert from "../../../hooks/useHandleDeleteWithSwe
 import useUsersTable from "../../../hooks/users/useUsersTable";
 import useOrderTable from "../../../hooks/orders/useOrderTable";
 import Empty from "../../utility/Empty";
+import TableContainer from "../common/TableContainer";
 
 const VITE_API_URL = import.meta.env.VITE_API_URL;
 const OrderTable = ({ onEditClick }) => {
@@ -28,6 +30,8 @@ const OrderTable = ({ onEditClick }) => {
   const [startData, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [checkDateFilter, setCheckDateFilter] = useState(false);
+
+  const tableContainerRef = useRef(null);
 
   const params = useMemo(
     () => ({
@@ -83,6 +87,7 @@ const OrderTable = ({ onEditClick }) => {
   }
 
   const { handleDelete } = useHandleDeletewithSweetAlert();
+
 
   return (
     <motion.div
@@ -162,9 +167,9 @@ const OrderTable = ({ onEditClick }) => {
           <Spinner />
         </div>
       )}
-      <div className="overflow-x-auto gap-5 flex-center flex-col">
+      <TableContainer>
         {!activeList && !loading && (
-          <table className="min-w-full divide-y divide-gray-700">
+          <table className="table-container divide-y divide-gray-700 w-[1000px] md:w-full">
             <thead>
               <tr>
                 <th className="px-6 py-3 text-left font-medium text-gray-400 uppercase tracking-wider">
@@ -278,7 +283,6 @@ const OrderTable = ({ onEditClick }) => {
             </tbody>
           </table>
         )}
-
         {activeList && !loading && orderItems?.length > 0 && orderItems !== null
           ? orderItems.map((order, index) => (
               <OrderList
@@ -303,43 +307,39 @@ const OrderTable = ({ onEditClick }) => {
               />
             ))
           : ""}
+      </TableContainer>
 
-        <div className="px-5 py-2 flex items-center w-full gap-3 mt-5">
+      <div className="px-5 py-2 flex items-center w-full gap-3 mt-5">
+        <button
+          className={`w-10 h-10 border border-gray-600 text-gray-400 font-semibold text-base transition-all hover:bg-gray-700 hover:text-white ${
+            currentPage > 1 ? "flex-center" : "hidden"
+          }`}
+          onClick={() => setCurrentPage(currentPage > 1 && currentPage - 1)}
+        >
+          <MoveLeft size="16" />
+        </button>
+        {pageNumbers.map((page) => (
           <button
+            key={page}
             className={`w-10 h-10 border border-gray-600 text-gray-400 font-semibold text-base transition-all hover:bg-gray-700 hover:text-white ${
-              currentPage > 1 ? "flex-center" : "hidden"
+              page === currentPage ? "bg-gray-700 text-white" : "text-gray-400"
             }`}
-            onClick={() => setCurrentPage(currentPage > 1 && currentPage - 1)}
+            onClick={() => handlePageClick(page)}
           >
-            <MoveLeft size="16" />
+            {page}
           </button>
-          {pageNumbers.map((page) => (
-            <button
-              key={page}
-              className={`w-10 h-10 border border-gray-600 text-gray-400 font-semibold text-base transition-all hover:bg-gray-700 hover:text-white ${
-                page === currentPage
-                  ? "bg-gray-700 text-white"
-                  : "text-gray-400"
-              }`}
-              onClick={() => handlePageClick(page)}
-            >
-              {page}
-            </button>
-          ))}
+        ))}
 
-          <button
-            className={`w-10 h-10 border border-gray-600 text-gray-400 font-semibold text-base transition-all hover:bg-gray-700 hover:text-white ${
-              currentPage < pageNumbers.length ? "flex-center" : "hidden"
-            }`}
-            onClick={() =>
-              setCurrentPage(
-                currentPage < pageNumbers.length && currentPage + 1
-              )
-            }
-          >
-            <MoveRight size="16" />
-          </button>
-        </div>
+        <button
+          className={`w-10 h-10 border border-gray-600 text-gray-400 font-semibold text-base transition-all hover:bg-gray-700 hover:text-white ${
+            currentPage < pageNumbers.length ? "flex-center" : "hidden"
+          }`}
+          onClick={() =>
+            setCurrentPage(currentPage < pageNumbers.length && currentPage + 1)
+          }
+        >
+          <MoveRight size="16" />
+        </button>
       </div>
     </motion.div>
   );

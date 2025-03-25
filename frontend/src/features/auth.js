@@ -11,7 +11,7 @@ export class AuthService {
 
       if (res.data.status === true) {
         // call another method
-        console.log(res);
+        // console.log(res);
         return res;
       } else {
         return res;

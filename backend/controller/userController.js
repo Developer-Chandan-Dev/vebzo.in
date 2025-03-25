@@ -46,7 +46,6 @@ const updateUserByAdmin = asyncHandler(async (req, res, next) => {
   try {
     const { id: userId } = req.params; // ID of the user to be updated
     const updates = req.body; // Fields to be updated
-    console.log(updates);
 
     // Ensure the admin is making the request
     if (req.user.role !== "admin") {

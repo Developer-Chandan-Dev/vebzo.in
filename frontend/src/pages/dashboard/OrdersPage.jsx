@@ -24,10 +24,8 @@ const OrdersPage = () => {
   const { data, loading, error } = useFetchData(
     `${VITE_API_URL}/api/v1/analytics/order-cards`
   );
-  console.log(data, loading);
 
   const handleEditClick = (order) => {
-    console.log(order);
     setSelectedOrder(order); // Set the selected order details
     setIsPopupActive(true); // Activate the popup
   };

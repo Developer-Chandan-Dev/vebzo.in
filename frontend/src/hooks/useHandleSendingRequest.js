@@ -18,7 +18,6 @@ const useHandleSendingRequest = (initialState) => {
     setLoading(true);
     setError(null);
 
-    console.log(method, url, formData);
     try {
       const response = await axios({
         method: method, // 'POST' or 'PUT'
@@ -36,9 +35,10 @@ const useHandleSendingRequest = (initialState) => {
     } catch (error) {
       console.log(error);
       if (error?.response?.data?.message) {
+        console.log(error?.response?.data?.message);
         setLoading(false);
-        setError(error.response?.data?.message || "Something went wrong");
-        return error.response?.data?.message || "Something went wrong";
+        setError(error?.response?.data?.message || "Something went wrong");
+        return error?.response?.data?.message || "Something went wrong";
       }
       if (error?.response?.data?.errors) {
         setLoading(false);

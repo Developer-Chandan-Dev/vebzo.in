@@ -9,6 +9,7 @@ const ProductTr = ({
   name,
   category,
   categoryId,
+  purchasePrice,
   price,
   salesPrice,
   description,
@@ -20,12 +21,14 @@ const ProductTr = ({
   setProductData,
   productData,
 }) => {
+  console.log(name, stock, sold);
   return (
     <motion.tr
       key={_id}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.3 }}
+      className={`${stock < 5 ? "bg-red-700" : ""}`}
     >
       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100 flex gap-2 items-center">
         {imageUrl ? (
@@ -43,6 +46,12 @@ const ProductTr = ({
 
       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
         {category}
+      </td>
+      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
+        <span className="flex items-center">
+          <IndianRupee className="size-[14px]" />
+          {purchasePrice?.toFixed(2)}
+        </span>
       </td>
       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
         <span className="flex items-center">
@@ -73,6 +82,19 @@ const ProductTr = ({
         {view}
       </td>
       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
+        <span className="flex items-center">
+          <IndianRupee className="size-[14px]" />
+          {parseInt(price) * parseInt(sold)}
+        </span>
+      </td>
+      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
+        <span className="flex items-center">
+          <IndianRupee className="size-[14px]" />
+          {parseInt(price) * parseInt(sold) -
+            parseInt(purchasePrice) * parseInt(sold)}
+        </span>
+      </td>
+      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
         <button className="text-indigo-400 hover:text-indigo-300 mr-2">
           <Edit
             size={18}
@@ -83,7 +105,9 @@ const ProductTr = ({
                 imageUrl,
                 categoryId,
                 description,
+                purchasePrice,
                 price,
+                salesPrice,
                 stock,
                 sold,
                 view,

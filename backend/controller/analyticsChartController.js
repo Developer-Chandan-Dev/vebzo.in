@@ -184,8 +184,9 @@ const salesByCategory = asyncHandler(async (req, res, next) => {
 
 const salesPerformance = asyncHandler(async (req, res, next) => {
   try {
-    const { interval = "daily" } = req.query; // 'daily' or 'weekly'
-    const dateFormat = interval === "weekly" ? "%Y-%U" : "%Y-%m-%d"; // Weekly or Daily format
+    const { interval = "monthly" } = req.query; // 'daily' or 'weekly'
+    // const dateFormat = interval === "weekly" ? "%Y-%U" : "%Y-%m-%d"; // Weekly or Daily format
+    const dateFormat = interval === "weekly" ? "%Y-%U" : "%Y-%m"; // Weekly or Daily format
 
     const salesData = await Order.aggregate([
       {

@@ -1,7 +1,18 @@
+import SmallSpinner from "../../utility/SmallSpinner";
+import useContactForm from "../../../hooks/client/useContactForm";
+
 const ContactUsForm = () => {
-  const handleSubmit = (e) => {
-    e.preventDefault();
-  };
+  const {
+    name,
+    setName,
+    email,
+    setEmail,
+    message,
+    setMessage,
+    loading,
+    onSubmit,
+  } = useContactForm();
+
   return (
     <>
       <section className="text-gray-600 body-font relative">
@@ -11,11 +22,13 @@ const ContactUsForm = () => {
               Send a Message
             </h1>
             <p className="lg:w-2/3 mx-auto leading-relaxed text-base">
-              Message us if you want tell us something, for any type of<br className="hidden sm:block"/> problem, opinion, query contact etc.
+              Message us if you want tell us something, for any type of
+              <br className="hidden sm:block" /> problem, opinion, query contact
+              etc.
             </p>
           </div>
           <div className="lg:w-1/2 md:w-2/3 mx-auto">
-            <form className="flex flex-wrap -m-2">
+            <form className="flex flex-wrap -m-2 text-sm" onSubmit={onSubmit}>
               <div className="p-2 w-1/2">
                 <div className="relative">
                   <label
@@ -29,7 +42,9 @@ const ContactUsForm = () => {
                     id="name"
                     required
                     name="name"
-                    className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-sm outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                   />
                 </div>
               </div>
@@ -46,7 +61,9 @@ const ContactUsForm = () => {
                     id="email"
                     required
                     name="email"
-                    className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-sm outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                   />
                 </div>
               </div>
@@ -62,16 +79,18 @@ const ContactUsForm = () => {
                     id="message"
                     name="message"
                     required
-                    className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out"
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                    className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 h-32 text-sm outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out"
                   ></textarea>
                 </div>
               </div>
               <div className="p-2 w-full">
-                <button className="flex mx-auto text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">
-                  Submit
+                <button className="flex mx-auto text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg flex-center">
+                  {loading ? <SmallSpinner /> : "Submit"}
                 </button>
               </div>
-              <div className="p-2 w-full pt-8 mt-8 border-t border-gray-200 text-center">
+              {/* <div className="p-2 w-full pt-8 mt-8 border-t border-gray-200 text-center">
                 <a className="text-indigo-500">example@email.com</a>
                 <p className="leading-normal my-5">
                   49 Smith St.
@@ -137,7 +156,7 @@ const ContactUsForm = () => {
                     </svg>
                   </a>
                 </span>
-              </div>
+              </div> */}
             </form>
           </div>
         </div>

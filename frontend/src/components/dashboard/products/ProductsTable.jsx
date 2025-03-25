@@ -16,6 +16,7 @@ import useFetchDataWithPagination from "../../../hooks/useFetchDataWithPaginatio
 import SearchBox from "../../utility/SearchBox";
 import Spinner from "../../utility/Spinner";
 import useHandleDeletewithSweetAlert from "../../../hooks/useHandleDeleteWithSweetAlert";
+import TableContainer from "../common/TableContainer";
 
 const VITE_API_URL = import.meta.env.VITE_API_URL;
 const ProductsTable = ({ onEditClick }) => {
@@ -74,7 +75,7 @@ const ProductsTable = ({ onEditClick }) => {
     pageNumbers.push(i);
   }
 
-  console.log(error);
+  console.log(productData);
   return (
     <motion.div
       className="bg-gray-800 bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-6 border border-gray-700 mb-6"
@@ -143,7 +144,7 @@ const ProductsTable = ({ onEditClick }) => {
         </div>
       )}
       {!loading && (
-        <div className="overflow-x-auto">
+        <TableContainer>
           <table className="min-w-full divide-y divide-gray-700">
             <thead>
               <tr>
@@ -152,6 +153,9 @@ const ProductsTable = ({ onEditClick }) => {
                 </th>
                 <th className="px-6 py-3 text-left font-medium text-gray-400 uppercase tracking-wider">
                   Category
+                </th>
+                <th className="px-6 py-3 text-left font-medium text-gray-400 uppercase tracking-wider">
+                  Purchase Price
                 </th>
                 <th className="px-6 py-3 text-left font-medium text-gray-400 uppercase tracking-wider">
                   Price
@@ -169,6 +173,12 @@ const ProductsTable = ({ onEditClick }) => {
                   View
                 </th>
                 <th className="px-6 py-3 text-left font-medium text-gray-400 uppercase tracking-wider">
+                  Total Revenue
+                </th>
+                <th className="px-6 py-3 text-left font-medium text-gray-400 uppercase tracking-wider">
+                  Total Profit
+                </th>
+                <th className="px-6 py-3 text-left font-medium text-gray-400 uppercase tracking-wider">
                   Actions
                 </th>
               </tr>
@@ -182,6 +192,7 @@ const ProductsTable = ({ onEditClick }) => {
                       name,
                       imageUrl,
                       category,
+                      purchasePrice,
                       price,
                       salesPrice,
                       description,
@@ -196,6 +207,7 @@ const ProductsTable = ({ onEditClick }) => {
                         imageUrl={imageUrl}
                         category={category?.name}
                         categoryId={category?._id}
+                        purchasePrice={purchasePrice}
                         price={price}
                         salesPrice={salesPrice}
                         description={description}
@@ -248,7 +260,7 @@ const ProductsTable = ({ onEditClick }) => {
               <MoveRight size="16" />
             </button>
           </div>
-        </div>
+        </TableContainer>
       )}
     </motion.div>
   );

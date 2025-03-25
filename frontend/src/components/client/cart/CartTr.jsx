@@ -14,7 +14,7 @@ const CartTr = ({
 }) => {
   return (
     <>
-      <tr className="border-b">
+      <tr className="border-b sm:gap-2 ">
         <td className="py-3 px-5" colSpan={2}>
           <div className="flex items-center justify-around">
             <XCircle
@@ -29,7 +29,9 @@ const CartTr = ({
           </div>
         </td>
         <td className="py-3">
-          <Link to={`/shop/${productId}`}>{name}</Link>
+          <Link to={`/shop/${productId}`}>
+            {name?.length > 15 ? name?.slice(0, 15) + "..." : name}
+          </Link>
         </td>
         <td className="py-3">{price}</td>
         <td className="py-3">

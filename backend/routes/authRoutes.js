@@ -25,9 +25,19 @@ const {
 const { loginValidationSchema } = require("../validations/auth.validation");
 const upload = require("../middlewares/fileUploadMiddleware");
 
-// Google Authentication Routes
-router.get("/google", passport.authenticate('google', { scope: ['profile', 'email'] }));
-router.get("/google/callback", passport.authenticate('google', { failureRedirect: "/" }), googleAuth);
+router.get('/google',
+  passport.authenticate('google', {
+    scope: ['profile', 'email'],
+    prompt: 'consent'
+  })
+);
+
+router.get('/google/callback',
+  passport.authenticate('google', { failureRedirect: '/login' }),
+  (req, res) => {
+    res.redirect(`${process.env.CLIENT_URL}/dashboard`); // Redirect to your frontend dashboard
+  }
+);
 
 // Normal Auth Routes
 router.post("/register", rateLimiter, validate(userValidationSchema), signup); // Register with new account

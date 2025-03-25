@@ -10,10 +10,10 @@ const {
 // @desc Create a new product (POST - /api/v1/products/, [Admin])
 const createProduct = asyncHandler(async (req, res, next) => {
   try {
-    const { name, description, price, stock, category } = req.body;
+    const { name, description, purchasePrice, price, salesPrice, stock, category } = req.body;
 
     // Validate required fields
-    if (!name || !price || !stock || !category) {
+    if (!name || !purchasePrice || !price || !stock || !category) {
       return next(
         new ErrorResponse("All required fields must be provided", 400)
       );
@@ -23,7 +23,9 @@ const createProduct = asyncHandler(async (req, res, next) => {
     const product = await Product.create({
       name,
       description,
+      purchasePrice,
       price,
+      salesPrice,
       stock,
       category,
     });
@@ -45,7 +47,7 @@ const productImageUpload = asyncHandler(async (req, res, next) => {
   try {
     const productId = req.params.productId; // Get product ID from route parameters
     const newImagePath = req.file?.path; // Path of the uploaded image from Multer
-    console.log(newImagePath, req.file, "48");
+
     // Find the product in the database
     const product = await Product.findById(productId);
     if (!product) {
@@ -60,7 +62,6 @@ const productImageUpload = asyncHandler(async (req, res, next) => {
       "products" // Cloudinary folder
     );
 
-    console.log(uploadResult, "77");
     // Update the product with new image details
     if (uploadResult) {
       product.imageUrl = uploadResult.imageUrl; // New image URL
@@ -97,8 +98,6 @@ const getProducts = asyncHandler(async (req, res, next) => {
       isFeatured,
       bestSellingProducts,
     } = req.query;
-
-    console.log(query, "101");
 
     const filters = {};
 
@@ -229,7 +228,7 @@ const getProductById = asyncHandler(async (req, res, next) => {
 // @desc Update a product (PUT - /api/v1/products/:id, [Admin])
 const updateProduct = asyncHandler(async (req, res, next) => {
   try {
-    const { name, description, price, salesPrice, stock, category } = req.body;
+    const { name, description, purchasePrice, price, salesPrice, stock, category } = req.body;
     const productId = req.params.id;
 
     // Find the existing product by ID
@@ -242,6 +241,7 @@ const updateProduct = asyncHandler(async (req, res, next) => {
     const updatedFields = {
       ...(name && { name }), // Add name only if provided
       ...(description && { description }),
+      ...(purchasePrice && { purchasePrice }),
       ...(price && { price }),
       ...(salesPrice > 0 && { salesPrice }),
       ...(stock && { stock }),
@@ -359,7 +359,6 @@ const productsByCategory = asyncHandler(async (req, res, next) => {
     const totalPages = Math.ceil(totalProducts / limit);
 
     const category = await Category.findOne({ _id: categoryId });
-    console.log(category);
 
     const products = await Product.find(filters)
       .sort(sortOption)

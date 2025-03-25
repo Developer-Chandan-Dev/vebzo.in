@@ -7,6 +7,7 @@ import useFetchDataWithPagination from "../../../hooks/useFetchDataWithPaginatio
 import Spinner from "../../utility/Spinner";
 import useHandleDeletewithSweetAlert from "../../../hooks/useHandleDeleteWithSweetAlert";
 import useUsersTable from "../../../hooks/users/useUsersTable";
+import TableContainer from "../common/TableContainer";
 
 const VITE_API_URL = import.meta.env.VITE_API_URL;
 const UsersTable = ({ onEditClick }) => {
@@ -43,7 +44,7 @@ const UsersTable = ({ onEditClick }) => {
     handleToggleRoleFilter,
     handleFilterByRole,
     handleToggleStatusFilter,
-    handleFilterByStatus
+    handleFilterByStatus,
   } = useUsersTable({
     currentPage,
     setCurrentPage,
@@ -54,7 +55,7 @@ const UsersTable = ({ onEditClick }) => {
     setCheckRoleFilter,
     checkStatusFilter,
     setStatus,
-    setCheckStatusFilter
+    setCheckStatusFilter,
   });
 
   useEffect(() => {
@@ -130,7 +131,7 @@ const UsersTable = ({ onEditClick }) => {
       {error && !loading && <p className="text-red-400">{error}</p>}
 
       {!loading && !error && (
-        <div className="overflow-x-auto">
+        <TableContainer>
           <table className="min-w-full divide-y divide-gray-700">
             <thead>
               <tr>
@@ -183,7 +184,7 @@ const UsersTable = ({ onEditClick }) => {
                       <option value="">Status</option>
                       <option value="false">Active</option>
                       <option value="true">InActive</option>
-                     </select>
+                    </select>
                   )}
                 </th>
               </tr>
@@ -246,7 +247,7 @@ const UsersTable = ({ onEditClick }) => {
               <MoveRight size="16" />
             </button>
           </div>
-        </div>
+        </TableContainer>
       )}
     </motion.div>
   );

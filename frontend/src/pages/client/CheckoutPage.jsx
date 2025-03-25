@@ -32,7 +32,7 @@ const CheckoutPage = () => {
   }, [authUser?._id, dispatch]);
 
   const { cartItems, status, error } = useSelector((state) => state.cart);
-  
+
   useEffect(() => {
     if (cartItems?.items?.length > 0) {
       const formattedOrderItems = cartItems?.items.map((item) => ({
@@ -40,7 +40,7 @@ const CheckoutPage = () => {
         quantity: item.quantity,
         price: item.price,
       }));
-      
+
       setOrderItems(formattedOrderItems);
     }
   }, [cartItems]);
@@ -54,9 +54,6 @@ const CheckoutPage = () => {
     );
   };
 
-
-  console.log(orderItems, cartItems);
-
   // Usage
   const GrandTotal = calculateGrandTotal(cartItems);
 
@@ -67,8 +64,6 @@ const CheckoutPage = () => {
   useEffect(() => {
     setGrandTotal(subTotal + deliveryCharge);
   }, [deliveryCharge, subTotal]);
-
-  console.log(grandTotal);
 
   const { handleSubmit } = useHandleSendingRequest();
 
@@ -92,14 +87,13 @@ const CheckoutPage = () => {
           totalPrice: grandTotal,
         }
       );
-
-      console.log(response?.Error);
-
+      if(response?.includes('Error: Insufficient stock for product:')){
+        toast.error(response);
+      }
       if (response.success === true) {
         toast.success(response.message);
         navigate("/cart");
       } else {
-        console.log(response);
         toast.error(response.message);
       }
     } catch (error) {

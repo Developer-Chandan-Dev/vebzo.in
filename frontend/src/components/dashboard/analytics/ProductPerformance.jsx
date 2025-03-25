@@ -9,7 +9,10 @@ import {
   YAxis,
 } from "recharts";
 import { motion } from "framer-motion";
+import useFetchData from "../../../hooks/useFetchData";
+import { useEffect, useState } from "react";
 
+const VITE_API_URL = import.meta.env.VITE_API_URL;
 const productPerformanceData = [
   { name: "Product A", sales: 4000, revenue: 2400, profit: 2400 },
   { name: "Product B", sales: 3000, revenue: 1298, profit: 2210 },
@@ -19,6 +22,17 @@ const productPerformanceData = [
 ];
 
 const ProductPerformance = () => {
+  const [performanceData, setPerformanceData] = useState(null);
+
+  const { data } = useFetchData(
+    `${VITE_API_URL}/api/v1/analytics/chart/sales-performance?interval=weekly`
+  );
+
+  useEffect(() => {
+    setPerformanceData(data?.data);
+  }, [data?.data]);
+
+  console.log(performanceData);
   return (
     <motion.div
       className="bg-gray-800 bg-opacity-80 backdrop-blur-md shadow-lg rounded-xl p-6 border border-gray-700"
@@ -27,14 +41,17 @@ const ProductPerformance = () => {
       transition={{ delay: 0.4 }}
     >
       <h2 className="text-lg font-medium mb-4 text-gray-100">
-        User Activity Heatmap
+        Sales Performance
       </h2>
 
       <div className="h-80 ">
         <ResponsiveContainer>
-          <BarChart data={productPerformanceData}>
+          <BarChart data={data?.data}>
             <CartesianGrid strokeDasharray="3 3" stroke="#485563" />
-            <XAxis dataKey={"name"} stroke="#9ca3af" />
+            <XAxis
+              dataKey={"_id"}
+              stroke="#9ca3af"
+            />
             <YAxis stroke="#9ca3af" />
 
             <Tooltip
@@ -46,9 +63,8 @@ const ProductPerformance = () => {
             />
 
             <Legend />
-            <Bar dataKey="sales" fill="#885CF6" />
-            <Bar dataKey="revenue" fill="#108981" />
-            <Bar dataKey="profit" fill="#F59E08" />
+            <Bar dataKey="totalOrders" fill="#885CF6" />
+            <Bar dataKey="totalRevenue" fill="#108981" />
           </BarChart>
         </ResponsiveContainer>
       </div>

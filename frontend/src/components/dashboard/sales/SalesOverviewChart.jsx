@@ -28,7 +28,6 @@ const SalesOverviewChart = () => {
   const { data, loading } = useFetchData(
     `${VITE_API_URL}/api/v1/analytics/chart/sales-overview`
   );
-  console.log(data, loading);
 
   return (
     <motion.div

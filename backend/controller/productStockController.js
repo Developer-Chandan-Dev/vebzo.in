@@ -40,14 +40,11 @@ const decreaseStock = async (orderItems) => {
 };
 
 const validateStock = async (orderItems) => {
-  console.log(orderItems);
   for (const item of orderItems) {
-    console.log(item, item.product, "45");
     const product = await Product.findById(item.product);
-    console.log(product, "47");
 
     if (!product || product.stock < item.quantity) {
-      throw new Error(`Insufficient stock for product: ${product}`);
+      throw new Error(`Insufficient stock for product: ${product?.name} Only ${product?.stock} available.`);
     }
   }
 };
@@ -75,7 +72,6 @@ const getProductStock = asyncHandler(async (req, res, next) => {
 
 const checkLowStock = async () => {
   const lowStockProducts = await Product.find({ stock: { $lte: 5 } });
-  console.log(lowStockProducts);
 
   if (lowStockProducts.length > 0) {
     console.log(

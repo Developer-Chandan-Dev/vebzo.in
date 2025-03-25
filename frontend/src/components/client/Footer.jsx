@@ -17,10 +17,9 @@ const Footer = () => {
             alt="Logo"
           />
           <p className="text-left text-gray-300">
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Assumenda
-            possimus unde aut numquam cum, non neque qui praesentium modi
-            delectus sapiente magni molestiae, reprehenderit fuga, quo
-            temporibus perferendis nulla dignissimos.
+            Bringing fresh, natural, and organic products straight from local
+            farmers to your doorstep. Quality you can trust, right from the
+            heart of your village.
           </p>
         </div>
         <div className="text-left">
@@ -74,15 +73,19 @@ const Footer = () => {
         <div className="text-left">
           <h3 className=" mb-7 text-lg font-semibold">Site Links</h3>
           <ul>
-            <li className="my-2 text-gray-300 transition hover:text-white">
-              Privacy Policy
-            </li>
-            <li className="my-2 text-gray-300 transition hover:text-white">
+            <Link to="/privacy-policy">
+              <li className="my-2 text-gray-300 transition hover:text-white">
+                Privacy Policy
+              </li>
+            </Link>
+            {/* <li className="my-2 text-gray-300 transition hover:text-white">
               Shopping Details
-            </li>
-            <li className="my-2 text-gray-300 transition hover:text-white">
-              Term & Conditions
-            </li>
+            </li> */}
+            <Link to="/terms-conditions">
+              <li className="my-2 text-gray-300 transition hover:text-white">
+                Term & Conditions
+              </li>
+            </Link>
             <li
               className={`${
                 authUser?.role === "admin" || authUser?.role === "manager"
@@ -96,7 +99,7 @@ const Footer = () => {
         </div>
       </div>
       <div className="flex items-center justify-between px-10 border-t pt-10 border-gray-700">
-        <p className="text-gray-300">Copyright &#169; | Apna Grocery Store </p>
+        <p className="text-gray-300">&#169; 2025 Apna Market | All right reserved </p>
         <div className="flex items-center gap-5">
           <Facebook size="19" />
           <Instagram size="19" />

@@ -11,7 +11,7 @@ import { useDispatch } from "react-redux";
  * @returns {object} An object with the state variables and functions to set them
  */
 
-const useFetchData = (url) => {
+const useFetchData = (url, params = null) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [data, setData] = useState(null);
@@ -29,6 +29,7 @@ const useFetchData = (url) => {
     setLoading(true);
     try {
       const response = await axios.get(url, {
+        params: params || {}, // If params is null, use an empty object
         withCredentials: true,
       }); // Waiting for get requests
       const resData = response.data;
@@ -57,7 +58,7 @@ const useFetchData = (url) => {
 
   useEffect(() => {
     fetchData(); // Fetch data initially and on refresh state change
-  }, [url, refresh]);
+  }, [url, refresh, params]);
 
   const refreshData = () => setRefresh((prev) => prev + 1); // Increment to trigger re-fetch
 

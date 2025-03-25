@@ -3,6 +3,7 @@ import { Star, UserCircle2 } from "lucide-react";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchReviews } from "../../../store/features/reviewSlice";
+import Empty from "../../utility/Empty";
 
 const Reviews = ({ productId }) => {
   const dispatch = useDispatch();
@@ -54,7 +55,7 @@ const Reviews = ({ productId }) => {
                 <p className="ml-3 mt-2">{item.comment}</p>
               </li>
             ))
-          : "Empty"}
+          : <Empty/>}
       </ul>
     </div>
   );

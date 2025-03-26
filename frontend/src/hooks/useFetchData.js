@@ -51,7 +51,8 @@ const useFetchData = (url, params = null) => {
         dispatch(logout());
         navigate("/login");
       }
-      setError(error.response.data.message);
+      console.log(error.response);
+      setError(error.response?.data.message);
       setLoading(false);
     }
   };

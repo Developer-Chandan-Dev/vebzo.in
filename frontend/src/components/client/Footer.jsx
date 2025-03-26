@@ -3,6 +3,7 @@
 import { Facebook, Instagram, Twitter } from "lucide-react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import footerLogo from "../../assets/images/organic-store-white-logo.png";
 
 const Footer = () => {
   const authUser = useSelector((state) => state.user.user);
@@ -12,7 +13,7 @@ const Footer = () => {
       <div className="flex items-start justify-between flex-wrap gap-4 px-10 py-5">
         <div className="w-96">
           <img
-            src="../../assets/images/organic-store-white-logo.png"
+            src={footerLogo}
             className="h-20 mb-7"
             alt="Logo"
           />

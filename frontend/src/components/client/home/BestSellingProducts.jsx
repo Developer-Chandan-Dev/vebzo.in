@@ -8,6 +8,7 @@ import Button from "../../utility/Button";
 import { addToCart, fetchCartItems } from "../../../store/features/cartSlice";
 import useHandleSwitchRoutes from "../../../hooks/useHandleSwitchRoutes";
 const VITE_API_URL = import.meta.env.VITE_API_URL;
+import LogoLeaf from "../../../assets/images/logo-leaf-new.png"
 
 const BestSellingProducts = () => {
   const authUser = useSelector((state) => state.user.user);
@@ -41,7 +42,7 @@ const BestSellingProducts = () => {
         Best Selling Products
       </h2>
       <img
-        src="../../../assets/images/logo-leaf-new.png"
+        src={LogoLeaf}
         alt="Leaf"
         className="pt-7 pb-4 mx-auto"
       />

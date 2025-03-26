@@ -5,6 +5,7 @@ import authService from "../../features/auth";
 import SmallSpinner from "../../components/utility/SmallSpinner";
 import { toast } from "react-toastify";
 import GoogleLoginComponent from "../../components/GoogleLoginComponent";
+import OrganicStore from "../../assets/images/organic-store-logo5.svg";
 
 const SignupPage = () => {
   const [username, setUsername] = useState("");
@@ -55,7 +56,7 @@ const SignupPage = () => {
             <div>
               <Link to="/">
                 <img
-                  src="../../assets/images/organic-store-logo5.svg"
+                  src={OrganicStore}
                   className="h-16 mb-4"
                 />
               </Link>

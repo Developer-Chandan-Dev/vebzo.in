@@ -1,5 +1,6 @@
 import "./style.css";
 import { ArrowRight } from "lucide-react";
+import LogoLeaf from "../../../assets/images/logo-leaf-new.png"
 
 const FrequentlyAskedQuestions = () => {
   return (
@@ -8,7 +9,7 @@ const FrequentlyAskedQuestions = () => {
         Frequently Asked Question
       </h1>
       <img
-        src="../../../assets/images/logo-leaf-new.png"
+        src={LogoLeaf}
         alt="Leaf"
         className="mx-auto py-7"
       />

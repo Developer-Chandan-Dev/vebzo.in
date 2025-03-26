@@ -1,4 +1,5 @@
 import { Mail, MapPin, PhoneCall } from "lucide-react";
+import BasilLeaf from "../../../assets/images/basil-leaf.png";
 
 const ContactInfoBox = () => {
   return (
@@ -8,7 +9,7 @@ const ContactInfoBox = () => {
     >
       <div className="absolute w-full h-auto -top-[2rem] ">
         <img
-          src="../../../assets/basil-leaf.png"
+          src={BasilLeaf}
           className="mx-auto h-16"
           alt="Leaf"
         />

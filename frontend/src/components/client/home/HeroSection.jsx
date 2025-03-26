@@ -2,6 +2,8 @@ import "./style.css";
 import { ShoppingCart } from "lucide-react";
 import Button from "../../utility/Button";
 import { Link } from "react-router-dom";
+import heroSectionImage from '../../../assets/images/organic-products-hero.png'
+import logoLeaf from '../../../assets/images/logo-leaf-new.png'
 
 const HeroSection = () => {
   return (
@@ -9,14 +11,14 @@ const HeroSection = () => {
       <div className="mx-auto w-full lg:w-11/12 max-w-7xl flex-center px-4 mainBox py-14 sm:py-20 lg:gap-x-14 xl:gap-x-20 ">
         <div className="imageBox w-[60%] lg:w-1/2 ">
           <img
-            src="../../../assets/images/organic-products-hero.png"
+            src={heroSectionImage}
             className="w-11/12 xl:w-full"
             alt="hero section image"
           />
         </div>
         <div className="w-full sm:w-[500px] hero-section-leftBox md:text-left">
           <img
-            src="../../../assets/images/logo-leaf-new.png"
+            src={logoLeaf}
             alt="Leaf"
             className="pb-5 leaf"
           />

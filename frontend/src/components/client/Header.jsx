@@ -6,6 +6,7 @@ import { Menu, ShoppingCart, User, X } from "lucide-react";
 import { Link } from "react-router-dom";
 import Button from "../utility/Button";
 import useHeader from "../../hooks/client/useHeader";
+import Logo from "../../assets/images/organic-store-logo5.svg"
 
 const Header = ({ bg = "bg-white" }) => {
   const {
@@ -29,7 +30,7 @@ const Header = ({ bg = "bg-white" }) => {
         <div className="logo text-2xl font-bold text-slate-500">
           <Link to="/">
             <img
-              src="../../assets/images/organic-store-logo5.svg"
+              src={Logo}
               className="h-16"
               alt="Logo"
             />
@@ -130,7 +131,7 @@ const Header = ({ bg = "bg-white" }) => {
         <div className="logo text-2xl font-bold text-slate-500">
           <Link to="/">
             <img
-             src="../../assets/images/organic-store-logo5.svg"
+             src={Logo}
               className="h-12"
               alt="Logo"
             />

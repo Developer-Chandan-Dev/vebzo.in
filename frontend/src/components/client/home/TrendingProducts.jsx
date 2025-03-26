@@ -7,6 +7,7 @@ import { addToCart, fetchCartItems } from "../../../store/features/cartSlice";
 import { toast } from "react-toastify";
 import Button from "../../utility/Button";
 import useHandleSwitchRoutes from "../../../hooks/useHandleSwitchRoutes";
+import Leaf from "../../../assets/images/logo-leaf-new.png"
 const VITE_API_URL = import.meta.env.VITE_API_URL;
 
 const TrendingProducts = () => {
@@ -41,7 +42,7 @@ const TrendingProducts = () => {
         Trending Products
       </h2>
       <img
-        src="../../../assets/images/logo-leaf-new.png"
+        src={Leaf}
         alt="Leaf"
         className="pt-7 pb-4 mx-auto"
       />

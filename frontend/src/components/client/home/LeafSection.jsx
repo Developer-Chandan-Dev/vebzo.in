@@ -1,23 +1,22 @@
-import React from "react";
-import Button from "../../utility/Button";
-import { Link } from 'react-router-dom'
+import { Link } from "react-router-dom";
 import { MoveRight } from "lucide-react";
+import Button from "../../utility/Button";
+import BasilLeaf from "../../../assets/images/basil-leaf.png";
+import FarmFreshVegitables from "../../../assets/images/product11-free-img.jpg";
+import Vegitables from "../../../assets/images/product17-free-img.jpg";
+import FarmFreshFruit from "../../../assets/images/product13-free-img.jpg";
 
 const LeafSection = () => {
   return (
     <div className="w-full py-10 bg-[#f8f6f3] relative">
       <div className="absolute w-full h-auto -top-[2rem] ">
-        <img
-          src="../../../assets/images/basil-leaf.png"
-          className="mx-auto h-16"
-          alt="Leaf"
-        />
+        <img src={BasilLeaf} className="mx-auto h-16" alt="Leaf" />
       </div>
 
       <div className="flex items-center flex-wrap gap-8 py-10 px-5 sm:px-10 justify-center">
         <div className="w-96 h-96 rounded-lg bg-white shadow-lg shadow-gray-200 relative">
           <img
-            src="../../../assets/images/product11-free-img.jpg"
+            src={FarmFreshVegitables}
             className="h-full absolute bottom-0 right-0 -z-0"
             alt="product Image"
           />
@@ -35,7 +34,7 @@ const LeafSection = () => {
         </div>
         <div className="w-96 h-96 rounded-lg bg-white shadow-lg shadow-gray-200 relative">
           <img
-            src="../../../assets/images/product17-free-img.jpg"
+            src={Vegitables}
             className="h-full absolute bottom-0 right-0"
             alt="product Image"
           />
@@ -51,7 +50,7 @@ const LeafSection = () => {
         </div>
         <div className="w-96 h-96 rounded-lg bg-white shadow-lg shadow-gray-200 relative">
           <img
-            src="../../../assets/images/product13-free-img.jpg"
+            src={FarmFreshFruit}
             className="h-full absolute bottom-0 right-0"
             alt="product Image"
           />

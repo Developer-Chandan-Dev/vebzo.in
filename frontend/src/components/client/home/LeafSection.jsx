@@ -8,7 +8,7 @@ const LeafSection = () => {
     <div className="w-full py-10 bg-[#f8f6f3] relative">
       <div className="absolute w-full h-auto -top-[2rem] ">
         <img
-          src="/public/images/basil-leaf.png"
+          src="../../../assets/images/basil-leaf.png"
           className="mx-auto h-16"
           alt="Leaf"
         />
@@ -17,7 +17,7 @@ const LeafSection = () => {
       <div className="flex items-center flex-wrap gap-8 py-10 px-5 sm:px-10 justify-center">
         <div className="w-96 h-96 rounded-lg bg-white shadow-lg shadow-gray-200 relative">
           <img
-            src="/public/images/product11-free-img.jpg"
+            src="../../../assets/images/product11-free-img.jpg"
             className="h-full absolute bottom-0 right-0 -z-0"
             alt="product Image"
           />
@@ -35,7 +35,7 @@ const LeafSection = () => {
         </div>
         <div className="w-96 h-96 rounded-lg bg-white shadow-lg shadow-gray-200 relative">
           <img
-            src="/public/images/product17-free-img.jpg"
+            src="../../../assets/images/product17-free-img.jpg"
             className="h-full absolute bottom-0 right-0"
             alt="product Image"
           />
@@ -51,7 +51,7 @@ const LeafSection = () => {
         </div>
         <div className="w-96 h-96 rounded-lg bg-white shadow-lg shadow-gray-200 relative">
           <img
-            src="/public/images/product13-free-img.jpg"
+            src="../../../assets/images/product13-free-img.jpg"
             className="h-full absolute bottom-0 right-0"
             alt="product Image"
           />

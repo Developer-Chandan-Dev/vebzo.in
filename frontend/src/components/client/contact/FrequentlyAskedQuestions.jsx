@@ -8,7 +8,7 @@ const FrequentlyAskedQuestions = () => {
         Frequently Asked Question
       </h1>
       <img
-        src="/public/images/logo-leaf-new.png"
+        src="../../../assets/images/logo-leaf-new.png"
         alt="Leaf"
         className="mx-auto py-7"
       />

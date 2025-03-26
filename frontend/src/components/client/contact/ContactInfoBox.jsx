@@ -8,7 +8,7 @@ const ContactInfoBox = () => {
     >
       <div className="absolute w-full h-auto -top-[2rem] ">
         <img
-          src="/public/images/basil-leaf.png"
+          src="../../../assets/basil-leaf.png"
           className="mx-auto h-16"
           alt="Leaf"
         />

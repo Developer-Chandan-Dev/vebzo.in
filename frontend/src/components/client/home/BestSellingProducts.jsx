@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import { Heart, ShoppingCart, Star } from "lucide-react";
+import { Heart, Image, ShoppingCart, Star } from "lucide-react";
 import useFetchData from "../../../hooks/useFetchData";
 import Spinner from "../../utility/Spinner";
 import Button from "../../utility/Button";
@@ -41,7 +41,7 @@ const BestSellingProducts = () => {
         Best Selling Products
       </h2>
       <img
-        src="/public/images/logo-leaf-new.png"
+        src="../../../assets/images/logo-leaf-new.png"
         alt="Leaf"
         className="pt-7 pb-4 mx-auto"
       />
@@ -59,15 +59,15 @@ const BestSellingProducts = () => {
                 <div className="w-72 h-auto productBox" key={product._id}>
                   <Link to={`/shop/${product?._id}`}>
                     <div className=" w-72 h-72 border mx-auto overflow-hidden relative">
-                      <img
-                        src={
-                          product?.imageUrl
-                            ? product?.imageUrl
-                            : "/public/images/cauliflower-1.webp"
-                        }
+                      {
+                        product?.imageUrl ? <img
+                        src={product?.imageUrl}
                         className="w-full h-full object-fit"
                         alt="Product Image"
-                      />
+                      /> : <Image className="w-full h-full object-fit"/>
+                      }
+                      
+                      
                       <div className="absolute w-auto h-10 top-2 right-2 flex items-center gap-3 px-3">
                         <Heart className="text-white drop-shadow" />
                         <ShoppingCart className="text-white drop-shadow" />

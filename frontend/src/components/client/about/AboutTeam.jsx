@@ -11,7 +11,8 @@ const AboutTeam = () => {
       <div className="flex items-center flex-wrap w-full mx-auto lg:w-[90%] gap-10 py-16">
         <div className="w-80 h-auto mx-auto">
           <div className="w-48 rounded-full overflow-hidden h-48 border mx-auto">
-            <img src="/public/images/potato-1.webp" alt="Member 1" />
+            {/* <img src="/public/images/potato-1.webp" alt="Member 1" /> */}
+            <img src='' alt="Member 1" />
           </div>
           <div className="py-5 px-4">
             <h3 className="text-2xl font-bold text-gray-700">Alex Carry</h3>

@@ -66,7 +66,7 @@ const LoginPage = () => {
             <div>
               <Link to="/">
                 <img
-                  src="/public/images/organic-store-logo5.svg"
+                  src="../../assets/images/organic-store-logo5.svg"
                   className="h-16 mb-4"
                 />
               </Link>

@@ -29,7 +29,7 @@ const Header = ({ bg = "bg-white" }) => {
         <div className="logo text-2xl font-bold text-slate-500">
           <Link to="/">
             <img
-              src="/public/images/organic-store-logo5.svg"
+              src="../../assets/images/organic-store-logo5.svg"
               className="h-16"
               alt="Logo"
             />
@@ -130,7 +130,7 @@ const Header = ({ bg = "bg-white" }) => {
         <div className="logo text-2xl font-bold text-slate-500">
           <Link to="/">
             <img
-              src="/public/images/organic-store-logo5.svg"
+             src="../../assets/images/organic-store-logo5.svg"
               className="h-12"
               alt="Logo"
             />

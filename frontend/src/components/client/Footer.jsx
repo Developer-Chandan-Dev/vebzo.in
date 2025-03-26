@@ -12,7 +12,7 @@ const Footer = () => {
       <div className="flex items-start justify-between flex-wrap gap-4 px-10 py-5">
         <div className="w-96">
           <img
-            src="/public/images/organic-store-white-logo.png"
+            src="../../assets/images/organic-store-white-logo.png"
             className="h-20 mb-7"
             alt="Logo"
           />

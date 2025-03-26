@@ -9,14 +9,14 @@ const HeroSection = () => {
       <div className="mx-auto w-full lg:w-11/12 max-w-7xl flex-center px-4 mainBox py-14 sm:py-20 lg:gap-x-14 xl:gap-x-20 ">
         <div className="imageBox w-[60%] lg:w-1/2 ">
           <img
-            src="/public/images/organic-products-hero.png"
+            src="../../../assets/images/organic-products-hero.png"
             className="w-11/12 xl:w-full"
             alt="hero section image"
           />
         </div>
         <div className="w-full sm:w-[500px] hero-section-leftBox md:text-left">
           <img
-            src="/public/images/logo-leaf-new.png"
+            src="../../../assets/images/logo-leaf-new.png"
             alt="Leaf"
             className="pb-5 leaf"
           />

@@ -36,7 +36,7 @@ const MyProfile = () => {
       <div
         className="w-full h-40"
         style={{
-          backgroundImage: 'url("/public/images/bg.jpeg")',
+          backgroundImage: 'url("../../../assets/images/bg.jpeg")',
           backgroundSize: "cover",
         }}
       ></div>

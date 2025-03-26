@@ -19,7 +19,7 @@
   width: 250px;
   height: 200px;
   display: block;
-  background-image: url(/public/images/leaves-free-img.png);
+  background-image: url("../../../assets/images/leaves-free-img.png");
   background-repeat: no-repeat;
   background-size: contain;
   /* background-position: bottom right; */

@@ -1,4 +1,4 @@
-import emptyIcon from "/public/images/box.png";
+import emptyIcon from "../../assets/images/box.png";
 import PropTypes from "prop-types";
 // import { Empty} from 'lucide-react'
 

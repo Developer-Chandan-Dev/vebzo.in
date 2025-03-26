@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { CheckCircle2, XCircle } from "lucide-react";
+import { CheckCircle2, XCircle, Image } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const CartTr = ({
@@ -21,11 +21,15 @@ const CartTr = ({
               className="text-gray-400 transition-all cursor-pointer hover:text-gray-600"
               onClick={() => handleRemoveToCart(productId)}
             />
-            <img
-              src={imageUrl ? imageUrl : "/public/images/potato-1.webp"}
-              className="size-20"
-              alt="potato"
-            />
+            {imageUrl ? (
+              <img
+                src={imageUrl && imageUrl}
+                className="size-20"
+                alt="potato"
+              />
+            ) : (
+              <Image className="size-20" />
+            )}
           </div>
         </td>
         <td className="py-3">

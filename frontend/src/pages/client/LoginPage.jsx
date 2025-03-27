@@ -66,10 +66,7 @@ const LoginPage = () => {
           <div className="signup-mainBox w-80 lg:w-96 h-full flex-center flex-col py-3 mx-auto">
             <div>
               <Link to="/">
-                <img
-                  src={OrganicStore}
-                  className="h-16 mb-4"
-                />
+                <img src={OrganicStore} className="h-16 mb-4" />
               </Link>
             </div>
             <h1 className="text-6xl py-3 font-semibold ">Hi there!</h1>
@@ -86,7 +83,7 @@ const LoginPage = () => {
                   onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
-              <div>
+              <div className="">
                 <input
                   type="password"
                   className="inputBox px-3 w-80 py-3 rounded-lg border my-4"

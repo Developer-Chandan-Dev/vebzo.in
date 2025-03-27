@@ -134,7 +134,7 @@ const Container = ({
           </div>
         )}
 
-        {!loading && products?.length > 0 && products !== null ? (
+        {!loading && products?.length > 0 && products !== null && (
           products.map((item, index) => (
             <ItemBox
               key={index}
@@ -148,9 +148,8 @@ const Container = ({
               rating={item.averageRating}
             />
           ))
-        ) : (
-          <Empty />
         )}
+        {/* {!loading && products?.length < 0 || products === null && <Empty />} */}
       </motion.div>
       <div className="flex items-center gap-3">
         <button

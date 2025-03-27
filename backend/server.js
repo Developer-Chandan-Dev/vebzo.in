@@ -23,6 +23,7 @@ const analyticsRoutes = require("./routes/analyticsRoutes");
 const reviewRoutes = require("./routes/reviewRoutes");
 const notificationRoutes = require("./routes/notificationsRoutes");
 const messagesRoutes = require("./routes/messageRoutes");
+const errorHandler = require("./middlewares/errorHandler");
 
 const app = express();
 const PORT = process.env.PORT || 8000;
@@ -85,6 +86,9 @@ app.use("/api/v1/analytics", analyticsRoutes);
 app.use("/api/v1/reviews", reviewRoutes);
 app.use("/api/v1/notifications", notificationRoutes);
 app.use("/api/v1/contact-messages", messagesRoutes);
+
+app.use(errorHandler); // Error handler should be at the end
+
 
 
 // **Step 5: Socket.io Setup**

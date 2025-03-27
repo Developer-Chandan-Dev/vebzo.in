@@ -87,14 +87,15 @@ const CheckoutPage = () => {
           totalPrice: grandTotal,
         }
       );
-      if(response?.includes('Error: Insufficient stock for product:')){
-        toast.error(response);
-      }
-      if (response.success === true) {
+      
+      if (response?.success === true) {
         toast.success(response.message);
         navigate("/cart");
       } else {
         toast.error(response.message);
+      }
+      if(response?.includes('Error: Insufficient stock for product:')){
+        toast.error(response);
       }
     } catch (error) {
       console.log(error);

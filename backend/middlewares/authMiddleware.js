@@ -2,8 +2,10 @@ const jwt = require("jsonwebtoken");
 const ErrorResponse = require("../utils/errorResponse");
 
 const protect = (req, res, next) => {
+  console.log(req.cookies);
   const token = req.cookies.apna_store_jwt;
-
+  console.log(token);
+  
   if (!token) {
     return next(new ErrorResponse("Not authrorized , no token", 401));
   }
@@ -11,6 +13,7 @@ const protect = (req, res, next) => {
   try {
     const decoded = jwt.verify(token, process.env.SECRET_KEY);
     req.user = decoded;
+    console.log(decoded);
     next();
   } catch (error) {
     console.log(error);

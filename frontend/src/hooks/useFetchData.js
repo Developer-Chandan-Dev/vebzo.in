@@ -4,6 +4,7 @@ import axios from "axios";
 import { logout } from "../store/features/userSlice";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import authService from "../features/auth";
 
 /**
  * A React hook that fetches the data from a given url and stores it in the state
@@ -43,12 +44,13 @@ const useFetchData = (url, params = null) => {
         setLoading(false);
         setData(null);
       }
-      
+
       if (
         error?.response?.data?.message === "Not authrorized , no token" ||
         error?.response?.data?.message.includes("Not authrorized")
       ) {
         dispatch(logout());
+        await authService.logout();
         navigate("/login");
       }
       console.log(error.response);

@@ -15,7 +15,6 @@ const googleAuth = (req, res) => {
 const signup = asyncHandler(async (req, res, next) => {
   try {
     const { username, email, password } = req.body;
-    console.log(username, email, password);
 
     if (!username || !email || !password) {
       return next(new ErrorResponse("Please fill in all fields", 400));
@@ -113,6 +112,7 @@ const logout = asyncHandler(async (req, res, next) => {
 const me = asyncHandler(async (req, res, next) => {
   try {
     const user = await User.findById(req.user.id).select("-password");
+
     if (!user) {
       return next(new ErrorResponse("User not found", 404));
     }
@@ -129,7 +129,7 @@ const updateProfile = asyncHandler(async (req, res, next) => {
     const userId = req.params.id; // ID from the route parameter
     const loggedInUserId = req.user.id; // Logged-in user ID from authentication middleware
     const newImagePath = req.file?.path; // Path of the uploaded image
-    console.log(updates);
+    
     // Ensure the logged-in user can only update their own profile
     if (userId !== loggedInUserId) {
       return next(
@@ -239,8 +239,7 @@ const updateUserByAdmin = asyncHandler(async (req, res, next) => {
 const updatePassword = asyncHandler(async (req, res, next) => {
   const { id: userId } = req.params; // ID of the user to be updated
   const { oldPassword, newPassword, confirmPassword } = req.body;
-  console.log(userId, req.user.id);
-
+  
   try {
 
     if (userId !== req.user.id) {
@@ -271,11 +270,9 @@ const updatePassword = asyncHandler(async (req, res, next) => {
     if (!isMatch) {
       return next(new ErrorResponse("Old password is incorrect", 401));
     }
-    console.log(isMatch, '266');
-
+    
     // Update the password (no manual hashing required, pre-save will handle it)
     user.password = newPassword;
-    console.log(user);
     await user.save();
 
     res.status(200).json({

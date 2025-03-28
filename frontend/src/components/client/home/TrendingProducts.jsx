@@ -16,6 +16,7 @@ const TrendingProducts = () => {
   const { data, loading, error } = useFetchData(
     `${VITE_API_URL}/api/v1/products?isFeatured=true`
   );
+  console.log(error);
 
   const dispatch = useDispatch();
 

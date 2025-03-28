@@ -27,7 +27,7 @@ const LeafSection = () => {
             <p className="py-1 text-base">
               Ut sollicitudin quam vel purus tempus, vel eleifend felis varius.
             </p>
-            <Link to="/shop/category/677e1d30c58485b68fef1a36">
+            <Link to="/shop/category/67e280932e8d16d6040f2756">
               <Button label="SHOP NOW" RightIcon={MoveRight} className="mt-4" />
             </Link>
           </div>
@@ -43,7 +43,7 @@ const LeafSection = () => {
             <p className="py-1 text-base">
               Ut sollicitudin quam vel purus tempus, vel eleifend felis varius.
             </p>
-            <Link to="/shop/category/677e1d30c58485b68fef1a36">
+            <Link to="/shop/category/67e4fc6819fea4b1e3749c93">
               <Button label="SHOP NOW" RightIcon={MoveRight} className="mt-4" />
             </Link>
           </div>
@@ -61,7 +61,7 @@ const LeafSection = () => {
             <p className="py-1 text-base">
               Ut sollicitudin quam vel purus tempus, vel eleifend felis varius.
             </p>
-            <Link to="/shop/category/67c59339d3eae75f6ef0a26e">
+            <Link to="/shop">
               <Button label="SHOP NOW" RightIcon={MoveRight} className="mt-4" />
             </Link>
           </div>

@@ -8,7 +8,7 @@ const {
   updateCategory,
   deleteCategory,
 } = require("../controller/categoryController");
-const { protect, admin } = require("../middlewares/authMiddleware");
+const { protect, admin, checkRole } = require("../middlewares/authMiddleware");
 
 // Validation imports
 const validate = require("../middlewares/validation.middleware");
@@ -21,7 +21,7 @@ const {
 router.post(
   "/",
   protect,
-  admin,
+  checkRole("admin", "manager"),
   validate(createCategoryValidationSchema),
   createCategory
 ); // Create a new category
@@ -30,7 +30,7 @@ router.get("/:id", getCategoryById); // Get a category b ID
 router.put(
   "/:id",
   protect,
-  admin,
+  checkRole("admin", "manager"),
   validate(updateCategoryValidationSchema),
   updateCategory
 ); // Update a Category

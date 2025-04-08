@@ -1,18 +1,29 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import "./style.css";
 import { motion } from "framer-motion";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { Heart, Image, IndianRupee, ShoppingCart, Star } from "lucide-react";
+import {
+  Heart,
+  Image,
+  IndianRupee,
+  ShoppingCart,
+  Star,
+  ShoppingBag,
+  LucideShoppingBasket,
+} from "lucide-react";
 import Button from "../../utility/Button";
 import { addToCart, fetchCartItems } from "../../../store/features/cartSlice";
 import useHandleSwitchRoutes from "../../../hooks/useHandleSwitchRoutes";
+import { addBuyNow } from "../../../store/features/buyNowSlice";
 
 const ItemBox = ({
   _id,
   name,
   category,
+  categoryId,
   price,
   salesPrice,
   imageUrl,
@@ -22,6 +33,7 @@ const ItemBox = ({
   const authUser = useSelector((state) => state.user.user);
 
   const dispatch = useDispatch();
+  const items = useSelector((state) => state.buyNow);
 
   const { handleGoToLoginPage } = useHandleSwitchRoutes();
 
@@ -36,6 +48,8 @@ const ItemBox = ({
       if (data?.payload?.success) {
         dispatch(fetchCartItems(authUser?._id));
         toast.success("Product is added to cart");
+      } else {
+        console.log(data);
       }
     });
   }
@@ -77,10 +91,14 @@ const ItemBox = ({
         </div>
       </div>
       <div className="flex-center flex-col py-5">
-        <p>{category}</p>
-        <h4 className="text-lg font-semibold py-1">
-          {name?.length > 18 ? name.slice(0, 18) + "..." : name}
-        </h4>
+        <Link to={`/shop/category/${categoryId}`}>
+          <p>{category}</p>
+        </Link>
+        <Link to={`/shop/${_id}`}>
+          <h4 className="text-lg font-semibold py-1">
+            {name?.length > 18 ? name.slice(0, 18) + "..." : name}
+          </h4>
+        </Link>
         <div className="flex-center">
           {[...Array(parseInt(5))].map((_, index) => {
             index += 1;
@@ -129,6 +147,26 @@ const ItemBox = ({
             authUser && parseInt(stock) > 5
               ? handleAddtoCart(_id)
               : handleGoToLoginPage()
+          }
+        />
+        <Button
+          label="Buy Now"
+          sm={true}
+          className={"mt-2"}
+          bg="#b0a013"
+          LeftIcon={LucideShoppingBasket}
+          onClick={() =>
+            authUser && parseInt(stock) > 5
+              ? dispatch(
+                  addBuyNow({
+                    productId: _id,
+                    name,
+                    price,
+                    quantity: 1,
+                    imageUrl,
+                  })
+                )
+              : alert("Now able to buy now")
           }
         />
       </div>

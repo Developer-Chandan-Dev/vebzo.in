@@ -19,22 +19,22 @@ const ContactInfoBox = () => {
         <div className="infoBox w-full sm:w-[340px] rounded p-7 h-auto border flex-center flex-col gap-4 mx-auto">
           <PhoneCall className="size-8 text-[#8bc34a]" />
           <div>
-            <p className="py-1 px-1">+91 1234567890</p>
-            <p className="py-1 px-1">+91 9876543210</p>
+            <p className="py-1 px-1">+91 9727378213</p>
+            <p className="py-1 px-1">+91 8081137450</p>
           </div>
         </div>
         <div className="infoBox w-full sm:w-[340px] rounded p-7 h-auto border flex-center flex-col gap-4 mx-auto">
           <Mail className="size-8 text-[#8bc34a]" />
           <div>
-            <p className="py-1 px-1">info@example.com</p>
-            <p className="py-1 px-1">support@example.com</p>
+            <p className="py-1 px-1">chandandev285@gmail.com</p>
+            <p className="py-1 px-1"> </p>
           </div>
         </div>
         <div className="infoBox w-full sm:w-[340px] rounded p-7 h-auto border flex-center flex-col gap-4 mx-auto">
           <MapPin className="size-8 text-[#8bc34a]" />
           <div>
-            <p className="py-1 px-1">1569 Ave, New York,</p>
-            <p className="py-1 px-1">NY 10028, USA</p>
+            <p className="py-1 px-1">Bhogwara, Ugrasenpur,</p>
+            <p className="py-1 px-1">Prayagraj ( UP ) </p>
           </div>
         </div>
       </div>

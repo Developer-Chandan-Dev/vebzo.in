@@ -10,7 +10,7 @@ const {
 // @desc Create a new product (POST - /api/v1/products/, [Admin])
 const createProduct = asyncHandler(async (req, res, next) => {
   try {
-    const { name, description, purchasePrice, price, salesPrice, stock, category } = req.body;
+    const { name, description, purchasePrice, price, salesPrice, stock, category, isFeatured } = req.body;
 
     // Validate required fields
     if (!name || !purchasePrice || !price || !stock || !category) {
@@ -28,6 +28,7 @@ const createProduct = asyncHandler(async (req, res, next) => {
       salesPrice,
       stock,
       category,
+      isFeatured
     });
 
     // Return response
@@ -99,6 +100,7 @@ const getProducts = asyncHandler(async (req, res, next) => {
       bestSellingProducts,
     } = req.query;
 
+    console.log(category);
     const filters = {};
 
     // Filtering logic
@@ -179,6 +181,10 @@ const getProducts = asyncHandler(async (req, res, next) => {
       sortOption = { createdAt: -1 };
     }
 
+    // Filter by category
+    // if (category) filters.category = { ...filters.category, $eq: category };
+    // console.log(filters);
+
     const totalProducts = await Product.countDocuments(filters);
     const totalPages = Math.ceil(totalProducts / limit);
 
@@ -228,7 +234,7 @@ const getProductById = asyncHandler(async (req, res, next) => {
 // @desc Update a product (PUT - /api/v1/products/:id, [Admin])
 const updateProduct = asyncHandler(async (req, res, next) => {
   try {
-    const { name, description, purchasePrice, price, salesPrice, stock, category } = req.body;
+    const { name, description, purchasePrice, price, salesPrice, stock, category, isFeatured } = req.body;
     const productId = req.params.id;
 
     // Find the existing product by ID
@@ -246,6 +252,7 @@ const updateProduct = asyncHandler(async (req, res, next) => {
       ...(salesPrice > 0 && { salesPrice }),
       ...(stock && { stock }),
       ...(category && { category }),
+      ...(isFeatured && { isFeatured }),
     };
 
     // Update the product with the new fields

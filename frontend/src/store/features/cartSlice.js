@@ -1,5 +1,6 @@
-import axios from "axios"; // Axios for API calls
+import axios from "axios";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+
 const VITE_API_URL = import.meta.env.VITE_API_URL;
 
 // Initial state
@@ -8,88 +9,84 @@ const initialState = {
   isLoading: false,
 };
 
-// Thunk to fetch cart items from the backend
+// Thunk to fetch cart items (Only for Logged-in Users)
 export const fetchCartItems = createAsyncThunk(
   "cart/fetchCartItems",
   async (userId, { rejectWithValue }) => {
     try {
-      const response = await axios.get(userId &&
-        `${VITE_API_URL}/api/v1/cart/${userId}`,
-        {
-          withCredentials: true,
-        }
-      );
-      return response.data; // Assume backend returns the full cart (array of items)
+      const response = await axios.get(`${VITE_API_URL}/api/v1/cart/${userId}`, {
+        withCredentials: true,
+      });
+      return response.data; // Backend returns cart data
     } catch (error) {
-      console.log(error);
       return rejectWithValue(error.response.data);
     }
   }
 );
 
-// Thunk to add a product to the cart
+// Thunk to add a product to the cart (For both Logged-in & Guest Users)
 export const addToCart = createAsyncThunk(
   "cart/addToCart",
   async ({ userId, productId, quantity }, { rejectWithValue }) => {
+
     try {
+
       const response = await axios.post(
         `${VITE_API_URL}/api/v1/cart/`,
-        {
-          userId,
-          productId,
-          quantity,
-        },
+        { userId, productId: productId, quantity },
         { withCredentials: true }
       );
-      return response.data; // Backend should return the newly added cart item with full details
+      return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
   }
 );
 
-// Thunk to remove a product from the cart
+// Thunk to remove a product from the cart (For both Logged-in & Guest Users)
 export const removeFromCart = createAsyncThunk(
   "cart/removeFromCart",
   async ({ userId, productId }, { rejectWithValue }) => {
+
     try {
       const response = await axios.delete(
         `${VITE_API_URL}/api/v1/cart/${userId}/${productId}`,
-        {
-          withCredentials: true,
-        }
+        { withCredentials: true }
       );
-      return response.data; // Return the productId to remove it from Redux state
+      return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
   }
 );
 
-// Thunk to update product quantity in the cart
+// Thunk to update product quantity (For both Logged-in & Guest Users)
 export const updateCart = createAsyncThunk(
   "cart/updateCart",
   async ({ userId, productId, quantity }, { rejectWithValue }) => {
+
     try {
       const response = await axios.put(
         `${VITE_API_URL}/api/v1/cart/update-cart`,
-        {
-          userId,
-          productId,
-          quantity,
-        },
-        {
-          withCredentials: true,
-        }
+        { userId, productId, quantity },
+        { withCredentials: true }
       );
-      return response.data; // Backend returns updated cart item
+      return response.data;
     } catch (error) {
-      console.log(error);
       return rejectWithValue(error.response.data);
     }
   }
 );
 
+// Clear cart after checkout
+export const clearCart = createAsyncThunk("cart/clearCart", async (userId) => {
+  await axios.delete(`${VITE_API_URL}/api/v1/cart/clear/${userId}`, {
+    withCredentials: true,
+  });
+  return [];
+});
+
+// Redux slice
 const cartSlice = createSlice({
   name: "cart",
   initialState,
@@ -151,7 +148,7 @@ const cartSlice = createSlice({
 });
 
 // Export actions
-export const { clearCart } = cartSlice.actions;
+export const { clearGuestCart } = cartSlice.actions;
 
 // Export reducer
 export default cartSlice.reducer;

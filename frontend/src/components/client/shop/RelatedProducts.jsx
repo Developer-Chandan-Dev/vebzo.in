@@ -18,16 +18,16 @@ const RelatedProducts = ({ categoryId }) => {
     `${VITE_API_URL}/api/v1/products/category/${categoryId}`,
     params
   );
-  console.log(error);
-
+  
   useEffect(() => {
     setRelatedProducts(data?.data);
   }, [data?.data]);
-
+  
   return (
     <section className="w-full px-5 sm:px-10 py-10 flex-center flex-col">
       <h2 className="text-xl font-semibold mb-10">Related Products</h2>
       {loading && <Spinner />}
+      {error && <p className="text-red-500 text-center">{error}</p>}
       <div className="flex items-center gap-5 px-3 flex-wrap">
         {relatedProducts !== null && relatedProducts?.length > 0 && !loading
           ? relatedProducts.map(
@@ -39,6 +39,7 @@ const RelatedProducts = ({ categoryId }) => {
                 salesPrice,
                 imageUrl,
                 averageRating,
+                stock
               }) => (
                 <ItemBox
                   key={_id}
@@ -50,10 +51,11 @@ const RelatedProducts = ({ categoryId }) => {
                   salesPrice={salesPrice}
                   imageUrl={imageUrl}
                   rating={averageRating}
+                  stock={stock}
                 />
               )
             )
-          : "Nothing found"}
+          : ""}
       </div>
     </section>
   );

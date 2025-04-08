@@ -228,7 +228,7 @@ const AddUpdateProductsPopup = ({ product, onClose }) => {
               </div>
               <div className="sm:flex items-center gap-8 py-3">
                 <div>
-                  <label className="">What is Featured product ?</label>
+                  <label className="">What is Featured/Trending product ?</label>
                   <div className="flex items-center gap-3 py-2 ml-1">
                     <label htmlFor="fyes" className="cursor-pointer">
                       Yes
@@ -255,7 +255,7 @@ const AddUpdateProductsPopup = ({ product, onClose }) => {
                     />
                   </div>
                 </div>
-                <div>
+                {/* <div>
                   <label className="ml-1">What is Trending Product ?</label>
                   <div className="flex items-center gap-3 py-2 ml-1">
                     <label htmlFor="tyes">Yes</label>
@@ -276,7 +276,7 @@ const AddUpdateProductsPopup = ({ product, onClose }) => {
                       className="size-4 cursor-pointer"
                     />
                   </div>
-                </div>
+                </div> */}
               </div>
               <div>
                 <button

@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { CheckCircle2, XCircle, Image } from "lucide-react";
+import { XCircle, Image } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const CartTr = ({
@@ -51,10 +51,10 @@ const CartTr = ({
         </td>
         <td className="py-3">{parseInt(quantity) * parseInt(price)}</td>
         <td className="">
-          <CheckCircle2
-            className={`size-7 text-white fill-green-400 opacity-45 hover:opacity-100 cursor-pointer`}
+          <button
+            className={`border border-[#8bc34a] rounded-md px-2 py-[6px] opacity-45 transition-all hover:opacity-100 hover:bg-[#8bc34a] hover:text-white cursor-pointer`}
             onClick={() => handleUpdateClick(productId, quantity)}
-          />
+          >Update </button> 
         </td>
       </tr>
     </>

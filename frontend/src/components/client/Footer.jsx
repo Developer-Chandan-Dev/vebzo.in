@@ -100,7 +100,7 @@ const Footer = () => {
         </div>
       </div>
       <div className="flex items-center justify-between px-10 border-t pt-10 border-gray-700">
-        <p className="text-gray-300">&#169; 2025 Apna Market | All right reserved </p>
+        <p className="text-gray-300">&#169; 2025 Vebzo | All right reserved </p>
         <div className="flex items-center gap-5">
           <Facebook size="19" />
           <Instagram size="19" />

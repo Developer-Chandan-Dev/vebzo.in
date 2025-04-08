@@ -26,6 +26,7 @@ const ProductsTable = ({ onEditClick }) => {
   const [activeSearchBox, setActiveSearchBox] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [sortBy, setSortBy] = useState("");
+  const [category, setCategory] = useState(null);
 
   const params = useMemo(
     () => ({
@@ -33,8 +34,9 @@ const ProductsTable = ({ onEditClick }) => {
       limit: 8,
       query: searchText.length > 0 ? searchText : "",
       sortBy: sortBy,
+      category: category
     }),
-    [currentPage, searchText, sortBy]
+    [currentPage, searchText, sortBy, category]
   );
 
   const { data, loading, error, refreshData } = useFetchDataWithPagination(
@@ -199,6 +201,7 @@ const ProductsTable = ({ onEditClick }) => {
                       stock,
                       sold,
                       views,
+                      isFeatured
                     }) => (
                       <ProductTr
                         key={_id}
@@ -219,6 +222,8 @@ const ProductsTable = ({ onEditClick }) => {
                         handleDelete={handleDelete}
                         setProductData={setProductData}
                         productData={productData}
+                        isFeatured={isFeatured
+                        }
                       />
                     )
                   )

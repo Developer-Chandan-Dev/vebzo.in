@@ -47,6 +47,7 @@ const Container = ({
     params
   );
 
+
   useEffect(() => {
     setProducts(data?.data);
   }, [data?.data]);
@@ -141,6 +142,7 @@ const Container = ({
               _id={item?._id}
               name={item?.name}
               category={item?.category?.name}
+              categoryId={item?.category?._id}
               price={item?.price}
               salesPrice={item?.salesPrice}
               imageUrl={item?.imageUrl}

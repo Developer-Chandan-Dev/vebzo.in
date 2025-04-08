@@ -32,6 +32,7 @@ const orderValidationSchema = Joi.object({
     .valid("Pending", "Paid", "Failed")
     .default("Pending"),
   deliveredAt: Joi.date().optional(), // Optional as delivery might not happen yet
+  buyNow : Joi.boolean().optional(),
 });
 
 module.exports = { orderValidationSchema };

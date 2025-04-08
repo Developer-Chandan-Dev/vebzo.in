@@ -28,12 +28,13 @@ const createOrder = asyncHandler(async (req, res, next) => {
     shippingAddress,
     totalPrice,
     paymentMethod,
+    buyNow
   } = req.body;
 
   if (!orderItems || orderItems.length === 0) {
     return next(new ErrorResponse("No order items", 400));
   }
-
+  
   try {
     // Validate stock before placing the order
     await validateStock(orderItems);
@@ -53,7 +54,7 @@ const createOrder = asyncHandler(async (req, res, next) => {
     await decreaseStock(orderItems);
 
     const createdOrder = await order.save();
-    if (createdOrder) {
+    if (createdOrder && !buyNow === true) {
       // Find the user's cart
       const cart = await Cart.findOne({ userId: req.user.id });
 

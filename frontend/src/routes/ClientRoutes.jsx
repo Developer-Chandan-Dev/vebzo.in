@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 // Route Imports
@@ -18,10 +18,16 @@ import MyOrders from "../components/client/profile/MyOrders";
 import ScrollToTop from "../components/utility/ScrollToTop";
 import PrivacyPolicyPage from "../pages/client/PrivacyPolicyPage";
 import TermsConditionsPage from "../pages/client/TermsConditionsPage";
+import BuyNowPopup from "../components/client/BuyNowPopup";
 
 const ClientRoutes = () => {
   // Retrive authenticated user information from Redux state
   const authUser = useSelector((state) => state?.user?.user);
+  const items = useSelector((state) => state?.buyNow?.buyItem);
+  console.log(items);
+
+  const location = useLocation();
+  console.log(location);
 
   return (
     <>
@@ -57,9 +63,13 @@ const ClientRoutes = () => {
           <Route path="my-orders" element={<MyOrders />} />
           <Route path="wishlist" element={<WishList />} />
         </Route>
-        <Route path="/privacy-policy" element={<PrivacyPolicyPage/>} />
-        <Route path="/terms-conditions" element={<TermsConditionsPage/>} />
+        <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+        <Route path="/terms-conditions" element={<TermsConditionsPage />} />
       </Routes>
+
+      {items?.length > 0 && location?.pathname !== "/checkout" && (
+        <BuyNowPopup />
+      )}
     </>
   );
 };

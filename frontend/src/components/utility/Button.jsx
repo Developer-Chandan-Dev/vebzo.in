@@ -24,7 +24,7 @@ const Button = ({
         mdLong && "!px-10 py-[12px]"
       } text-center transition-all bg-[#6a9739] hover:bg-[#599e10] text-[14px] rounded-[4px] font-semibold text-white gap-x-3 flex items-center ${className} ${
         disable ? "opacity-50 cursor-default" : ""
-      } ${width} ${bg} ${text}`}
+      } ${width} !${bg} ${text}`}
       onClick={onClick}
       type={type}
     >

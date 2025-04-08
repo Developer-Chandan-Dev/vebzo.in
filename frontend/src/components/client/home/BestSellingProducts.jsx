@@ -8,7 +8,7 @@ import Button from "../../utility/Button";
 import { addToCart, fetchCartItems } from "../../../store/features/cartSlice";
 import useHandleSwitchRoutes from "../../../hooks/useHandleSwitchRoutes";
 const VITE_API_URL = import.meta.env.VITE_API_URL;
-import LogoLeaf from "../../../assets/images/logo-leaf-new.png"
+import LogoLeaf from "../../../assets/images/logo-leaf-new.png";
 
 const BestSellingProducts = () => {
   const authUser = useSelector((state) => state.user.user);
@@ -41,11 +41,7 @@ const BestSellingProducts = () => {
       <h2 className="text-4xl font-semibold text-gray-700 head-line-1">
         Best Selling Products
       </h2>
-      <img
-        src={LogoLeaf}
-        alt="Leaf"
-        className="pt-7 pb-4 mx-auto"
-      />
+      <img src={LogoLeaf} alt="Leaf" className="pt-7 pb-4 mx-auto" />
 
       {loading && (
         <div className="w-full h-72 flex-center">
@@ -60,15 +56,16 @@ const BestSellingProducts = () => {
                 <div className="w-72 h-auto productBox" key={product._id}>
                   <Link to={`/shop/${product?._id}`}>
                     <div className=" w-72 h-72 border mx-auto overflow-hidden relative">
-                      {
-                        product?.imageUrl ? <img
-                        src={product?.imageUrl}
-                        className="w-full h-full object-fit"
-                        alt="Product Image"
-                      /> : <Image className="w-full h-full object-fit"/>
-                      }
-                      
-                      
+                      {product?.imageUrl ? (
+                        <img
+                          src={product?.imageUrl}
+                          className="w-full h-full object-fit"
+                          alt="Product Image"
+                        />
+                      ) : (
+                        <Image className="w-full h-full object-fit" />
+                      )}
+
                       <div className="absolute w-auto h-10 top-2 right-2 flex items-center gap-3 px-3">
                         <Heart className="text-white drop-shadow" />
                         <ShoppingCart className="text-white drop-shadow" />
@@ -76,7 +73,9 @@ const BestSellingProducts = () => {
                     </div>
                   </Link>
                   <div className="flex-center flex-col py-5">
-                    <p>{product?.category?.name}</p>
+                    <Link to={`/shop/category/${product?.category?._id}`}>
+                      <p>{product?.category?.name}</p>
+                    </Link>
                     <Link to={`/shop/${product?._id}`}>
                       <h4 className="text-lg font-semibold py-1">
                         {product?.name?.length > 18

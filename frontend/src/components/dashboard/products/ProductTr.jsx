@@ -20,6 +20,7 @@ const ProductTr = ({
   handleDelete,
   setProductData,
   productData,
+  isFeatured
 }) => {
   console.log(name, stock, sold);
   return (
@@ -111,6 +112,7 @@ const ProductTr = ({
                 stock,
                 sold,
                 view,
+                isFeatured
               });
             }}
           />

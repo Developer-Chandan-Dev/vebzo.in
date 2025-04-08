@@ -13,7 +13,7 @@ const AboutUs = () => {
             Our Mission
           </h2>
           <p className="text-[15px] text-gray-700">
-            At <b>ApnaMarket</b>, we bring you to purest and freshest products
+            At <b>Vebzo</b>, we bring you to purest and freshest products
             directly from our local farms and trusted suppliers. Our mission is
             to provide high-quality, organic, and natural products to our
             beloved community, ensuring you receive only the best and healthiest
@@ -22,7 +22,7 @@ const AboutUs = () => {
           <br />
           <p className="text-[15px] text-gray-700">
             We understand the importance of freshness and quality, which is why
-            every product at ApnaMarket is carefully selected and delivered with
+            every product at Vebzo is carefully selected and delivered with
             love. From farm-fresh vegetables and fruits to authentic
             village-made products, we strive to bring the goodness of nature
             right to your doorstep.

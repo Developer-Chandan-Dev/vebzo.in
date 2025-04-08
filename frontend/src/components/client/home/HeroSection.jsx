@@ -23,14 +23,14 @@ const HeroSection = () => {
             className="pb-5 leaf"
           />
           <h5 className="text-base lg:text-md xl:text-lg font-semibold text-gray-700">
-            Welcome to ApnaMarket
+            Welcome to Vebzo
           </h5>
           <h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl head-line-1 leading-[50px] lg:leading-[60px] xl:leading-[70px] text-gray-700">
             Your Own, The Home of Freshness
           </h1>
           <p className="mt-7 text-gray-600 text-base">
             Discover the purest, freshest, and most authentic products from your
-            own local community. At ApnaMarket we bring nature&apos;s goodness
+            own local community. At Vebzo we bring nature&apos;s goodness
             straight to your doorstep.
           </p>
           <Link to="/shop">

@@ -1,12 +1,15 @@
-import { useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "../utility/Button";
-import { clearBuyNow } from "../../store/features/buyNowSlice";
-import { Link } from "react-router-dom";
+import {
+  clearBuyNow,
+  updateBuyNowQuantity,
+} from "../../store/features/buyNowSlice";
 
 const BuyNowPopup = () => {
-  const [quantity, setQuantity] = useState(1);
+  const [quantities, setQuantities] = useState({});
 
   const items = useSelector((state) => state?.buyNow?.buyItem);
 
@@ -23,8 +26,16 @@ const BuyNowPopup = () => {
     },
   };
 
-  const handleQuantityChange = (e) => {
-    setQuantity(e.target.value);
+  const handleQuantityChange = (e, index) => {
+    const value = parseInt(e.target.value);
+    const validQuantity = value < 1 ? 1 : value;
+
+    setQuantities((prev) => ({
+      ...prev,
+      [index]: validQuantity,
+    }));
+
+    dispatch(updateBuyNowQuantity({ index, quantity: validQuantity }));
   };
 
   return (
@@ -40,7 +51,7 @@ const BuyNowPopup = () => {
         <h2 className="text-2xl font-semibold pb-5">Buy Now</h2>
         <div className="flex-center flex-col gap-2">
           {items &&
-            items?.length > 0 &&
+            items.length > 0 &&
             items.map((item, index) => (
               <div
                 key={index}
@@ -53,25 +64,27 @@ const BuyNowPopup = () => {
                 <ul className="">
                   <li className="flex item-center my-1">
                     <p className="w-40 pl-3 text-left">Name</p>
-                    <p className="pl-3">{item?.name}</p>{" "}
+                    <p className="pl-3">{item?.name}</p>
                   </li>
                   <li className="flex item-center my-1">
                     <p className="w-40 pl-3 text-left ">Price</p>
-                    <p className="pl-3">{item?.price}</p>{" "}
+                    <p className="pl-3">{item?.price}</p>
                   </li>
                   <li className="flex item-center my-1">
                     <p className="w-40 pl-3 text-left">Quantity</p>
                     <input
                       type="number"
                       className="pl-3 ml-2 border border-gray-200 w-14 py-1 px-1 rounded-sm"
-                      value={quantity}
-                      onChange={handleQuantityChange}
+                      value={item?.quantity || 1}
+                      onChange={(e) => handleQuantityChange(e, index)}
                       min={1}
-                    />{" "}
+                    />
                   </li>
                   <li className="flex item-center my-1">
                     <p className="w-40 pl-3 text-left">Sub total</p>
-                    <p className="pl-3">{quantity * item?.price}</p>{" "}
+                    <p className="pl-3">
+                      {(item?.quantity || 1) * item?.price}
+                    </p>
                   </li>
                 </ul>
               </div>

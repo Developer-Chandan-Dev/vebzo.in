@@ -19,7 +19,7 @@ const ShopPage = () => {
         <title>Shop Organic Products Online - Vebzo</title>
         <meta
           name="description"
-          content="Browse our wide range of organic fruits, vegetables, pulses, and spices. Fresh from local farms to your home. Shop now on ApnaMarket."
+          content="Browse our wide range of organic fruits, vegetables, pulses, and spices. Fresh from local farms to your home. Shop now on Vebzo."
         />
       </Helmet>
       <div>

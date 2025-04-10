@@ -1,23 +1,29 @@
-import { createSlice } from "@reduxjs/toolkit"
+// buyNowSlice.js
+import { createSlice } from "@reduxjs/toolkit";
 
-// Initial state
 const initialState = {
-    buyItem: [],
-    status: false,
-}
+  buyItem: [], // example: [{ id, name, price, quantity, imageUrl }]
+};
 
 const buyNowSlice = createSlice({
-    name: "buyNow",
-    initialState,
-    reducers: {
-        addBuyNow: (state, action) => {
-            state.buyItem.push(action.payload)
-        },
-        clearBuyNow: (state) => {
-            state.buyItem = []
-        }
-    }
-})
+  name: "buyNow",
+  initialState,
+  reducers: {
+    setBuyNowItem: (state, action) => {
+      state.buyItem = [action.payload];
+    },
+    clearBuyNow: (state) => {
+      state.buyItem = [];
+    },
+    updateBuyNowQuantity: (state, action) => {
+      const { index, quantity } = action.payload;
+      if (state.buyItem[index]) {
+        state.buyItem[index].quantity = quantity;
+      }
+    },
+  },
+});
 
-export const { addBuyNow, clearBuyNow } = buyNowSlice.actions;
+export const { setBuyNowItem, clearBuyNow, updateBuyNowQuantity } = buyNowSlice.actions;
+
 export default buyNowSlice.reducer;

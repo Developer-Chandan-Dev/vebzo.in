@@ -12,7 +12,7 @@ const ContactPage = () => {
         <title>Contact Us - Vebzo Customer Support</title>
         <meta
           name="description"
-          content="Need help or have questions? Contact ApnaMarket through email, phone, or our contact form. We're here to serve you better."
+          content="Need help or have questions? Contact Vebzo through email, phone, or our contact form. We're here to serve you better."
         />
       </Helmet>
       <div className="w-full h-auto">

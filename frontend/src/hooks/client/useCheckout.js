@@ -31,8 +31,7 @@ const useCheckout = () => {
 
     const { cartItems, status, error } = useSelector((state) => state.cart);
     const { buyItem } = useSelector((state) => state.buyNow);
-    console.log(cartItems, buyItem);
-
+    
     useEffect(() => {
         if (buyItem?.length > 0) {
             const formattedOrderItems = buyItem?.map((item) => ({
@@ -53,15 +52,11 @@ const useCheckout = () => {
         }
     }, [cartItems, buyItem]);
 
-    console.log(orderItems);
-
-
+    
     const calculateGrandTotal = (items) => {
-        console.log(items);
         return (
             items?.length > 0 &&
             items?.reduce((total, item) => {
-                console.log(total, item)
                 return total + item.quantity * item?.price;
             }, 0)
         );

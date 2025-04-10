@@ -17,7 +17,7 @@ import {
 import Button from "../../utility/Button";
 import { addToCart, fetchCartItems } from "../../../store/features/cartSlice";
 import useHandleSwitchRoutes from "../../../hooks/useHandleSwitchRoutes";
-import { addBuyNow } from "../../../store/features/buyNowSlice";
+import { setBuyNowItem } from "../../../store/features/buyNowSlice";
 
 const ItemBox = ({
   _id,
@@ -149,26 +149,29 @@ const ItemBox = ({
               : handleGoToLoginPage()
           }
         />
-        <Button
-          label="Buy Now"
-          sm={true}
-          className={"mt-2"}
-          bg="#b0a013"
-          LeftIcon={LucideShoppingBasket}
-          onClick={() =>
-            authUser && parseInt(stock) > 5
-              ? dispatch(
-                  addBuyNow({
-                    productId: _id,
-                    name,
-                    price,
-                    quantity: 1,
-                    imageUrl,
-                  })
-                )
-              : alert("Now able to buy now")
-          }
-        />
+        {authUser && (
+          <Button
+            label="Buy Now"
+            sm={true}
+            className={"mt-2"}
+            bgHover="hover:bg-[#f0b22d]"
+            bg="bg-[#dba839]"
+            LeftIcon={LucideShoppingBasket}
+            onClick={() =>
+              authUser && parseInt(stock) > 5
+                ? dispatch(
+                    setBuyNowItem({
+                      productId: _id,
+                      name,
+                      price,
+                      quantity: 1,
+                      imageUrl,
+                    })
+                  )
+                : alert("Not able to buy now. (Login First)")
+            }
+          />
+        )}
       </div>
     </motion.div>
   );

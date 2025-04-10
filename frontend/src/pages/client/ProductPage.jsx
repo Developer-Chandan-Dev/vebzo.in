@@ -8,8 +8,9 @@ import Spinner from "../../components/utility/Spinner";
 import ReviewForm from "../../components/client/shop/ReviewForm";
 import RelatedProducts from "../../components/client/shop/RelatedProducts";
 import useProductPage from "../../hooks/client/useProductPage";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import useHandleSwitchRoutes from "../../hooks/useHandleSwitchRoutes";
+import { setBuyNowItem } from "../../store/features/buyNowSlice";
 
 const VITE_API_URL = import.meta.env.VITE_API_URL;
 const ProductPage = () => {
@@ -32,6 +33,8 @@ const ProductPage = () => {
   } = useProductPage();
 
   const authUser = useSelector((state) => state.user.user);
+
+  const dispatch = useDispatch();
 
   const { handleGoToLoginPage } = useHandleSwitchRoutes();
 
@@ -112,7 +115,7 @@ const ProductPage = () => {
                   </h3>
                 </div>
                 <p>{productData?.description}</p>
-                <div className="flex items-center gap-2 py-4 border-b">
+                <div className="flex items-center gap-2 py-4 border-b flex-wrap">
                   <input
                     type="number"
                     value={quantity}
@@ -120,7 +123,7 @@ const ProductPage = () => {
                     className="w-16 pl-4 pr-1 py-2 border outline-none"
                   />
                   <button
-                    className="w-60 py-2 px-3 bg-[#6a9739] text-white text-semibold text-[14px] rounded-lg"
+                    className="w-40 py-[10px] px-3 bg-[#6a9739] transition-all font-semibold hover:bg-[#73a83a] text-white text-semibold text-[14px] rounded-lg"
                     onClick={() =>
                       authUser && parseInt(productData?.stock) > 5
                         ? handleAddToCart()
@@ -129,6 +132,26 @@ const ProductPage = () => {
                   >
                     ADD TO CART
                   </button>
+                  {authUser && (
+                    <button
+                      className="w-40 py-[10px] px-3 hover:bg-[#f0b22d] transition-all font-semibold bg-[#dba839] text-white text-semibold text-[14px] rounded-lg"
+                      onClick={() =>
+                        authUser && parseInt(productData?.stock) > 5
+                          ? dispatch(
+                              setBuyNowItem({
+                                productId: productData?._id,
+                                name: productData?.name,
+                                price: productData?.price,
+                                quantity: 1,
+                                imageUrl: productData?.imageUrl,
+                              })
+                            )
+                          : alert("Not able to buy now. (Login First)")
+                      }
+                    >
+                      BUY NOW
+                    </button>
+                  )}
                 </div>
                 <div className="py-2">
                   <p>

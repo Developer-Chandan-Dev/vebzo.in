@@ -24,10 +24,8 @@ const ClientRoutes = () => {
   // Retrive authenticated user information from Redux state
   const authUser = useSelector((state) => state?.user?.user);
   const items = useSelector((state) => state?.buyNow?.buyItem);
-  console.log(items);
 
   const location = useLocation();
-  console.log(location);
 
   return (
     <>

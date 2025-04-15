@@ -6,6 +6,7 @@ import { fetchCartItems } from "../../store/features/cartSlice";
 import { toast } from "react-toastify";
 import useHandleSendingRequest from "../useHandleSendingRequest";
 import { clearBuyNow } from "../../store/features/buyNowSlice";
+import { fetchMyOrders } from "../../store/features/myOrdersSlice";
 const VITE_API_URL = import.meta.env.VITE_API_URL;
 
 const useCheckout = () => {
@@ -31,7 +32,7 @@ const useCheckout = () => {
 
     const { cartItems, status, error } = useSelector((state) => state.cart);
     const { buyItem } = useSelector((state) => state.buyNow);
-    
+
     useEffect(() => {
         if (buyItem?.length > 0) {
             const formattedOrderItems = buyItem?.map((item) => ({
@@ -52,7 +53,7 @@ const useCheckout = () => {
         }
     }, [cartItems, buyItem]);
 
-    
+
     const calculateGrandTotal = (items) => {
         return (
             items?.length > 0 &&
@@ -75,6 +76,7 @@ const useCheckout = () => {
     const { handleSubmit } = useHandleSendingRequest();
 
     const onSubmit = async (e) => {
+        console.log(grandTotal, '78');
         try {
             e.preventDefault();
             const response = await handleSubmit(
@@ -91,20 +93,23 @@ const useCheckout = () => {
                         phone,
                     },
                     paymentMethod: "COD",
-                    totalPrice: grandTotal,
-                    buyNow : buyItem ? true : false
+                    totalPrice: subTotal,
+                    deliveryCharge,
+                    grandTotal,
+                    buyNow: buyItem ? true : false
                 }
             );
 
             if (response?.success === true) {
-                if(buyItem){
+                if (buyItem) {
                     dispatch(clearBuyNow())
                     toast.success(response.message);
                 }
                 toast.success(response.message);
                 navigate("/profile/my-orders");
+                dispatch(fetchMyOrders());
             } else {
-                toast.error(response.message);
+                toast.error(response);
             }
             if (response?.includes('Error: Insufficient stock for product:')) {
                 toast.error(response);

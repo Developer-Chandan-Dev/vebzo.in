@@ -1,4 +1,5 @@
 /* eslint-disable no-unused-vars */
+import { useDispatch } from "react-redux";
 import { Image, RefreshCwIcon, TrainTrack, X, XCircle } from "lucide-react";
 import { formatDate } from "../../../utils/dateUtils";
 import Button from "../../utility/Button";
@@ -6,6 +7,7 @@ import Spinner from "../../utility/Spinner";
 import OrderTrackingPopup from "./OrderTrackingPopup";
 import Empty from "../../utility/Empty";
 import useMyOrders from "../../../hooks/client/useMyOrders";
+import { fetchMyOrders } from "../../../store/features/myOrdersSlice.js";
 
 const VITE_API_URL = import.meta.env.VITE_API_URL;
 
@@ -23,10 +25,12 @@ const MyOrders = () => {
     handlePopupOpen,
     loading,
     error,
-    refreshData,
+    // refreshData,
     loading2,
     setLoading2,
   } = useMyOrders();
+
+  const dispatch = useDispatch();
 
   return (
     <div className="w-full px-4 h-auto py-5 relative">
@@ -35,7 +39,7 @@ const MyOrders = () => {
         <button
           className="w-auto px-3 gap-2 h-9 border flex-center text-gray-700 transition-all hover:text-gray-400 rounded-md border-gray-400"
           title="Refresh"
-          onClick={refreshData}
+          onClick={() => dispatch(fetchMyOrders())}
         >
           <span className="hidden sm:block">Refresh</span>
           <RefreshCwIcon className="size-4" />
@@ -56,11 +60,12 @@ const MyOrders = () => {
           togglePopup={togglePopup}
           setIsOpen={setIsOpen}
           order_id={order_id}
-          refreshData={refreshData}
         />
       )}
       <div className="w-full mt-5 h-auto">
-        {!loading && myOrders?.length > 0 && myOrders !== null ? (
+        {!loading &&
+          myOrders?.length > 0 &&
+          myOrders !== null &&
           myOrders.map((item, index) => (
             <div
               key={index}
@@ -179,10 +184,9 @@ const MyOrders = () => {
                 </div>
               </div>
             </div>
-          ))
-        ) : (
-          <Empty />
-        )}
+          ))}
+
+        {error && !loading && <Empty />}
       </div>
     </div>
   );

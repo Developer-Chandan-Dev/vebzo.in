@@ -6,6 +6,7 @@ const {
 } = require("../controller/productStockController");
 const asyncHandler = require("../utils/asyncHandler");
 const ErrorResponse = require("../utils/errorResponse");
+const { emitOrderUpdate } = require("../server/socket.server");
 
 const generateOrderNumber = () => {
   const date = new Date();
@@ -27,14 +28,18 @@ const createOrder = asyncHandler(async (req, res, next) => {
     orderItems,
     shippingAddress,
     totalPrice,
+    grandTotal,
     paymentMethod,
-    buyNow
+    buyNow,
+    deliveryCharge
   } = req.body;
+
+  console.log(grandTotal, deliveryCharge, '37');
 
   if (!orderItems || orderItems.length === 0) {
     return next(new ErrorResponse("No order items", 400));
   }
-  
+
   try {
     // Validate stock before placing the order
     await validateStock(orderItems);
@@ -47,6 +52,8 @@ const createOrder = asyncHandler(async (req, res, next) => {
       orderItems,
       shippingAddress,
       totalPrice,
+      grandTotal : grandTotal > 0 ? grandTotal : totalPrice + deliveryCharge,
+      deliveryCharge,
       paymentMethod,
     });
 
@@ -224,6 +231,9 @@ const updateOrderStatus = asyncHandler(async (req, res, next) => {
 
     const updatedOrder = await order.save();
 
+    // Send update to that user
+    emitOrderUpdate(updatedOrder.user.toString(), updatedOrder)
+
     res.status(200).json({ success: true, status: updatedOrder.status });
   } catch (error) {
     console.log(error);
@@ -243,6 +253,7 @@ const getMyOrders = asyncHandler(async (req, res, next) => {
     if (!order) {
       return next(new ErrorResponse("Order not found", 404));
     }
+    console.log(order);
 
     res.status(200).json({ order, totalOrders: order.length });
   } catch (error) {

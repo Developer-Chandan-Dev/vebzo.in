@@ -2,24 +2,29 @@ import { useEffect, useState } from "react";
 import useHandleSendingRequest from "../useHandleSendingRequest";
 import useHandleDeletewithSweetAlert from "../useHandleDeleteWithSweetAlert";
 import { logout } from "../../store/features/userSlice";
-import useFetchDataWithPagination from "../useFetchDataWithPagination";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { useSocket } from "../../context/SocketContext";
 
 const VITE_API_URL = import.meta.env.VITE_API_URL;
 const useMyOrders = () => {
     const [myOrders, setMyOrders] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
     const [loading2, setLoading2] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
     const [order_id, setOrder_Id] = useState(null);
 
-    const { data, loading, error, refreshData } = useFetchDataWithPagination(
-        `${VITE_API_URL}/api/v1/orders/my-orders`
-    );
+    // const socket = useSocket();
+
+    const orderItems = useSelector((state) => state?.myOrders);
+    // const status = useSelector((state) => state.order.status);
 
     useEffect(() => {
-        setMyOrders(data?.order);
-    }, [data?.order]);
+        setMyOrders(orderItems?.orderItems);
+        setLoading(orderItems?.isLoading);
+        setError(orderItems?.error)
+    }, [orderItems?.error, orderItems?.isLoading, orderItems?.orderItems]);
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -36,6 +41,7 @@ const useMyOrders = () => {
             );
 
             if (response.success === true) {
+                console.log(myOrders);
                 setMyOrders(
                     myOrders.filter((item) =>
                         item?._id === _id ? (item.status = response.status) : "Not match"
@@ -70,7 +76,7 @@ const useMyOrders = () => {
     };
 
     return {
-        myOrders, setMyOrders,handleCancelingOrder, isOpen, setIsOpen, order_id, setOrder_Id, handleDelete, togglePopup, handlePopupOpen, loading, error, refreshData, loading2, setLoading2
+        myOrders, setMyOrders, handleCancelingOrder, isOpen, setIsOpen, order_id, setOrder_Id, handleDelete, togglePopup, handlePopupOpen, loading, error, loading2, setLoading2
     }
 }
 

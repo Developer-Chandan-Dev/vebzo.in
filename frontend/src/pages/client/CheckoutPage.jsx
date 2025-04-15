@@ -69,6 +69,7 @@ const CheckoutPage = () => {
                       type="text"
                       id="fname"
                       value={firstname}
+                      required
                       onChange={(e) => setFirstname(e.target.value)}
                       className="w-full sm:w-[230px] md:w-[300px] bg-white h-12 px-3 outline-gray-300 border my-1"
                       placeholder="Your First Name"
@@ -76,7 +77,7 @@ const CheckoutPage = () => {
                   </div>
                   <div className="w-full">
                     <label htmlFor="lname" className="font-medium">
-                      Last Name <span className="text-red-600">*</span>
+                      Last Name 
                     </label>
                     <br />
                     <input

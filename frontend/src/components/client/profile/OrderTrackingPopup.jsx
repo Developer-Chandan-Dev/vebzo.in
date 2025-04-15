@@ -9,7 +9,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 const VITE_API_URL = import.meta.env.VITE_API_URL;
 
-const OrderTrackingPopup = ({ togglePopup, isOpen, order_id, setIsOpen, refreshData }) => {
+const OrderTrackingPopup = ({ togglePopup, isOpen, order_id, setIsOpen }) => {
   const [status, setStatus] = useState("Pending");
   const popupRef = useRef();
 
@@ -32,7 +32,7 @@ const OrderTrackingPopup = ({ togglePopup, isOpen, order_id, setIsOpen, refreshD
 
   const handlePopupClose = ()=>{
     setIsOpen(false)
-    refreshData();
+    // refreshData();
   }
 
   return (

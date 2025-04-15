@@ -16,7 +16,7 @@ const orderValidationSchema = Joi.object({
   shippingAddress: Joi.object({
     address: Joi.string().required(),
     village: Joi.string()
-      .valid("Bhogwara", "Udagi", "Savdih", "Belhabandh (Kwajgi patti)")
+      .valid("Bhogwara", "Udagi", "Savdih", "Belhabandh (Kwajgi patti)", "Nevada", "Bhorai Ka Pura", "Sarai Hariram")
       .required(),
     city: Joi.string().valid("Prayagraj").required(),
     phone: Joi.string()
@@ -24,6 +24,7 @@ const orderValidationSchema = Joi.object({
       .required(),
   }).required(),
   totalPrice: Joi.number().positive().required(),
+  grandTotal: Joi.number().positive().optional(),
   status: Joi.string()
     .valid("Pending", "Confirmed", "Out for Delivery", "Delivered", "Cancelled")
     .default("Pending"),
@@ -33,6 +34,7 @@ const orderValidationSchema = Joi.object({
     .default("Pending"),
   deliveredAt: Joi.date().optional(), // Optional as delivery might not happen yet
   buyNow : Joi.boolean().optional(),
+  deliveryCharge: Joi.number(),
 });
 
 module.exports = { orderValidationSchema };

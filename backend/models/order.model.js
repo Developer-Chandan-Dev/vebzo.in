@@ -39,7 +39,7 @@ const orderSchema = new mongoose.Schema(
       village: {
         type: String,
         required: true,
-        enum: ["Bhogwara", "Udagi", "Savdih", "Belhabandh (Kwajgi patti)"],
+        enum: ["Bhogwara", "Udagi", "Savdih", "Belhabandh (Kwajgi patti)", "Nevada", "Bhorai Ka Pura", "Sarai Hariram"],
       },
       city: { type: String, required: true, enum: ["Prayagraj"] },
       phone: { type: String, required: true, min: 10, max: 10 },
@@ -48,7 +48,9 @@ const orderSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-
+    grandTotal : {
+      type: Number,
+    },
     status: {
       type: String,
       enum: [
@@ -72,6 +74,10 @@ const orderSchema = new mongoose.Schema(
     },
     deliveredAt: {
       type: Date,
+    },
+    deliveryCharge: {
+      type: Number,
+      default: 0,
     },
     disabledByUser: {
       type: Boolean,

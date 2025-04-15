@@ -27,6 +27,7 @@ const useFetchDataWithPagination = (url, params = null) => { // Accept params as
         setLoading(false);
         setError(null);
       } catch (error) {
+        console.log(error);
         if (error.message === "Request failed with status code 404") {
           setError(error.message);
           setLoading(false);

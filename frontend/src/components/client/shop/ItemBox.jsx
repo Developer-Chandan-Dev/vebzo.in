@@ -18,6 +18,11 @@ import Button from "../../utility/Button";
 import { addToCart, fetchCartItems } from "../../../store/features/cartSlice";
 import useHandleSwitchRoutes from "../../../hooks/useHandleSwitchRoutes";
 import { setBuyNowItem } from "../../../store/features/buyNowSlice";
+import { useContext } from "react";
+import { FavsContext } from "../../../context/FavsContext";
+import axios from "axios";
+
+const VITE_API_URL = import.meta.env.VITE_API_URL;
 
 const ItemBox = ({
   _id,
@@ -34,6 +39,11 @@ const ItemBox = ({
 
   const dispatch = useDispatch();
   const items = useSelector((state) => state.buyNow);
+
+  const { favIds, setFavIds, getFavoriteProducts, setFavsCount } =
+    useContext(FavsContext);
+
+  const match = favIds?.includes(_id);
 
   const { handleGoToLoginPage } = useHandleSwitchRoutes();
 
@@ -53,6 +63,30 @@ const ItemBox = ({
       }
     });
   }
+
+  // Handle Toggle Favorites
+  const toggleFavorites = async (productId) => {
+    if (authUser) {
+      
+      try {
+        const res = await axios.put(
+          `${VITE_API_URL}/api/v1/users/favorites`,
+          { userId: authUser?._id, productId },
+          { withCredentials: true }
+        );
+
+        if (res?.data?.success === true) {
+          toast.success(res?.data?.message);
+          setFavIds(res?.data?.favorites);
+          setFavsCount(res?.data?.favorites?.length);
+          getFavoriteProducts();
+        }
+      } catch (error) {
+        console.log(error);
+        toast.error(error.message);
+      }
+    }
+  };
 
   const itemVariants = {
     hidden: { y: 20, opacity: 0 },
@@ -83,11 +117,13 @@ const ItemBox = ({
             </p>
           )}
 
-          {/* <Heart
-            className="drop-shadow text-pink-500 cursor-pointer ring-pink-600"
-            onClick={() => alert("Clicked")}
+          <Heart
+            className={`size-5 ${
+              match && "fill-pink-600"
+            } text-pink-600 cursor-pointer`}
+            onClick={() => toggleFavorites(_id)}
           />
-          <ShoppingCart className="text-white drop-shadow cursor-pointer" /> */}
+          {/* <ShoppingCart className="text-white drop-shadow cursor-pointer" /> */}
         </div>
       </div>
       <div className="flex-center flex-col py-5">

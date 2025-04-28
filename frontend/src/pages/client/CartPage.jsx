@@ -100,7 +100,7 @@ const CartPage = () => {
                 <tr className="border-b">
                   <td className="px-4 py-4 w-40">Delivery Charge</td>
                   <td className="px-4 py-4 w-auto">
-                    Rs. {deliveryCharge || 0}
+                    Not Added
                   </td>
                 </tr>
                 {/* <tr className="border-b">

@@ -17,6 +17,7 @@ import SearchBox from "../../utility/SearchBox";
 import Spinner from "../../utility/Spinner";
 import useHandleDeletewithSweetAlert from "../../../hooks/useHandleDeleteWithSweetAlert";
 import TableContainer from "../common/TableContainer";
+import useFetchData from "../../../hooks/useFetchData";
 
 const VITE_API_URL = import.meta.env.VITE_API_URL;
 const ProductsTable = ({ onEditClick }) => {
@@ -26,7 +27,10 @@ const ProductsTable = ({ onEditClick }) => {
   const [activeSearchBox, setActiveSearchBox] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [sortBy, setSortBy] = useState("");
+  const [categories, setCategories] = useState(null);
   const [category, setCategory] = useState(null);
+
+  const [checkCategoryFilter, setCheckCategoryFilter] = useState(false);
 
   const params = useMemo(
     () => ({
@@ -34,7 +38,7 @@ const ProductsTable = ({ onEditClick }) => {
       limit: 8,
       query: searchText.length > 0 ? searchText : "",
       sortBy: sortBy,
-      category: category
+      category: category,
     }),
     [currentPage, searchText, sortBy, category]
   );
@@ -48,10 +52,17 @@ const ProductsTable = ({ onEditClick }) => {
     setProductData(data?.data);
   }, [data?.data]);
 
+  const categoryData = useFetchData(`${VITE_API_URL}/api/v1/category`);
+
+  useEffect(() => {
+    setCategories(categoryData?.data?.data);
+  }, [categoryData?.data?.data]);
+
   const handleSetSearchText = () => {
     setSearchText(searchTerm.trim());
     setCurrentPage(1);
   };
+
   const handleKeyPress = (event) => {
     if (event.key === "Enter") {
       handleSetSearchText(); // Trigger the search function when Enter key is pressed
@@ -77,7 +88,18 @@ const ProductsTable = ({ onEditClick }) => {
     pageNumbers.push(i);
   }
 
-  console.log(productData);
+  const handleToggleCategoryFilter = () => {
+    if (checkCategoryFilter === true) {
+      setCheckCategoryFilter(false);
+      setCategory("");
+    } else {
+      setCheckCategoryFilter(true);
+    }
+  };
+  const handleFilterByCategory = (e) => {
+    setCategory(e.target.value);
+    handlePageClick(1);
+  };
   return (
     <motion.div
       className="bg-gray-800 bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-6 border border-gray-700 mb-6"
@@ -153,8 +175,30 @@ const ProductsTable = ({ onEditClick }) => {
                 <th className="px-6 py-3 text-left font-medium text-gray-400 uppercase tracking-wider">
                   Name
                 </th>
-                <th className="px-6 py-3 text-left font-medium text-gray-400 uppercase tracking-wider">
-                  Category
+                <th className="px-6 py-3 text-left font-medium text-gray-400 uppercase tracking-wider flex items-center gap-1">
+                  <input
+                    type="checkbox"
+                    className="size-4 cursor-pointer ml-1"
+                    onChange={handleToggleCategoryFilter}
+                    checked={checkCategoryFilter}
+                  />
+                  {!checkCategoryFilter && <span>Category</span>}
+                  {checkCategoryFilter && (
+                    <select
+                      className="bg-gray-700 px-1 outline-gray-500 py-1 mr-1 rounded-md text-[14px]"
+                      value={category}
+                      onChange={handleFilterByCategory}
+                    >
+                      <option value="">Categories</option>
+                      {categories?.length > 0 &&
+                        categories !== null &&
+                        categories?.map((item) => (
+                          <option key={item?._id} value={item?._id}>
+                            {item?.name}
+                          </option>
+                        ))}
+                    </select>
+                  )}
                 </th>
                 <th className="px-6 py-3 text-left font-medium text-gray-400 uppercase tracking-wider">
                   Purchase Price
@@ -201,7 +245,7 @@ const ProductsTable = ({ onEditClick }) => {
                       stock,
                       sold,
                       views,
-                      isFeatured
+                      isFeatured,
                     }) => (
                       <ProductTr
                         key={_id}
@@ -222,8 +266,7 @@ const ProductsTable = ({ onEditClick }) => {
                         handleDelete={handleDelete}
                         setProductData={setProductData}
                         productData={productData}
-                        isFeatured={isFeatured
-                        }
+                        isFeatured={isFeatured}
                       />
                     )
                   )

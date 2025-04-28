@@ -2,11 +2,11 @@
 /* eslint-disable react/prop-types */
 import { motion } from "framer-motion";
 import { useEffect, useRef } from "react";
-import { Menu, ShoppingCart, User, X } from "lucide-react";
+import { Menu, ShoppingCart, Heart, User, X } from "lucide-react";
 import { Link } from "react-router-dom";
 import Button from "../utility/Button";
 import useHeader from "../../hooks/client/useHeader";
-import Logo from "../../assets/images/organic-store-logo5.svg"
+import Logo from "../../assets/images/organic-store-logo5.svg";
 
 const Header = ({ bg = "bg-white" }) => {
   const {
@@ -17,6 +17,7 @@ const Header = ({ bg = "bg-white" }) => {
     location,
     authUser,
     cartItems,
+    favsCount,
     calculateGrandTotal,
     grandTotal,
     toggleMenu,
@@ -29,11 +30,7 @@ const Header = ({ bg = "bg-white" }) => {
       <nav className="hidden md:flex-between gap-x-7 lg:gap-x-10 max-w-7xl mx-auto lg:px-5 xl:px-10">
         <div className="logo text-2xl font-bold text-slate-500">
           <Link to="/">
-            <img
-              src={Logo}
-              className="h-16"
-              alt="Logo"
-            />
+            <img src={Logo} className="h-16" alt="Logo" />
           </Link>
         </div>
         <ul className="flex items-center md:gap-x-3 lg:gap-x-5 xl:gap-x-6 font-semibold ">
@@ -100,6 +97,15 @@ const Header = ({ bg = "bg-white" }) => {
                   </span>
                 </div>
               </Link>
+              <Link to="/profile/wishlist">
+                <div className="relative">
+                  <Heart className="text-[#8bc34a] cursor-pointer" size="20" />
+                  <span className="flex-center text-xs px-1 py-[2px] -right-2 -top-4 text-white absolute font-serif rounded-full bg-[#8bc34a]">
+                    {favsCount || 0}
+                  </span>
+                </div>
+              </Link>
+
               <Link to="/profile">
                 {authUser?.imageUrl ? (
                   <img
@@ -108,7 +114,7 @@ const Header = ({ bg = "bg-white" }) => {
                     className="size-9 rounded-full overflow-hidden border"
                   />
                 ) : (
-                  <User size="20" className="cursor-pointer" />
+                  <User size="20" className="cursor-pointer text-[#8bc34a]" />
                 )}
               </Link>
             </div>
@@ -130,11 +136,7 @@ const Header = ({ bg = "bg-white" }) => {
       <nav className="flex-between md:hidden relative">
         <div className="logo text-2xl font-bold text-slate-500">
           <Link to="/">
-            <img
-             src={Logo}
-              className="h-12"
-              alt="Logo"
-            />
+            <img src={Logo} className="h-12" alt="Logo" />
           </Link>
         </div>
 
@@ -216,7 +218,7 @@ const SideMenu = ({ isOpen, toggleMenu, setIsOpen }) => {
         <div className="flex-between py-4 px-5">
           <Link to="/profile">
             <div className="w-9 h-9 rounded-full border flex-center">
-              <User className="size-5" />
+              <User className="size-5 text-[#8bc34a]" />
             </div>
           </Link>
           <div

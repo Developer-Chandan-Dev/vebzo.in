@@ -19,7 +19,6 @@ const AddUpdateProductsPopup = ({ product, onClose }) => {
   const [isFeatured, setIsFeatured] = useState(product?.isFeatured || false);
 
   const [newProductId, setNewProductId] = useState("");
-  console.log(product);
 
   const { data, loading } = useFetchData(`${VITE_API_URL}/api/v1/category`);
 

@@ -31,6 +31,13 @@ const userSchema = new mongoose.Schema(
     imageUrlPublicId: {
       type: String,
     },
+    bio: {
+      type: String,
+      default: "",
+    },
+    post: {
+      type: String,
+    },
     address: {
       type: String,
       default: "",
@@ -38,6 +45,7 @@ const userSchema = new mongoose.Schema(
     phone: {
       type: String,
     },
+    favorites: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
     role: {
       type: String,
       enum: ["user", "manager", "admin"],

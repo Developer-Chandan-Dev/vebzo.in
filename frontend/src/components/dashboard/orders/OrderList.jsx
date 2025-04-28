@@ -23,6 +23,8 @@ const OrderList = ({
   handleDelete,
   setOrderItems,
   orderItems2,
+  grandTotal,
+  deliveryCharge,
 }) => {
   const [newStatus, setNewStatus] = useState(status || "Pending");
   const [newPaymentStatus, setNewPaymentStatus] = useState(
@@ -106,13 +108,25 @@ const OrderList = ({
               <b>Delivery Date :</b>{" "}
               {deliveredAt ? formatDate(deliveredAt) : ""}
             </li>
+            <li className="mt-3">
+              <span className="flex items-center">
+                <b>Total :</b>
+                <IndianRupee size={13} /> <span>{totalPrice}</span>
+              </span>
+            </li>
+            <li>
+              <span className="flex items-center">
+                <b>Delivery Charge :</b>
+                <IndianRupee size={13} /> <span>{deliveryCharge}</span>
+              </span>
+            </li>
+            <li>
+              <span className="flex items-center">
+                <b>Grand Total :</b>
+                <IndianRupee size={13} /> <span>{grandTotal}</span>
+              </span>
+            </li>
           </ul>
-        </div>
-        <div className="flex items-center gap-2">
-          <b>Total :</b>
-          <span className="flex items-center">
-            <IndianRupee size={13} /> <span>{totalPrice}</span>
-          </span>
         </div>
         <div className="flex items-center flex-col gap-5 ">
           <select

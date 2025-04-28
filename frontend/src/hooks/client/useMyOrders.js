@@ -14,6 +14,7 @@ const useMyOrders = () => {
     const [loading2, setLoading2] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
     const [order_id, setOrder_Id] = useState(null);
+    const [searchTerm, setSearchTerm] = useState('')
 
     // const socket = useSocket();
 
@@ -41,7 +42,7 @@ const useMyOrders = () => {
             );
 
             if (response.success === true) {
-                console.log(myOrders);
+                console.log(myOrders, response);
                 setMyOrders(
                     myOrders.filter((item) =>
                         item?._id === _id ? (item.status = response.status) : "Not match"
@@ -74,9 +75,17 @@ const useMyOrders = () => {
         setIsOpen(true);
         setOrder_Id(id);
     };
+    // const handleSetSearchText = () => {
+    //     setSearchText(searchTerm.trim());
+    // }
+    // const handleEnterKeyPress = (event) => {
+    //     if (event.key === "Enter") {
+    //         handleSetSearchText(); // Trigger the search function when Enter key pressed
+    //     }
+    // }
 
     return {
-        myOrders, setMyOrders, handleCancelingOrder, isOpen, setIsOpen, order_id, setOrder_Id, handleDelete, togglePopup, handlePopupOpen, loading, error, loading2, setLoading2
+        myOrders, setMyOrders, handleCancelingOrder, isOpen, setIsOpen, order_id, setOrder_Id, handleDelete, togglePopup, handlePopupOpen, loading, error, loading2, setLoading2, searchTerm, setSearchTerm
     }
 }
 

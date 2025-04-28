@@ -21,6 +21,7 @@ const OrderTable = ({ onEditClick }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [activeSearchBox, setActiveSearchBox] = useState(false);
   const [orderItems, setOrderItems] = useState(null);
+  const [orderId, setOrderId] = useState(false);
 
   const [status, setStatus] = useState("");
   const [paymentStatus, setPaymentStatus] = useState("");
@@ -78,8 +79,8 @@ const OrderTable = ({ onEditClick }) => {
   useEffect(() => {
     setOrderItems(data?.data);
   }, [data?.data]);
-  // Function to handle page change
 
+  // Function to handle page change
   // Create an array of page numbers (e.g., [1, 2, 3])
   const pageNumbers = [];
   for (let i = 1; i <= data?.totalPages; i++) {
@@ -87,7 +88,6 @@ const OrderTable = ({ onEditClick }) => {
   }
 
   const { handleDelete } = useHandleDeletewithSweetAlert();
-
 
   return (
     <motion.div
@@ -172,8 +172,14 @@ const OrderTable = ({ onEditClick }) => {
           <table className="table-container divide-y divide-gray-700 w-[1000px] md:w-full">
             <thead>
               <tr>
-                <th className="px-6 py-3 text-left font-medium text-gray-400 uppercase tracking-wider">
-                  Order Id
+                <th className="px-6 py-3 text-left font-medium text-gray-400 uppercase tracking-wider flex items-center gap-1">
+                  <input
+                    type="checkbox"
+                    className="size-4 cursor-pointer"
+                    onChange={handleToggleStatusFilter}
+                    checked={checkStatusFilter}
+                  />
+                  <span>Order Id</span>
                 </th>
                 <th className="px-6 py-3 text-left font-medium text-gray-400 uppercase tracking-wider">
                   Customer Name
@@ -299,6 +305,8 @@ const OrderTable = ({ onEditClick }) => {
                 paymentStatus={order?.paymentStatus}
                 deliveredAt={order?.deliveredAt}
                 status={order?.status}
+                ord={order?.grandTotal}
+                deliveryCharge={order?.deliveryCharge}
                 createdAt={order?.createdAt}
                 onEditClick={onEditClick}
                 handleDelete={handleDelete}

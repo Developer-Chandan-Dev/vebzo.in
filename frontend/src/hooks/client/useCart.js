@@ -6,15 +6,11 @@ import { fetchCartItems, removeFromCart, updateCart } from "../../store/features
 const useCart = () => {
     const [userId, setUserId] = useState("");
     const [subTotal, setSubTotal] = useState(0);
-    const [deliveryCharge, setDeliveryCharge] = useState(10);
+    const [deliveryCharge, setDeliveryCharge] = useState(0);
     const dispatch = useDispatch();
 
     const authUser = useSelector((state) => state.user.user);
     const { cartItems, status, error } = useSelector((state) => state.cart);
-
-    useEffect(() => {
-        dispatch(fetchCartItems(authUser?._id));
-    }, [authUser?._id, dispatch]);
 
     useEffect(() => {
         setUserId(authUser?._id);

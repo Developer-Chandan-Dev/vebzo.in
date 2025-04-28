@@ -7,29 +7,10 @@ import { toast } from "react-toastify";
 import Button from "../../utility/Button";
 import useHandleSwitchRoutes from "../../../hooks/useHandleSwitchRoutes";
 import Leaf from "../../../assets/images/logo-leaf-new.png";
+import ItemBoxForHome from "./ItemBoxForHome";
 
 const TrendingProducts = () => {
-  const authUser = useSelector((state) => state.user.user);
   const trendingProducts = useSelector((state) => state?.trendingItems);
-  console.log(trendingProducts);
-  const dispatch = useDispatch();
-
-  const { handleGoToLoginPage } = useHandleSwitchRoutes();
-
-  function handleAddtoCart(getCurrentProductId) {
-    dispatch(
-      addToCart({
-        userId: authUser?._id,
-        productId: getCurrentProductId,
-        quantity: 1,
-      })
-    ).then((data) => {
-      if (data?.payload?.success) {
-        dispatch(fetchCartItems(authUser?._id));
-        toast.success("Product is added to cart");
-      }
-    });
-  }
 
   return (
     <div className="w-full px-5 sm:px-10 py-20 ">
@@ -52,66 +33,15 @@ const TrendingProducts = () => {
           {trendingProducts?.trendingItems?.data?.length > 0 &&
             trendingProducts?.trendingItems?.data !== null &&
             trendingProducts?.trendingItems?.data.map((product) => (
-              <div className="w-72 h-auto productBox" key={product._id}>
-                <Link to={`/shop/${product?._id}`}>
-                  <div className=" w-72 h-72 border mx-auto overflow-hidden relative">
-                    {product?.imageUrl ? (
-                      <img
-                        src={product?.imageUrl}
-                        className="w-full h-full object-fit"
-                        alt="Product Image"
-                      />
-                    ) : (
-                      <Image className="w-full h-full object-fit" />
-                    )}
-
-                    <div className="absolute w-auto h-10 top-2 right-2 flex items-center gap-3 px-3">
-                      <Heart className="text-white drop-shadow" />
-                      <ShoppingCart className="text-white drop-shadow" />
-                    </div>
-                  </div>
-                </Link>
-                <div className="flex-center flex-col py-5">
-                  <Link to={`/shop/category/${product?.category?._id}`}>
-                    <p>{product?.category?.name}</p>
-                  </Link>
-                  <Link to={`/shop/${product?._id}`}>
-                    <h4 className="text-lg font-semibold py-1">
-                      {product?.name?.length > 18
-                        ? product?.name?.slice(0, 18) + "..."
-                        : product?.name}
-                    </h4>
-                  </Link>
-                  <div className="flex-center">
-                    {[...Array(parseInt(5))].map((_, index) => {
-                      index += 1;
-                      return (
-                        <Star
-                          key={index}
-                          className={`${
-                            index <= product?.averageRating
-                              ? "fill-yellow-300 text-yellow-500"
-                              : "text-gray-400"
-                          }`}
-                          size="18"
-                        />
-                      );
-                    })}
-                  </div>
-                  <p className="mt-1">Rs. {product?.price}.00</p>
-                  <Button
-                    label="Add to cart"
-                    sm={true}
-                    className={"mt-2"}
-                    LeftIcon={ShoppingCart}
-                    onClick={() =>
-                      authUser
-                        ? handleAddtoCart(product?._id)
-                        : handleGoToLoginPage()
-                    }
-                  />
-                </div>
-              </div>
+              <ItemBoxForHome
+                key={product?._id}
+                _id={product?._id}
+                imageUrl={product?.imageUrl}
+                category={product?.category}
+                name={product?.name}
+                averageRating={product?.averageRating}
+                price={product?.price}
+              />
             ))}
         </div>
       )}

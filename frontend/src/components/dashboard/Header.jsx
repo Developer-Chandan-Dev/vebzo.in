@@ -14,7 +14,6 @@ const Header = ({ title = "Title" }) => {
 
   const handleLogout = async () => {
     const res = await authService.logout();
-    console.log(res);
     if (res.data.success === true) {
       toast.success(res.data.message);
       navigate("/");

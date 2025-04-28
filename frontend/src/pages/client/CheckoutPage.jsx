@@ -4,6 +4,7 @@ import Footer from "../../components/client/Footer";
 import Header from "../../components/client/Header";
 import Button from "../../components/utility/Button";
 import useCheckout from "../../hooks/client/useCheckout";
+import { useEffect } from "react";
 
 const CheckoutPage = () => {
   const {
@@ -32,7 +33,19 @@ const CheckoutPage = () => {
     calculateGrandTotal,
     GrandTotal,
     onSubmit,
+    loading,
   } = useCheckout();
+
+  useEffect(() => {
+    if (village === "Bhogwara") setDeliveryCharge(10);
+    if (village === "Belhabandh") setDeliveryCharge(18);
+    if (village === "Udagi") setDeliveryCharge(18);
+    if (village === "Savdih") setDeliveryCharge(18);
+    if (village === "Belhabandh (Kwajgi patti)") setDeliveryCharge(18);
+    if (village === "Nevada") setDeliveryCharge(18);
+    if (village === "Bhorai Ka Pura") setDeliveryCharge(18);
+    if (village === "Sarai Hariram") setDeliveryCharge(20);
+  }, [setDeliveryCharge, village]);
 
   return (
     <>
@@ -77,7 +90,7 @@ const CheckoutPage = () => {
                   </div>
                   <div className="w-full">
                     <label htmlFor="lname" className="font-medium">
-                      Last Name 
+                      Last Name
                     </label>
                     <br />
                     <input
@@ -122,7 +135,13 @@ const CheckoutPage = () => {
                   >
                     <option value="Bhogwara">Bhogwara</option>
                     <option value="Udagi">Udagi</option>
-                    <option value="Belhabandh">Belhabandh</option>
+                    <option value="Belhabandh (Kwajgi patti)">
+                      Belhabandh (Kwajgi patti)
+                    </option>
+                    <option value="Savdih">Savdih</option>
+                    <option value="Nevada">Nevada</option>
+                    <option value="Bhorai Ka Pura">Bhorai Ka Pura</option>
+                    <option value="Sarai Hariram">Sarai Hariram</option>
                   </select>
                 </div>
                 <div className="relative py-2">
@@ -206,7 +225,7 @@ const CheckoutPage = () => {
                     width={"w-full"}
                     onClick={onSubmit}
                     className=" flex-center"
-                    label="PROCEED TO CHECKOUT"
+                    label={loading ? "PROCESSING..." : "PROCEED TO CHECKOUT"}
                   />
                 </div>
               </div>

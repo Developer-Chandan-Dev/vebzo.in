@@ -22,7 +22,7 @@ const getAllUsers = asyncHandler(async (req, res, next) => {
     if (role) filters.role = { ...filters.role, $eq: role };
     if (isBlocked) filters.isBlocked = { ...filters.isBlocked, $eq: isBlocked };
     if (createdAt) filters.createdAt = { ...filters.createdAt, $eq: createdAt };
-    
+
 
     const totalUsers = await User.countDocuments(filters);
     const totalPages = Math.ceil(totalUsers / limit);
@@ -105,4 +105,55 @@ const deleteUserByAdmin = asyncHandler(async (req, res, next) => {
   }
 });
 
-module.exports = { getAllUsers, updateUserByAdmin, deleteUserByAdmin };
+
+const favoriteProducts = asyncHandler(async (req, res, next) => {
+  try {
+    const { userId, productId } = req.body;
+
+    if (!userId || !productId) {
+      return next(new ErrorResponse("User and product ID is required!", 404));
+    }
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return next(new ErrorResponse("User not found", 404));
+    }
+
+    const index = user.favorites.indexOf(productId);
+    if (index === -1) {
+      user.favorites.push(productId); // Add to favorites
+    } else {
+      user.favorites.splice(index, 1); // Remove from favorites
+    }
+
+    await user.save();
+
+    res.status(200).json({ success: true, message: `${index === -1 ? 'Added in Favorites' : 'Removed from Favorites'}`, favorites: user.favorites });
+
+  } catch (error) {
+    console.log(error);
+    return next(new ErrorResponse("Internal Server Error", 500));
+  }
+});
+
+const getFavoriteProducts = asyncHandler(async (req, res, next) => {
+  try {
+    const { userId } = req.params;
+    console.log(userId, '142');
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return next(new ErrorResponse("User not found", 404));
+    }
+
+    const favoriteProducts = await User.findById(userId).select("-password -cartData").populate("favorites")
+
+    res.status(200).json({ success: true, favorites: favoriteProducts, favoriteIds: user?.favorites })
+  } catch (error) {
+    console.log(error);
+    return next(new ErrorResponse("User not found", 500));
+  }
+})
+
+module.exports = { getAllUsers, updateUserByAdmin, deleteUserByAdmin, favoriteProducts, getFavoriteProducts };

@@ -6,7 +6,6 @@ const session = require("express-session");
 const passport = require("passport");
 const morgan = require("morgan");
 const http = require("http");
-const { Server } = require("socket.io");
 
 const db = require("./config/db");
 
@@ -24,6 +23,7 @@ const reviewRoutes = require("./routes/reviewRoutes");
 const notificationRoutes = require("./routes/notificationsRoutes");
 const messagesRoutes = require("./routes/messageRoutes");
 const errorHandler = require("./middlewares/errorHandler");
+const initSocketServer = require("./server/socket.server.js"); // Socket server
 
 const app = express();
 const PORT = process.env.PORT || 8000;
@@ -41,28 +41,15 @@ app.use(
   })
 );
 
-// **Step 2: Custom CORS Headers (Backup Solution)**
-// app.use((req, res, next) => {
-//   res.header("Access-Control-Allow-Origin", process.env.CLIENT_URL || "http://localhost:5173");
-//   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-//   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-//   res.header("Access-Control-Allow-Credentials", "true");
-//   if (req.method === "OPTIONS") {
-//     return res.status(200).json({});
-//   }
-//   next();
-// });
-
-
 // **Step 3: Middleware**
 app.use(morgan("dev"));
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-// app.use(session({ secret: process.env.SECRET_KEY, resave: true, saveUninitialized: true }));
+app.use(session({ secret: process.env.SECRET_KEY, resave: true, saveUninitialized: true }));
 
-// app.use(passport.initialize());
-// app.use(passport.session());
+app.use(passport.initialize());
+app.use(passport.session());
 
 // ✅ **Check .env Working (Debugging Route)**
 app.get("/test-env", (req, res) => {
@@ -93,33 +80,9 @@ app.use(errorHandler); // Error handler should be at the end
 
 // **Step 5: Socket.io Setup**
 const server = http.createServer(app);
-const io = new Server(server, {
-  cors: {
-    origin: [process.env.CLIENT_URL, "http://localhost:5173"],
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true,
-  },
-});
 
-// ✅ **Make io available in controllers**
-app.use((req, res, next) => {
-  req.io = io;
-  next();
-});
-
-// ✅ **Socket.IO Listeners**
-io.on("connection", (socket) => {
-  console.log(`A user connected: ${socket.id}`);
-
-  socket.on("sendNotification", (notification) => {
-    console.log("Notification received:", notification);
-    io.emit("receiveNotification", notification);
-  });
-
-  socket.on("disconnect", () => {
-    console.log(`A user disconnected: ${socket.id}`);
-  });
-});
+// Initialize Socket.IO server
+initSocketServer(server);
 
 // **Step 6: Start Server**
 server.listen(PORT, () => {

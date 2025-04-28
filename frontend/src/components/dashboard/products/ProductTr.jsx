@@ -22,7 +22,7 @@ const ProductTr = ({
   productData,
   isFeatured
 }) => {
-  console.log(name, stock, sold);
+
   return (
     <motion.tr
       key={_id}

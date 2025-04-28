@@ -11,11 +11,14 @@ const initialState = {
 }
 
 // Thunk to fetch my orders (Only for Logged-in-Users)
-export const fetchMyOrders = createAsyncThunk("orders/fetchMyOrders", async (_, { rejectWithValue }) => {
+export const fetchMyOrders = createAsyncThunk("orders/fetchMyOrders", async (params = null, { rejectWithValue }) => {
+    console.log(params);
     try {
         const response = await axios.get(`${VITE_API_URL}/api/v1/orders/my-orders`, {
+            params: params || {}, // If params is null, use an empty object
             withCredentials: true,
         });
+        console.log(response);
 
         return response?.data; // Backend returns cart data
     } catch (error) {
@@ -41,7 +44,6 @@ const orderSlice = createSlice({
             })
             .addCase(fetchMyOrders.fulfilled, (state, action) => {
                 state.isLoading = false;
-                console.log(action.payload);
                 state.orderItems = action.payload?.order; // Set the fetched orders to state
                 state.error = null;
             })

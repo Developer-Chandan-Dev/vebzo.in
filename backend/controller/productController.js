@@ -100,7 +100,6 @@ const getProducts = asyncHandler(async (req, res, next) => {
       bestSellingProducts,
     } = req.query;
 
-    console.log(category);
     const filters = {};
 
     // Filtering logic
@@ -110,6 +109,11 @@ const getProducts = asyncHandler(async (req, res, next) => {
         { description: { $regex: query, $options: "i" } },
       ];
     }
+
+    if (category) {
+      filters.category = { ...filters.category, $eq: category }
+    }
+
     if (minPrice) filters.price = { ...filters.price, $gte: minPrice };
     if (maxPrice) filters.price = { ...filters.price, $lte: maxPrice };
     if (inStock === "true") filters.stock = { $gt: 0 };

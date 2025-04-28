@@ -1,9 +1,9 @@
 import { toast } from "react-toastify";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import useHandleSendingRequest from "../useHandleSendingRequest";
-import { logout } from "../../store/features/userSlice";
+import { login, logout } from "../../store/features/userSlice";
 import authService from "../../features/auth";
 import useFetchData from "../useFetchData";
 
@@ -94,7 +94,6 @@ const useMyProfile = () => {
             );
 
             if (res.success === true) {
-                console.log(res);
                 toast.success(res?.message);
                 dispatch(login(res?.user?._id, res?.user?.username, res?.user?.email, res?.user?.role, res?.user?.imageUrl))
                 setFilePreview(res?.user.imageUrl);

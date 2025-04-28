@@ -45,17 +45,17 @@ const UserProfilePage = () => {
                   My Orders
                 </li>
               </Link>
-              {/* <Link to="/profile/wishlist">
-              <li
-                className={`cursor-pointer px-3 transition-all rounded-md text-gray-600 font-semibold ${
-                  location.pathname.includes("/wishlist")
-                    ? "bg-white drop-shadow  text-gray-700"
-                    : ""
-                } hover:bg-slate-100 hover:text-gray-500 py-[10px] mb-2`}
-              >
-                Wishlist
-              </li>
-            </Link> */}
+              <Link to="/profile/wishlist">
+                <li
+                  className={`cursor-pointer px-3 transition-all rounded-md text-gray-600 font-semibold ${
+                    location.pathname.includes("/wishlist")
+                      ? "bg-white drop-shadow  text-gray-700"
+                      : ""
+                  } hover:bg-slate-100 hover:text-gray-500 py-[10px] mb-2`}
+                >
+                  Wishlist
+                </li>
+              </Link>
             </ul>
           </div>
           <div className="w-full md:w-[850px] h-auto pb-10 border md:rounded-3xl overflow-hidden">

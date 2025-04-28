@@ -1,6 +1,15 @@
 /* eslint-disable no-unused-vars */
 import { useDispatch } from "react-redux";
-import { Image, RefreshCwIcon, TrainTrack, X, XCircle } from "lucide-react";
+import { Link } from "react-router-dom";
+import { useEffect, useMemo, useState } from "react";
+import {
+  Image,
+  RefreshCwIcon,
+  Search,
+  TrainTrack,
+  X,
+  XCircle,
+} from "lucide-react";
 import { formatDate } from "../../../utils/dateUtils";
 import Button from "../../utility/Button";
 import Spinner from "../../utility/Spinner";
@@ -30,12 +39,64 @@ const MyOrders = () => {
     setLoading2,
   } = useMyOrders();
 
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchText, setSearchText] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+
   const dispatch = useDispatch();
+
+  const handleSetSearchText = () => {
+    setSearchText(searchTerm.trim());
+    setCurrentPage(1);
+  };
+
+  const params = useMemo(
+    () => ({
+      // page: currentPage,
+      // limit: 9,
+      query: searchText.length > 0 ? searchText : "",
+    }),
+    [searchText]
+  );
+
+  const handleEnterKeyPress = (event) => {
+    if (event.key === "Enter") {
+      handleSetSearchText(); // Trigger the search function when Enter key is pressed
+    }
+  };
+
+  useEffect(() => {
+    if (searchTerm === "" || searchTerm === null) {
+      handleSetSearchText();
+    }
+  }, [setSearchText, searchTerm]);
+
+  const handleSearch = () => {
+    if (params?.query.length > 0) {
+      dispatch(fetchMyOrders(params));
+    }
+  };
+  console.log(myOrders);
 
   return (
     <div className="w-full px-4 h-auto py-5 relative">
       <div className="flex items-center gap-2 mb-5 justify-between">
         <h1 className="text-3xl font-semibold ml-2 ">My Orders</h1>
+        <div className="relative ">
+          <input
+            type="text"
+            placeholder="Search by order Id..."
+            className="border bg-gray-50 text-gray-800 placeholder-gray-400 rounded-lg pl-4 pr-4 py-2 focus:outline-none focus:ring-1 focus:ring-gray-300"
+            onChange={(e) => setSearchTerm(e.target.value)}
+            value={searchTerm}
+            onKeyDown={handleEnterKeyPress}
+          />
+          <Search
+            className="absolute right-3 cursor-pointer top-2.5 text-gray-400 hover:text-gray-500"
+            size={18}
+            onClick={handleSearch}
+          />
+        </div>
         <button
           className="w-auto px-3 gap-2 h-9 border flex-center text-gray-700 transition-all hover:text-gray-400 rounded-md border-gray-400"
           title="Refresh"
@@ -108,33 +169,42 @@ const MyOrders = () => {
                   <div>
                     {item?.orderItems.length > 0 && item?.orderItems !== null
                       ? item?.orderItems.map((subItem, index) => (
-                          <div
-                            className="flex items-start flex-wrap gap-3 mb-4"
-                            key={index}
-                          >
-                            {subItem?.product?.imageUrl ? (
-                              <img
-                                src={subItem?.product?.imageUrl}
-                                className="w-24 h-24 bg-white border"
-                                alt="Product Image"
-                              />
-                            ) : (
-                              <Image className="w-24 h-24 bg-white text-gray-400 border" />
-                            )}
-                            <div>
-                              <h3>{subItem?.product?.name}</h3>
-                              <p>
-                                By: {item?.firstname} {item?.lastname}
-                              </p>
-                              <p className="mt-3">
-                                Qty : {subItem?.quantity} :{" "}
-                                <b>
-                                  Rs. {subItem?.price} ={" "}
-                                  {subItem?.quantity * subItem?.price}
-                                </b>
-                              </p>
+                          <>
+                            <div
+                              key={index}
+                              className="flex items-start flex-wrap gap-3 mb-4"
+                            >
+                              {subItem?.product?.imageUrl ? (
+                                <Link to={`/shop/${subItem?.product?._id}`}>
+                                  <img
+                                    src={subItem?.product?.imageUrl}
+                                    className="w-24 h-24 bg-white border"
+                                    alt="Product Image"
+                                  />
+                                </Link>
+                              ) : (
+                                <Image className="w-24 h-24 bg-white text-gray-400 border" />
+                              )}
+                              <div>
+                                <Link to={`/shop/${subItem?.product?._id}`}>
+                                  <h3>{subItem?.product?.name}</h3>
+                                </Link>
+                                <p>
+                                  By: {item?.firstname} {item?.lastname}
+                                </p>
+                                <p className="mt-3">
+                                  Qty : {subItem?.quantity} , Price :{" "}
+                                  {subItem?.price}
+                                </p>
+                                <p>
+                                  <b>
+                                    Total : .{" "}
+                                    {subItem?.quantity * subItem?.price}
+                                  </b>
+                                </p>
+                              </div>
                             </div>
-                          </div>
+                          </>
                         ))
                       : ""}
                   </div>
@@ -152,6 +222,21 @@ const MyOrders = () => {
                     <p>
                       <b>24 Dec 2025</b>
                     </p>
+                    <div className="mt-3">
+                      <p>
+                        <span className="font-semibold">Total</span> : Rs.{" "}
+                        {item?.totalPrice}
+                      </p>
+                      <p>
+                        <span className="font-semibold">Delivery Charge</span> :{" "}
+                        Rs. {item?.deliveryCharge}
+                      </p>
+                      <p>
+                        <span className="font-semibold">Grand Total</span> : Rs.{" "}
+                        {parseInt(item?.deliveryCharge) +
+                          parseInt(item?.totalPrice)}
+                      </p>
+                    </div>
                   </div>
                 </div>
 
@@ -179,14 +264,18 @@ const MyOrders = () => {
                   )}
 
                   <p>
-                    <b>Rs. {item?.totalPrice}</b>
+                    <b>
+                      Rs.{" "}
+                      {parseInt(item?.deliveryCharge) +
+                        parseInt(item?.totalPrice)}
+                      .00
+                    </b>
                   </p>
                 </div>
               </div>
             </div>
           ))}
-
-        {error && !loading && <Empty />}
+        {error && !loading && myOrders?.length < 0 && <Empty />}
       </div>
     </div>
   );

@@ -30,10 +30,6 @@ const useProductPage = () => {
 
     const dispatch = useDispatch();
 
-    useEffect(() => {
-        dispatch(fetchCartItems(authUser?._id));
-    }, [authUser?._id, dispatch]);
-
     const handleAddToCart = () => {
         dispatch(
             addToCart({

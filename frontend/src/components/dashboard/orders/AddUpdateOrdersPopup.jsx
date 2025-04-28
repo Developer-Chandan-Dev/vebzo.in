@@ -58,7 +58,6 @@ const AddUpdateOrdersPopup = ({ order, onClose, refreshData }) => {
       }
     );
     if (response.success === true) {
-      console.log(response);
       setStatus(response?.status);
       toast.success("Status Updated Successfully");
     } else {
@@ -75,7 +74,6 @@ const AddUpdateOrdersPopup = ({ order, onClose, refreshData }) => {
       }
     );
     if (response.success === true) {
-      console.log(response);
       setPaymentStatus(response?.paymentStatus);
       toast.success("Payment Status Updated Successfully");
     } else {

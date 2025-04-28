@@ -36,7 +36,6 @@ const CategoriesTable = ({ onEditClick }) => {
     `${VITE_API_URL}/api/v1/category/`,
     params
   );
-  console.log(error);
   
   useEffect(() => {
     setCategories(data?.data);

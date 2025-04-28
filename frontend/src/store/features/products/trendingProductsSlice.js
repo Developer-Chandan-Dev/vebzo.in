@@ -14,7 +14,6 @@ const initialState = {
 export const fetchTrendingProducts = createAsyncThunk("trendingItems/fetchTrendingProducts", async (_, { rejectWithValue }) => {
     try {
         const response = await axios.get(`${VITE_API_URL}/api/v1/products?isFeatured=true`);
-        console.log(response);
         return response?.data; // Backend returns cart data
     } catch (error) {
         console.log(error);

@@ -2,11 +2,11 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { fetchCartItems } from "../../store/features/cartSlice";
 import { toast } from "react-toastify";
 import useHandleSendingRequest from "../useHandleSendingRequest";
 import { clearBuyNow } from "../../store/features/buyNowSlice";
 import { fetchMyOrders } from "../../store/features/myOrdersSlice";
+import { fetchCartItems } from "../../store/features/cartSlice";
 const VITE_API_URL = import.meta.env.VITE_API_URL;
 
 const useCheckout = () => {
@@ -21,14 +21,11 @@ const useCheckout = () => {
     const [deliveryCharge, setDeliveryCharge] = useState(10);
     const [grandTotal, setGrandTotal] = useState(0);
     const [orderItems, setOrderItems] = useState([]);
+    const [loading, setLoading] = useState(false);
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const authUser = useSelector((state) => state.user.user);
-
-    useEffect(() => {
-        dispatch(fetchCartItems(authUser?._id));
-    }, [authUser?._id, dispatch]);
 
     const { cartItems, status, error } = useSelector((state) => state.cart);
     const { buyItem } = useSelector((state) => state.buyNow);
@@ -76,7 +73,8 @@ const useCheckout = () => {
     const { handleSubmit } = useHandleSendingRequest();
 
     const onSubmit = async (e) => {
-        console.log(grandTotal, '78');
+        setLoading(true);
+        
         try {
             e.preventDefault();
             const response = await handleSubmit(
@@ -96,7 +94,7 @@ const useCheckout = () => {
                     totalPrice: subTotal,
                     deliveryCharge,
                     grandTotal,
-                    buyNow: buyItem ? true : false
+                    buyNow: buyItem?.length > 0 ? true : false
                 }
             );
 
@@ -104,22 +102,30 @@ const useCheckout = () => {
                 if (buyItem) {
                     dispatch(clearBuyNow())
                     toast.success(response.message);
+                    setLoading(false);
+                    navigate("/profile/my-orders");
                 }
                 toast.success(response.message);
-                navigate("/profile/my-orders");
+                setLoading(false);
                 dispatch(fetchMyOrders());
+                dispatch(fetchCartItems());
+                navigate("/profile/my-orders");
             } else {
                 toast.error(response);
+                setLoading(false);
             }
+
             if (response?.includes('Error: Insufficient stock for product:')) {
                 toast.error(response);
+                setLoading(false);
             }
         } catch (error) {
             console.log(error);
+            setLoading(false);
         }
     };
 
-    return { firstname, setFirstname, lastname, setLastname, city, setCity, village, setVillage, address, setAddress, phone, setPhone, notes, setNotes, subTotal, setSubTotal, deliveryCharge, setDeliveryCharge, grandTotal, setGrandTotal, orderItems, setOrderItems, calculateGrandTotal, GrandTotal, onSubmit }
+    return { firstname, setFirstname, loading, lastname, setLastname, city, setCity, village, setVillage, address, setAddress, phone, setPhone, notes, setNotes, subTotal, setSubTotal, deliveryCharge, setDeliveryCharge, grandTotal, setGrandTotal, orderItems, setOrderItems, calculateGrandTotal, GrandTotal, onSubmit }
 }
 
 export default useCheckout

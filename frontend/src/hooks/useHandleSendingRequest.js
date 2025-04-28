@@ -33,7 +33,6 @@ const useHandleSendingRequest = (initialState) => {
       setFormData(initialState);
       return response.data;
     } catch (error) {
-      console.log(error);
       if (error?.response?.data?.message) {
         console.log(error?.response?.data?.message);
         setLoading(false);

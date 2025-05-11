@@ -24,8 +24,9 @@ const LeafSection = () => {
             <h2 className="text-left text-lg font-semibold py-1">
               Farm Fresh Vegitables
             </h2>
-            <p className="py-1 text-base">
-              Ut sollicitudin quam vel purus tempus, vel eleifend felis varius.
+            <p className="py-1  text-[14px]">
+              Experience the difference of truly fresh produce. Our Farm-Fresh
+              vegetables bring the garden&apos;s bounty straight to your side.
             </p>
             <Link to="/shop/category/67e280932e8d16d6040f2756">
               <Button label="SHOP NOW" RightIcon={MoveRight} className="mt-4" />
@@ -40,8 +41,9 @@ const LeafSection = () => {
           />
           <div className="!z-10 px-8 text-left py-10  relative">
             <h2 className="text-left text-lg font-semibold py-1">Vegitables</h2>
-            <p className="py-1 text-base">
-              Ut sollicitudin quam vel purus tempus, vel eleifend felis varius.
+            <p className="py-1 text-[14px]">
+              Explore our wide variety of quality vegetables, perfect the adding
+              healthy and delicious ingredients to your meals.
             </p>
             <Link to="/shop/category/67e4fc6819fea4b1e3749c93">
               <Button label="SHOP NOW" RightIcon={MoveRight} className="mt-4" />
@@ -58,8 +60,9 @@ const LeafSection = () => {
             <h2 className="text-left text-lg font-semibold py-1">
               Farm Fresh Fruits
             </h2>
-            <p className="py-1 text-base">
-              Ut sollicitudin quam vel purus tempus, vel eleifend felis varius.
+            <p className="py-1 text-[14px]">
+              Taste the sunshine in every bite! Our farm-fresh fruits offer a
+              delightful and nutritious treat straight from the farm.
             </p>
             <Link to="/shop">
               <Button label="SHOP NOW" RightIcon={MoveRight} className="mt-4" />

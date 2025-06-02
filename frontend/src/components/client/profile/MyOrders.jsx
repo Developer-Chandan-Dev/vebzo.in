@@ -119,6 +119,18 @@ const MyOrders = () => {
           order_id={order_id}
         />
       )}
+
+      {!isLoading && error && (
+        <p className="text-3xl font-bold text-red-500 ml-10 mt-10">
+          Error : {error}
+        </p>
+      )}
+      {!isLoading && myOrders?.length == 0 && (
+        <p className="text-3xl font-bold text-blue-500 ml-10 mt-10">
+          Not Found!
+        </p>
+      )}
+
       <div className="w-full mt-5 h-auto">
         {!isLoading &&
           myOrders?.length > 0 &&

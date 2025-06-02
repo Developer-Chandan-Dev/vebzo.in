@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import useHandleSendingRequest from "../useHandleSendingRequest";
 import { clearBuyNow } from "../../store/features/buyNowSlice";
-import { fetchMyOrders } from "../../store/features/myOrdersSlice";
 import { fetchCartItems } from "../../store/features/cartSlice";
 const VITE_API_URL = import.meta.env.VITE_API_URL;
 
@@ -107,7 +106,6 @@ const useCheckout = () => {
                 }
                 toast.success(response.message);
                 setLoading(false);
-                dispatch(fetchMyOrders());
                 dispatch(fetchCartItems());
                 navigate("/profile/my-orders");
             } else {

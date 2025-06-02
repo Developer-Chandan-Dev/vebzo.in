@@ -1,15 +1,6 @@
-import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
-import { toast } from "react-toastify";
-import { Heart, Image, ShoppingCart, Star } from "lucide-react";
+import { useSelector } from "react-redux";
 import Spinner from "../../utility/Spinner";
-import Button from "../../utility/Button";
-import { addToCart, fetchCartItems } from "../../../store/features/cartSlice";
-import useHandleSwitchRoutes from "../../../hooks/useHandleSwitchRoutes";
 import LogoLeaf from "../../../assets/images/logo-leaf-new.png";
-import { useContext } from "react";
-import { FavsContext } from "../../../context/FavsContext";
-import axios from "axios";
 import ItemBoxForHome from "./ItemBoxForHome";
 
 const BestSellingProducts = () => {

@@ -4,7 +4,6 @@ import ItemBox from "../shop/ItemBox";
 
 const WishList = () => {
   const { favs } = useContext(FavsContext);
-  console.log(favs);
 
   return (
     <div className="p-5 flex items-center gap-5 flex-wrap">

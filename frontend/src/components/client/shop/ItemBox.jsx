@@ -18,11 +18,8 @@ import Button from "../../utility/Button";
 import { addToCart, fetchCartItems } from "../../../store/features/cartSlice";
 import useHandleSwitchRoutes from "../../../hooks/useHandleSwitchRoutes";
 import { setBuyNowItem } from "../../../store/features/buyNowSlice";
-import { useContext } from "react";
-import { FavsContext } from "../../../context/FavsContext";
-import axios from "axios";
+import useFavorites from "../../../hooks/client/useFavorites";
 
-const VITE_API_URL = import.meta.env.VITE_API_URL;
 
 const ItemBox = ({
   _id,
@@ -35,15 +32,13 @@ const ItemBox = ({
   stock,
   rating,
 }) => {
+
   const authUser = useSelector((state) => state.user.user);
 
   const dispatch = useDispatch();
   const items = useSelector((state) => state.buyNow);
 
-  const { favIds, setFavIds, getFavoriteProducts, setFavsCount } =
-    useContext(FavsContext);
-
-  const match = favIds?.includes(_id);
+  const { toggleFavorites, match } = useFavorites(_id);
 
   const { handleGoToLoginPage } = useHandleSwitchRoutes();
 
@@ -63,30 +58,6 @@ const ItemBox = ({
       }
     });
   }
-
-  // Handle Toggle Favorites
-  const toggleFavorites = async (productId) => {
-    if (authUser) {
-      
-      try {
-        const res = await axios.put(
-          `${VITE_API_URL}/api/v1/users/favorites`,
-          { userId: authUser?._id, productId },
-          { withCredentials: true }
-        );
-
-        if (res?.data?.success === true) {
-          toast.success(res?.data?.message);
-          setFavIds(res?.data?.favorites);
-          setFavsCount(res?.data?.favorites?.length);
-          getFavoriteProducts();
-        }
-      } catch (error) {
-        console.log(error);
-        toast.error(error.message);
-      }
-    }
-  };
 
   const itemVariants = {
     hidden: { y: 20, opacity: 0 },

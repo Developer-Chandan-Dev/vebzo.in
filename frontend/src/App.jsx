@@ -15,7 +15,6 @@ import NotAuthorized from "./pages/NotAuthorized";
 
 
 import { SocketProvider } from "./context/SocketContext";
-import { fetchMyOrders } from "./store/features/myOrdersSlice";
 import { fetchBSOrders } from "./store/features/products/bestSellingProductsSlice";
 import { fetchTrendingProducts } from "./store/features/products/trendingProductsSlice";
 
@@ -25,7 +24,6 @@ function App() {
 
   useEffect(() => {
     dispatch(fetchCartItems(authUser?._id));
-    dispatch(fetchMyOrders());
   }, [authUser?._id, dispatch]);
 
   useEffect(() => {

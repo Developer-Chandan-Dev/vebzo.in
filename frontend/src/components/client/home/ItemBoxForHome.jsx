@@ -12,10 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addToCart, fetchCartItems } from "../../../store/features/cartSlice";
 import { toast } from "react-toastify";
 import useHandleSwitchRoutes from "../../../hooks/useHandleSwitchRoutes";
-import { FavsContext } from "../../../context/FavsContext";
-import { useContext } from "react";
-import axios from "axios";
-const VITE_API_URL = import.meta.env.VITE_API_URL;
+import useFavorites from "../../../hooks/client/useFavorites";
 
 const ItemBoxForHome = ({
   _id,
@@ -29,10 +26,7 @@ const ItemBoxForHome = ({
 
   const dispatch = useDispatch();
 
-  const { favIds, setFavIds, getFavoriteProducts, setFavsCount } =
-    useContext(FavsContext);
-
-  const match = favIds?.includes(_id);
+  const { toggleFavorites, match } = useFavorites(_id)
 
   const { handleGoToLoginPage } = useHandleSwitchRoutes();
 
@@ -50,30 +44,6 @@ const ItemBoxForHome = ({
       }
     });
   }
-
-  // Favorites Logic implementation
-  const toggleFavorites = async (productId) => {
-    if (authUser) {
-
-      try {
-        const res = await axios.put(
-          `${VITE_API_URL}/api/v1/users/favorites`,
-          { userId: authUser?._id, productId },
-          { withCredentials: true }
-        );
-
-        if (res?.data?.success === true) {
-          toast.success(res?.data?.message);
-          setFavIds(res?.data?.favorites);
-          setFavsCount(res?.data?.favorites?.length);
-          getFavoriteProducts();
-        }
-      } catch (error) {
-        console.log(error);
-        toast.error(error.message);
-      }
-    }
-  };
 
   return (
     <div className="w-72 h-auto productBox">

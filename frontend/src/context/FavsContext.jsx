@@ -2,20 +2,26 @@
 /* eslint-disable react-refresh/only-export-components */
 import axios from "axios";
 import { createContext, useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-toastify";
+import { logout } from '../store/features/userSlice.js'
+import authService from '../features/auth.js'
 
 const VITE_API_URL = import.meta.env.VITE_API_URL;
 
 export const FavsContext = createContext();
 
 const FavsContextProvider = (props) => {
+  // const { handleLogout } = useHandleSwitchRoutes();
   const [favs, setFavs] = useState([]);
   const [favIds, setFavIds] = useState([]);
   const [favsCount, setFavsCount] = useState(0);
   const [loading, setLoading] = useState(false);
 
   const authUser = useSelector((state) => state.user.user);
+
+
+  const dispatch = useDispatch();
 
   const getFavoriteProducts = async () => {
     try {
@@ -33,8 +39,19 @@ const FavsContextProvider = (props) => {
       }
       setLoading(false);
     } catch (error) {
-      console.log(error);
+
       toast.error(error.message);
+
+      if (error?.response?.data?.message === "Not authrorized , no token") {
+        const res = await authService.logout();
+        if (res?.data?.success === true) {
+          toast.success(res.data.message);
+          // navigate("/");
+        } else {
+          toast.error(res.data.message);
+        }
+        dispatch(logout());
+      }
       setLoading(false);
     }
   };

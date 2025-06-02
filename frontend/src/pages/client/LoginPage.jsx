@@ -4,7 +4,6 @@ import { Link, useNavigate } from "react-router-dom";
 import authService from "../../features/auth";
 import { login } from "../../store/features/userSlice";
 import SmallSpinner from "../../components/utility/SmallSpinner";
-import { fetchCartItems } from "../../store/features/cartSlice";
 import { toast } from "react-toastify";
 import GoogleLoginComponent from "../../components/GoogleLoginComponent";
 import OrganicStore from "../../assets/images/organic-store-logo5.svg";
@@ -43,7 +42,6 @@ const LoginPage = () => {
       setPassword("");
       setLoading(false);
       navigate("/");
-      dispatch(fetchCartItems(authUser?._id));
     } else if (res.data.success !== true && res.data.message) {
       toast.error(res.data.message);
       setLoading(false);

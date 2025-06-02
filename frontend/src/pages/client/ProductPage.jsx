@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { Helmet } from "react-helmet";
-import { Image, Star, IndianRupee } from "lucide-react";
+import { Image, Star, IndianRupee, Heart } from "lucide-react";
 import { Link } from "react-router-dom";
 import Footer from "../../components/client/Footer";
 import Header from "../../components/client/Header";
@@ -11,6 +11,7 @@ import useProductPage from "../../hooks/client/useProductPage";
 import { useDispatch, useSelector } from "react-redux";
 import useHandleSwitchRoutes from "../../hooks/useHandleSwitchRoutes";
 import { setBuyNowItem } from "../../store/features/buyNowSlice";
+import useFavorites from "../../hooks/client/useFavorites";
 
 const VITE_API_URL = import.meta.env.VITE_API_URL;
 const ProductPage = () => {
@@ -31,6 +32,8 @@ const ProductPage = () => {
     handleShowDescription,
     handleShowReviews,
   } = useProductPage();
+
+  const { toggleFavorites, match } = useFavorites(productData?._id)
 
   const authUser = useSelector((state) => state.user.user);
 
@@ -58,7 +61,7 @@ const ProductPage = () => {
         {!loading && (
           <div className="px-5 sm:px-10 md:px-20 py-10 sm:py-20 bg-[#f8f6f3]">
             <div className="flex items-start pb-14 gap-1 flex-wrap md:flex-nowrap">
-              <div className="w-full xl:w-[550px] h-auto">
+              <div className="w-full xl:w-[550px] h-auto relative">
                 {productData?.imageUrl ? (
                   <img
                     src={productData?.imageUrl}
@@ -66,8 +69,14 @@ const ProductPage = () => {
                     alt=""
                   />
                 ) : (
-                  <Image />
+                  <Image className="w-full h-full object-fit opacity-40"/>
                 )}
+                <Heart
+                  className={`size-8 absolute drop-shadow ring-pink-700 top-5 right-3 ${
+                    match && "fill-pink-600"
+                  } text-pink-600 cursor-pointer`}
+                  onClick={() => toggleFavorites(productData?._id)}
+                />
               </div>
               <div className="md:px-10 text-left w-full md:w-[650px] text-[15px]">
                 <h1 className="text-4xl font-semibold amiri-quarn ">

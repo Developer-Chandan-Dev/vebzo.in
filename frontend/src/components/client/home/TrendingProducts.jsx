@@ -1,11 +1,5 @@
-import { Heart, Image, ShoppingCart, Star } from "lucide-react";
-import { Link } from "react-router-dom";
 import Spinner from "../../utility/Spinner";
-import { useDispatch, useSelector } from "react-redux";
-import { addToCart, fetchCartItems } from "../../../store/features/cartSlice";
-import { toast } from "react-toastify";
-import Button from "../../utility/Button";
-import useHandleSwitchRoutes from "../../../hooks/useHandleSwitchRoutes";
+import { useSelector } from "react-redux";
 import Leaf from "../../../assets/images/logo-leaf-new.png";
 import ItemBoxForHome from "./ItemBoxForHome";
 

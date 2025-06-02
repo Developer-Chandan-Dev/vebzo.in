@@ -2,7 +2,7 @@
 /* eslint-disable react/prop-types */
 import { motion } from "framer-motion";
 import { useEffect, useRef } from "react";
-import { Menu, ShoppingCart, Heart, User, X } from "lucide-react";
+import { Menu, ShoppingCart, Heart, User, X, UserCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 import Button from "../utility/Button";
 import useHeader from "../../hooks/client/useHeader";
@@ -83,7 +83,7 @@ const Header = ({ bg = "bg-white" }) => {
         {authUser ? (
           <>
             <div className="flex item-center gap-x-4 relative">
-              <p className="text-base font-semibold text-[#8bc34a] drop-shadow-sm">
+              <p className="font-semibold text-[#8bc34a] drop-shadow-sm text-[14px]">
                 Rs. {subTotal || 0}
               </p>
               <Link to="/cart">
@@ -114,7 +114,10 @@ const Header = ({ bg = "bg-white" }) => {
                     className="size-9 rounded-full overflow-hidden border"
                   />
                 ) : (
-                  <User size="20" className="cursor-pointer text-[#8bc34a]" />
+                  <UserCircle
+                    size="22"
+                    className="cursor-pointer text-[#8bc34a]"
+                  />
                 )}
               </Link>
             </div>
@@ -143,23 +146,27 @@ const Header = ({ bg = "bg-white" }) => {
         <div className="flex items-center relative">
           {authUser ? (
             <>
-              <p className="text-base font-semibold text-[#8bc34a] drop-shadow-sm mr-1 sm:mr-3">
+              <p className=" text-[14px] font-semibold text-[#8bc34a] drop-shadow-sm mr-1 sm:mr-3">
                 Rs. {subTotal || 0}
               </p>
-              <Link to="/cart">
+              <Link to="/cart" className="relative">
                 <ShoppingCart
-                  className="text-[#8bc34a] cursor-pointer mr-4 sm:mr-6"
+                  className="text-[#8bc34a] cursor-pointer mr-1"
                   size="22"
                 />
-                <span className="px-1 py-[2px] flex-center text-xs right-12 -top-1 text-white absolute font-serif rounded-full bg-[#8bc34a]">
+                <span className="px-1 py-[2px] flex-center text-xs -right-[5px] -top-3 text-white absolute font-serif rounded-full bg-[#8bc34a]">
                   {cartItems?.items?.length}
                 </span>
               </Link>
+
+              <Link to="/profile" className="mx-2">
+                <UserCircle className="size-6 text-[#8bc34a] font-bold" />
+              </Link>
               <button
-                className="w-10 flex-center h-10 bg-[#6a9739]"
+                className="w-8 flex-center h-8 rounded-md cursor-pointer bg-[#6a9739]"
                 onClick={toggleMenu}
               >
-                <Menu className="text-white" />
+                <Menu className="text-white size-5 cursor-pointer" />
               </button>
             </>
           ) : (
@@ -217,12 +224,10 @@ const SideMenu = ({ isOpen, toggleMenu, setIsOpen }) => {
       <div className="w-11/12 h-full bg-white">
         <div className="flex-between py-4 px-5">
           <Link to="/profile">
-            <div className="w-9 h-9 rounded-full border flex-center">
-              <User className="size-5 text-[#8bc34a]" />
-            </div>
+            <UserCircle className="text-[#8bc34a]" size="26" />
           </Link>
           <div
-            className="w-10 h-10 rounded-lg flex-center transition-all text-gray-800 opacity-50 hover:opacity-100 hover:shadow cursor-pointer hover:border "
+            className="w-10 h-10 rounded-lg flex-center transition-all text-gray-800 opacity-50 hover:opacity-100 hover:shadow cursor-pointer hover:border"
             onClick={toggleMenu}
           >
             <X className="" />

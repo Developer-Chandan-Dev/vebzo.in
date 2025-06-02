@@ -1,5 +1,4 @@
 /* eslint-disable no-unused-vars */
-import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { useEffect, useMemo, useState } from "react";
 import {
@@ -16,39 +15,13 @@ import Spinner from "../../utility/Spinner";
 import OrderTrackingPopup from "./OrderTrackingPopup";
 import Empty from "../../utility/Empty";
 import useMyOrders from "../../../hooks/client/useMyOrders";
-import { fetchMyOrders } from "../../../store/features/myOrdersSlice.js";
 
 const VITE_API_URL = import.meta.env.VITE_API_URL;
 
 const MyOrders = () => {
-  const {
-    myOrders,
-    setMyOrders,
-    isOpen,
-    handleCancelingOrder,
-    setIsOpen,
-    order_id,
-    setOrder_Id,
-    handleDelete,
-    togglePopup,
-    handlePopupOpen,
-    loading,
-    error,
-    // refreshData,
-    loading2,
-    setLoading2,
-  } = useMyOrders();
-
   const [searchTerm, setSearchTerm] = useState("");
   const [searchText, setSearchText] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-
-  const dispatch = useDispatch();
-
-  const handleSetSearchText = () => {
-    setSearchText(searchTerm.trim());
-    setCurrentPage(1);
-  };
 
   const params = useMemo(
     () => ({
@@ -58,6 +31,30 @@ const MyOrders = () => {
     }),
     [searchText]
   );
+
+  console.log(searchTerm, searchText, "36");
+  // Custom hook to manage orders
+  const {
+    myOrders,
+    refetch,
+    setMyOrders,
+    isOpen,
+    handleStatusChange,
+    setIsOpen,
+    order_id,
+    handleDelete,
+    togglePopup,
+    handlePopupOpen,
+    isLoading,
+    error,
+    isUpdating,
+    isDeleting,
+  } = useMyOrders(params);
+
+  const handleSetSearchText = () => {
+    setSearchText(searchTerm.trim());
+    setCurrentPage(1);
+  };
 
   const handleEnterKeyPress = (event) => {
     if (event.key === "Enter") {
@@ -72,15 +69,14 @@ const MyOrders = () => {
   }, [setSearchText, searchTerm]);
 
   const handleSearch = () => {
-    if (params?.query.length > 0) {
-      dispatch(fetchMyOrders(params));
+    if (searchTerm.trim() !== "") {
+      handleSetSearchText(); // Trigger the search function when Enter key is pressed
     }
   };
-  console.log(myOrders);
 
   return (
     <div className="w-full px-4 h-auto py-5 relative">
-      <div className="flex items-center gap-2 mb-5 justify-between">
+      <div className="flex items-center gap-2 mb-5 justify-between flex-wrap">
         <h1 className="text-3xl font-semibold ml-2 ">My Orders</h1>
         <div className="relative ">
           <input
@@ -100,19 +96,19 @@ const MyOrders = () => {
         <button
           className="w-auto px-3 gap-2 h-9 border flex-center text-gray-700 transition-all hover:text-gray-400 rounded-md border-gray-400"
           title="Refresh"
-          onClick={() => dispatch(fetchMyOrders())}
+          onClick={() => refetch()}
         >
           <span className="hidden sm:block">Refresh</span>
           <RefreshCwIcon className="size-4" />
         </button>
       </div>
-      {loading && (
+      {isLoading && (
         <div className="w-full h-64 flex-center">
           <Spinner />
         </div>
       )}
 
-      {!loading && error && (
+      {!isLoading && error && (
         <div className="w-full px-3 py-2 text-red-500">{error}</div>
       )}
       {isOpen && (
@@ -124,7 +120,7 @@ const MyOrders = () => {
         />
       )}
       <div className="w-full mt-5 h-auto">
-        {!loading &&
+        {!isLoading &&
           myOrders?.length > 0 &&
           myOrders !== null &&
           myOrders.map((item, index) => (
@@ -145,15 +141,8 @@ const MyOrders = () => {
                   {item.status === "Delivered" ? (
                     <XCircle
                       className="ml-3 opacity-50 hover:opacity-90 cursor-pointer"
-                      onClick={() =>
-                        handleDelete(
-                          `${VITE_API_URL}/api/v1/orders/my-orders/${item?._id}`,
-                          item?.orderId,
-                          item?._id,
-                          setMyOrders,
-                          myOrders
-                        )
-                      }
+                      onClick={() => handleDelete(item?._id)}
+                      disabled={isDeleting}
                     />
                   ) : (
                     <Button
@@ -171,7 +160,7 @@ const MyOrders = () => {
                       ? item?.orderItems.map((subItem, index) => (
                           <>
                             <div
-                              key={index}
+                              key={subItem?._id}
                               className="flex items-start flex-wrap gap-3 mb-4"
                             >
                               {subItem?.product?.imageUrl ? (
@@ -255,11 +244,12 @@ const MyOrders = () => {
                       sm={true}
                       LeftIcon={X}
                       onClick={() =>
-                        handleCancelingOrder(
+                        handleStatusChange(
                           item?._id,
                           item?.status === "Cancelled" ? "Pending" : "Cancelled"
                         )
                       }
+                      disabled={isUpdating}
                     />
                   )}
 
@@ -275,7 +265,7 @@ const MyOrders = () => {
               </div>
             </div>
           ))}
-        {error && !loading && myOrders?.length < 0 && <Empty />}
+        {error && !isLoading && myOrders?.length < 0 && <Empty />}
       </div>
     </div>
   );

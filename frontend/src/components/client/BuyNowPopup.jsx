@@ -38,6 +38,23 @@ const BuyNowPopup = () => {
     dispatch(updateBuyNowQuantity({ index, quantity: validQuantity }));
   };
 
+  const handleIncrement = (index) => {
+    setQuantities((prev) => {
+      const newQuantity = (prev[index] || 1) + 1;
+      dispatch(updateBuyNowQuantity({ index, quantity: newQuantity }));
+      return { ...prev, [index]: newQuantity };
+    });
+  };
+
+  const handleDecrement = (index) => {
+    setQuantities((prev) => {
+      const newQuantity =
+        (prev[index] || 1) - 1 < 1 ? 1 : (prev[index] || 1) - 1;
+      dispatch(updateBuyNowQuantity({ index, quantity: newQuantity }));
+      return { ...prev, [index]: newQuantity };
+    });
+  };
+
   return (
     <motion.div
       className="fixed flex-center left-0 top-0 w-full h-full z-50 drop-shadow bg-black text-slate-700 backdrop-filter backdrop-blur-sm bg-opacity-10 "
@@ -63,25 +80,37 @@ const BuyNowPopup = () => {
                 />
                 <ul className="">
                   <li className="flex item-center my-1">
-                    <p className="w-40 pl-3 text-left">Name</p>
+                    <p className="w-32 sm:w-40 pl-3 text-left">Name</p>
                     <p className="pl-3">{item?.name}</p>
                   </li>
                   <li className="flex item-center my-1">
-                    <p className="w-40 pl-3 text-left ">Price</p>
+                    <p className="w-32 sm:w-40 pl-3 text-left">Price</p>
                     <p className="pl-3">{item?.price}</p>
                   </li>
                   <li className="flex item-center my-1">
-                    <p className="w-40 pl-3 text-left">Quantity</p>
+                    <p className="w-32 sm:w-40 pl-3 text-left">Quantity</p>
                     <input
                       type="number"
-                      className="pl-3 ml-2 border border-gray-200 w-14 py-1 px-1 rounded-sm"
-                      value={item?.quantity || 1}
+                      className="pl-[6px] sm:pl-3 ml-2 border border-gray-200 w-12 sm:w-14 py-1 px-1 rounded-sm"
+                       value={quantities[index] || 1}
                       onChange={(e) => handleQuantityChange(e, index)}
                       min={1}
                     />
+                    <button
+                      className="text-center px-[10px] sm:px-3 mx-1 cursor-pointer transition-all text-[14px] rounded-[4px] font-semibold text-white bg-[#6a9739] hover:bg-[#599e10] gap-x-3 flex items-center"
+                      onClick={() => handleIncrement(index)}
+                    >
+                      +
+                    </button>
+                    <button
+                      className="text-center px-[10px] sm:px-3 cursor-pointer transition-all text-[14px] rounded-[4px] font-semibold text-white bg-[#6a9739] hover:bg-[#599e10] gap-x-3 flex items-center"
+                      onClick={() => handleDecrement(index)}
+                    >
+                      -
+                    </button>
                   </li>
                   <li className="flex item-center my-1">
-                    <p className="w-40 pl-3 text-left">Sub total</p>
+                    <p className="w-32 sm:w-40 pl-3 text-left">Sub total</p>
                     <p className="pl-3">
                       {(item?.quantity || 1) * item?.price}
                     </p>

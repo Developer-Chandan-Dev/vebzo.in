@@ -20,7 +20,6 @@ import useHandleSwitchRoutes from "../../../hooks/useHandleSwitchRoutes";
 import { setBuyNowItem } from "../../../store/features/buyNowSlice";
 import useFavorites from "../../../hooks/client/useFavorites";
 
-
 const ItemBox = ({
   _id,
   name,
@@ -32,7 +31,6 @@ const ItemBox = ({
   stock,
   rating,
 }) => {
-
   const authUser = useSelector((state) => state.user.user);
 
   const dispatch = useDispatch();
@@ -64,6 +62,15 @@ const ItemBox = ({
     visible: { y: 0, opacity: 1 },
   };
 
+  let off;
+  if (salesPrice) {
+    off = parseFloat(
+      ((parseInt(salesPrice) - parseInt(price)) / parseInt(salesPrice)) * 100
+    ).toFixed(0);
+  }
+
+  const discount = salesPrice ? `${off}% off` : "";
+
   return (
     <motion.div
       variants={itemVariants}
@@ -81,20 +88,31 @@ const ItemBox = ({
             <Image className="w-full h-full text-gray-300" />
           )}
         </Link>
-        <div className="absolute w-auto h-10 top-1 right-1 flex items-center gap-3 px-3">
-          {parseInt(stock) <= 5 && (
-            <p className="px-3 py-1 text-xs rounded-full bg-orange-500 text-white">
-              Low Stock
-            </p>
-          )}
 
-          <Heart
-            className={`size-5 ${
-              match && "fill-pink-600"
-            } text-pink-600 cursor-pointer`}
-            onClick={() => toggleFavorites(_id)}
-          />
-          {/* <ShoppingCart className="text-white drop-shadow cursor-pointer" /> */}
+        <div className="absolute w-full h-10 top-0 right-1 flex items-center justify-between gap-3 px-3">
+          <span
+            className={`${
+              salesPrice
+                ? "w-auto text-xs px-2 py-[6px] bg-green-500 text-white border rounded-full"
+                : ""
+            } `}
+          >
+            {discount && discount}
+          </span>
+          <div className="flex items-center gap-3">
+            {parseInt(stock) <= 5 && (
+              <p className="px-3 py-1 text-xs rounded-full bg-orange-500 text-white">
+                Low Stock
+              </p>
+            )}
+            <Heart
+              className={`size-5 ${
+                match && "fill-pink-600"
+              } text-pink-600 cursor-pointer`}
+              onClick={() => toggleFavorites(_id)}
+            />
+            {/* <ShoppingCart className="text-white drop-shadow cursor-pointer" /> */}
+          </div>
         </div>
       </div>
       <div className="flex-center flex-col py-5">

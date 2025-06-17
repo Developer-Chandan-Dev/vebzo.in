@@ -33,13 +33,24 @@ const ProductPage = () => {
     handleShowReviews,
   } = useProductPage();
 
-  const { toggleFavorites, match } = useFavorites(productData?._id)
+  const { toggleFavorites, match } = useFavorites(productData?._id);
 
   const authUser = useSelector((state) => state.user.user);
 
   const dispatch = useDispatch();
 
   const { handleGoToLoginPage } = useHandleSwitchRoutes();
+
+  let off;
+  if (productData?.salesPrice) {
+    off = parseFloat(
+      ((parseInt(productData?.salesPrice) - parseInt(productData?.price)) /
+        parseInt(productData?.salesPrice)) *
+        100
+    ).toFixed(0);
+  }
+
+  const discount = productData?.salesPrice ? `${off}% off` : "";
 
   return (
     <>
@@ -69,7 +80,12 @@ const ProductPage = () => {
                     alt=""
                   />
                 ) : (
-                  <Image className="w-full h-full object-fit opacity-40"/>
+                  <Image className="w-full h-full object-fit opacity-40" />
+                )}
+                {productData?.salesPrice && (
+                  <span className="absolute top-3 left-3 bg-[#6a9739] text-white px-2 py-1 rounded-lg">
+                    {discount}
+                  </span>
                 )}
                 <Heart
                   className={`size-8 absolute drop-shadow ring-pink-700 top-5 right-3 ${

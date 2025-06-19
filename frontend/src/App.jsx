@@ -1,7 +1,7 @@
 import "./App.css";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import { Route, BrowserRouter as Router, Routes, useLocation } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -18,7 +18,21 @@ import { SocketProvider } from "./context/SocketContext";
 import { fetchBSOrders } from "./store/features/products/bestSellingProductsSlice";
 import { fetchTrendingProducts } from "./store/features/products/trendingProductsSlice";
 
+const useGtagPageView = () => {
+  const location = useLocation();
+  useEffect(() => {
+    if (typeof gtag === 'function') {
+      gtag('event', 'page_view', {
+        page_path: location.pathname + location.search,
+        page_location: window.location.href,
+      });
+    }
+  }, [location]);
+};
+
+
 function App() {
+  useGtagPageView();
   const dispatch = useDispatch();
   const authUser = useSelector((state) => state.user.user);
 

@@ -1,7 +1,7 @@
 import "./App.css";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Route, BrowserRouter as Router, Routes, useLocation } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -49,7 +49,6 @@ function App() {
   return (
     <>
       <SocketProvider userId={authUser?._id}>
-        <Router>
           <Routes>
             {/* Client Routes */}
             <Route path="/*" element={<ClientRoutes />} />
@@ -69,7 +68,6 @@ function App() {
             <Route path="*" element={<NotFound />} />
             <Route path="/unauthorized" element={<NotAuthorized />} />
           </Routes>
-        </Router>
         <ToastContainer />
       </SocketProvider>
     </>

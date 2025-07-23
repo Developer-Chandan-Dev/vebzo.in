@@ -6,7 +6,7 @@ Vebzo.in is a modern MERN stack-based e-commerce platform that helps local fruit
 
 ## 🔗 Live Demo
 
-🚀 Coming Soon on [https://vebzo.in](https://vebzo.in)
+🚀 Live: [https://vebzo.in](https://vebzo.in)
 
 ---
 

@@ -56,7 +56,6 @@ const addToCart = async (req, res) => {
 const fetchCartItems = async (req, res) => {
   try {
     const { userId } = req.params;
-    console.log(userId,'59');
 
     if (!userId) {
       return res.status(400).json({

@@ -25,7 +25,6 @@ exports.addReview = asyncHandler(async (req, res, next) => {
       comment,
     });
 
-    console.log(review);
     // Update product rating
     const product = await Product.findById(productId);
     const allReviews = await Review.find({ productId });

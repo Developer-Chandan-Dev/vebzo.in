@@ -3,15 +3,12 @@ import { useState } from "react";
 import { Star } from "lucide-react";
 import { toast } from "react-toastify";
 import Button from "../../utility/Button";
-import useHandleSendingRequest from "../../../hooks/useHandleSendingRequest";
-import useFetchData from "../../../hooks/useFetchData";
 import Reviews from "./Reviews";
 import { useDispatch } from "react-redux";
 import {
   addNewReview,
   fetchReviews,
 } from "../../../store/features/reviewSlice";
-const VITE_API_URL = import.meta.env.VITE_API_URL;
 
 const ReviewForm = ({ productId }) => {
   const [rating, setRating] = useState(0);

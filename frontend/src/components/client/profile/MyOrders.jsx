@@ -31,8 +31,7 @@ const MyOrders = () => {
     }),
     [searchText]
   );
-
-  console.log(searchTerm, searchText, "36");
+  
   // Custom hook to manage orders
   const {
     myOrders,

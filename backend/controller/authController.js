@@ -7,7 +7,6 @@ const { handleImageUpload } = require("../helper/cloudinary.helper.js");
 
 // Google Auth Success
 const googleAuth = (req, res) => {
-  console.log(req.user);
   // const token = generateTokenAndSetCookie(req.user);
 }
 

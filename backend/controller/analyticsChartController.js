@@ -104,7 +104,6 @@ const userGrowthChart = asyncHandler(async (req, res, next) => {
         $sort: { _id: 1 }, // Sort by month
       },
     ]);
-    console.log(monthlyData);
 
     // Format the data into a frontend-friently structure
     const formattedData = Array(12)

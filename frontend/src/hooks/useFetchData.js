@@ -53,7 +53,6 @@ const useFetchData = (url, params = null) => {
         await authService.logout();
         navigate("/login");
       }
-      console.log(error.response);
       setError(error.response?.data.message);
       setLoading(false);
     }

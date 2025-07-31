@@ -79,7 +79,6 @@ const getCategories = asyncHandler(async (req, res, next) => {
       { $skip: (page - 1) * limit },
       { $limit: limit },
     ]);
-    console.log(categories)
 
     res
       .status(200)

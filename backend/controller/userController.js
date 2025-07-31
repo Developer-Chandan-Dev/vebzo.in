@@ -139,7 +139,6 @@ const favoriteProducts = asyncHandler(async (req, res, next) => {
 const getFavoriteProducts = asyncHandler(async (req, res, next) => {
   try {
     const { userId } = req.params;
-    console.log(userId, '142');
 
     const user = await User.findById(userId);
 

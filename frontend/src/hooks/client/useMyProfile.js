@@ -97,11 +97,12 @@ const useMyProfile = () => {
                 toast.success(res?.message);
                 dispatch(login(res?.user?._id, res?.user?.username, res?.user?.email, res?.user?.role, res?.user?.imageUrl))
                 setFilePreview(res?.user.imageUrl);
-                setLoading(false);
             }
         } catch (error) {
             console.log(error);
             toast.error(error || "Something went wrong");
+        } finally {
+            setLoading(false);
         }
     };
 

@@ -1,7 +1,17 @@
 import { format, isToday, formatDistanceToNow, isYesterday } from "date-fns";
 
 export const formatDate = (dateString) => {
+  // Handle empty or null dateString
+  if (!dateString) {
+    return ""; // Return an empty string for invalid input
+  }
+
   const date = new Date(dateString);
+
+  // Check if the date is valid
+  if (isNaN(date.getTime())) {
+    return ""; // Return an empty string for invalid dates
+  }
 
   if (isToday(date)) {
     return formatDistanceToNow(date, { addSuffix: true });
@@ -20,7 +30,17 @@ export const formatDate = (dateString) => {
  * @returns {string} The formatted date and time string (e.g., 'Jul 11, 2024 at 10:30 AM').
  */
 export const formatDateTime = (dateString) => {
+  // Handle empty or null dateString
+  if (!dateString) {
+    return ""; // Return an empty string for invalid input
+  }
+
   const date = new Date(dateString);
+
+  // Check if the date is valid
+  if (isNaN(date.getTime())) {
+    return ""; // Return an empty string for invalid dates
+  }
   // 'PPpp' is a date-fns format string that includes both date and time.
   // Example: 'Jul 11, 2024 at 10:30 AM'
   return format(date, "PPpp");

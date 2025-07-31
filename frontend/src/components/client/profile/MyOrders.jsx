@@ -9,7 +9,7 @@ import {
   X,
   XCircle,
 } from "lucide-react";
-import { formatDate } from "../../../utils/dateUtils";
+import { formatDate, formatDateTime } from "../../../utils/dateUtils";
 import Button from "../../utility/Button";
 import Spinner from "../../utility/Spinner";
 import OrderTrackingPopup from "./OrderTrackingPopup";
@@ -49,6 +49,7 @@ const MyOrders = () => {
     isUpdating,
     isDeleting,
   } = useMyOrders(params);
+
 
   const handleSetSearchText = () => {
     setSearchText(searchTerm.trim());
@@ -220,7 +221,7 @@ const MyOrders = () => {
                   <div>
                     <p>Delivery Expected By:</p>
                     <p>
-                      <b>24 Dec 2025</b>
+                      <b>{formatDateTime(item?.deliveredAt)}</b>
                     </p>
                     <div className="mt-3">
                       <p>

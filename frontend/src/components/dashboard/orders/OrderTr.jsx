@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { motion } from "framer-motion";
 import { Edit, IndianRupee, Trash2 } from "lucide-react";
-import { formatDate } from "../../../utils/dateUtils";
+import { formatDate, formatDateTime } from "../../../utils/dateUtils";
 const VITE_API_URL = import.meta.env.VITE_API_URL;
 
 const OrderTr = ({
@@ -71,6 +71,9 @@ const OrderTr = ({
       </td>
       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
         {formatDate(createdAt)}
+      </td>
+      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
+        {formatDateTime(deliveredAt)}
       </td>
       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
         <div className="flex-center">

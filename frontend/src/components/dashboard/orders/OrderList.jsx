@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { Edit, IndianRupee, Origami, Trash2 } from "lucide-react";
 import { useState } from "react";
-import { formatDate } from "../../../utils/dateUtils";
+import { formatDate, formatDateTime } from "../../../utils/dateUtils";
 import useHandleSendingRequest from "../../../hooks/useHandleSendingRequest";
 const VITE_API_URL = import.meta.env.VITE_API_URL;
 
@@ -30,6 +30,7 @@ const OrderList = ({
   const [newPaymentStatus, setNewPaymentStatus] = useState(
     paymentStatus || "Pending"
   );
+  console.log(grandTotal, deliveryCharge, totalPrice, 33);
 
   const { handleSubmit } = useHandleSendingRequest();
 
@@ -106,7 +107,7 @@ const OrderList = ({
             </li>
             <li>
               <b>Delivery Date :</b>{" "}
-              {deliveredAt ? formatDate(deliveredAt) : ""}
+              {deliveredAt ? formatDateTime(deliveredAt) : ""}
             </li>
             <li className="mt-3">
               <span className="flex items-center">

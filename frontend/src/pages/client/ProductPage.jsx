@@ -87,12 +87,14 @@ const ProductPage = () => {
                     {discount}
                   </span>
                 )}
+                <div className="size-12 absolute drop-shadow top-7 right-7 flex-center bg-white rounded-full">
                 <Heart
-                  className={`size-8 absolute drop-shadow ring-pink-700 top-5 right-3 ${
+                  className={`size-8  ring-pink-700  ${
                     match && "fill-pink-600"
                   } text-pink-600 cursor-pointer`}
                   onClick={() => toggleFavorites(productData?._id)}
                 />
+                </div>
               </div>
               <div className="md:px-10 text-left w-full md:w-[650px] text-[15px]">
                 <h1 className="text-4xl font-semibold amiri-quarn ">

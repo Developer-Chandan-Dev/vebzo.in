@@ -1,11 +1,5 @@
 /* eslint-disable react/prop-types */
-import {
-  Heart,
-  Image,
-  PlusCircle,
-  ShoppingCart,
-  Star,
-} from "lucide-react";
+import { Heart, Image, ShoppingCart, Star } from "lucide-react";
 import { Link } from "react-router-dom";
 import Button from "../../utility/Button";
 import { useDispatch, useSelector } from "react-redux";
@@ -26,7 +20,7 @@ const ItemBoxForHome = ({
 
   const dispatch = useDispatch();
 
-  const { toggleFavorites, match } = useFavorites(_id)
+  const { toggleFavorites, match } = useFavorites(_id);
 
   const { handleGoToLoginPage } = useHandleSwitchRoutes();
 
@@ -61,18 +55,17 @@ const ItemBoxForHome = ({
         </Link>
 
         <div className="absolute w-auto h-10 top-2 right-2 flex items-center gap-3 px-3">
-          <Heart
-            className={`size-6 drop-shadow ${
-              match && "fill-pink-600"
-            } text-pink-600 cursor-pointer`}
-            onClick={() => toggleFavorites(_id)}
-          />
-          <PlusCircle
-            className="text-white drop-shadow cursor-pointer"
-            onClick={() =>
-              authUser ? handleAddtoCart(_id) : handleGoToLoginPage()
-            }
-          />
+          <div className="size-7 flex-center bg-white rounded-full shadow-md shadow-slate-400">
+            <Heart
+              className={`size-5 drop-shadow ${
+                match && "fill-pink-600"
+              } text-pink-600 cursor-pointer`}
+              onClick={() =>
+                authUser ? toggleFavorites(_id) : handleGoToLoginPage()
+              }
+            />
+          </div>
+          
         </div>
       </div>
 

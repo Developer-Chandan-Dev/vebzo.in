@@ -105,12 +105,14 @@ const ItemBox = ({
                 Low Stock
               </p>
             )}
-            <Heart
-              className={`size-5 ${
-                match && "fill-pink-600"
-              } text-pink-600 cursor-pointer`}
-              onClick={() => toggleFavorites(_id)}
-            />
+            <div className="size-7 flex-center bg-white rounded-full  shadow-md shadow-slate-400">
+              <Heart
+                className={`size-5 ${
+                  match && "fill-pink-600"
+                } text-pink-600 cursor-pointer`}
+                onClick={() => toggleFavorites(_id)}
+              />
+            </div>
             {/* <ShoppingCart className="text-white drop-shadow cursor-pointer" /> */}
           </div>
         </div>

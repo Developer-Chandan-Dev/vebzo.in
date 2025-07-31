@@ -6,6 +6,8 @@ import { toast } from "react-toastify";
 import { X } from "lucide-react";
 import useHandleSendingRequest from "../../../hooks/useHandleSendingRequest";
 import useFetchData from "../../../hooks/useFetchData";
+import { formatDateForDatetimeLocal } from "../../../utils/dateUtils";
+import SmallSpinner from "../../utility/SmallSpinner";
 const VITE_API_URL = import.meta.env.VITE_API_URL;
 
 const AddUpdateOrdersPopup = ({ order, onClose, refreshData }) => {
@@ -18,6 +20,7 @@ const AddUpdateOrdersPopup = ({ order, onClose, refreshData }) => {
   const [village, setVillage] = useState("");
   const [city, setCity] = useState("");
   const [address, setAddress] = useState("");
+  const [isLoading, seIsLoading] = useState(false);
 
   const { data, loading, error } = useFetchData(
     `${VITE_API_URL}/api/v1/orders/details/${order?._id}`
@@ -83,23 +86,34 @@ const AddUpdateOrdersPopup = ({ order, onClose, refreshData }) => {
 
   const onSubmit = async (e) => {
     e.preventDefault();
+    seIsLoading(true);
 
     try {
-      const res = await handleSubmit("PUT", `${VITE_API_URL}/api/v1/orders`, {
-        status,
-        paymentStatus,
-        deliveredAt,
-        shippingAddress: {
-          phone,
-          village,
-          city,
-          address,
-        },
-      });
+      const res = await handleSubmit(
+        "PUT",
+        `${VITE_API_URL}/api/v1/orders/${order?._id}`,
+        {
+          status,
+          paymentStatus,
+          deliveredAt,
+          shippingAddress: {
+            phone,
+            village,
+            city,
+            address,
+          },
+        }
+      );
 
       console.log(res);
+      if (res.success === true) {
+        toast.success(res?.message);
+      }
     } catch (error) {
       console.log(error);
+      toast.error(error || "Something went wrong");
+    } finally {
+      seIsLoading(false);
     }
   };
 
@@ -187,6 +201,9 @@ const AddUpdateOrdersPopup = ({ order, onClose, refreshData }) => {
                   <option value="Udagi">Udagi</option>
                   <option value="Savdih">Savdih</option>
                   <option value="Belhabandh (Kwajgi patti)">Savdih</option>
+                  <option value="Nevada">Nevada</option>
+                  <option value="Bhorai Ka Pura">Bhorai Ka Pura</option>
+                  <option value="Sarai Hariram">Sarai Hariram</option>
                 </select>
               </div>
             </div>
@@ -236,6 +253,23 @@ const AddUpdateOrdersPopup = ({ order, onClose, refreshData }) => {
                 />
               </div>
             </div>
+            <div>
+              <label htmlFor="datetime" className="ml-1">
+                Expected Delivery Date
+                <span className="text-red-400 ml-1">*</span>
+              </label>
+              <div className="py-1">
+                <input
+                  type="datetime-local"
+                  id="datetime"
+                  required
+                  value={formatDateForDatetimeLocal(deliveredAt)}
+                  onChange={(e) => setDeliveredAt(e.target.value)}
+                  className="w-full sm:w-60 h-10 py-1 px-[10px] border rounded-md border-slate-500 outline-slate-500 my-2 bg-gray-700"
+                  placeholder="Enter Product Name"
+                />
+              </div>
+            </div>
           </div>
 
           <div className="mt-2">
@@ -243,7 +277,7 @@ const AddUpdateOrdersPopup = ({ order, onClose, refreshData }) => {
               className="px-6 rounded-md py-2 border text-slate-100 border-slate-500 font-semibold transition-all hover:text-white hover:bg-slate-700 hover:shadow-md shadow-slate-300"
               type="submit"
             >
-              Update
+              {isLoading ? <SmallSpinner /> : "Update"}
             </button>
           </div>
         </form>

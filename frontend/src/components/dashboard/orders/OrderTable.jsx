@@ -79,6 +79,7 @@ const OrderTable = ({ onEditClick }) => {
   useEffect(() => {
     setOrderItems(data?.data);
   }, [data?.data]);
+  console.log(orderItems);
 
   // Function to handle page change
   // Create an array of page numbers (e.g., [1, 2, 3])
@@ -169,7 +170,7 @@ const OrderTable = ({ onEditClick }) => {
       )}
       <TableContainer>
         {!activeList && !loading && (
-          <table className="table-container divide-y divide-gray-700 w-[1000px] md:w-full">
+          <table className="table-container divide-y divide-gray-700 w-[1200px] md:w-[1450px] ">
             <thead>
               <tr>
                 <th className="px-6 py-3 text-left font-medium text-gray-400 uppercase tracking-wider flex items-center gap-1">
@@ -185,7 +186,7 @@ const OrderTable = ({ onEditClick }) => {
                   Customer Name
                 </th>
                 <th className="px-6 py-3 text-left font-medium text-gray-400 uppercase tracking-wider">
-                  Total
+                  Grand Total
                 </th>
                 <th className="px-4 py-3 text-left font-medium text-gray-400 uppercase tracking-wider flex items-center gap-1">
                   <input
@@ -252,6 +253,9 @@ const OrderTable = ({ onEditClick }) => {
                   )}
                 </th>
                 <th className="px-6 py-3 text-left font-medium text-gray-400 uppercase tracking-wider">
+                  Delivery Date
+                </th>
+                <th className="px-6 py-3 text-left font-medium text-gray-400 uppercase tracking-wider">
                   Actions
                 </th>
               </tr>
@@ -269,7 +273,7 @@ const OrderTable = ({ onEditClick }) => {
                     lastname={order?.lastname}
                     orderItems={order?.orderItems}
                     shippingAddress={order?.shippingAddress}
-                    totalPrice={order?.totalPrice}
+                    totalPrice={order?.grandTotal}
                     paymentMethod={order?.paymentMethod}
                     paymentStatus={order?.paymentStatus}
                     deliveredAt={order?.deliveredAt}
@@ -305,7 +309,7 @@ const OrderTable = ({ onEditClick }) => {
                 paymentStatus={order?.paymentStatus}
                 deliveredAt={order?.deliveredAt}
                 status={order?.status}
-                ord={order?.grandTotal}
+                grandTotal={order?.grandTotal}
                 deliveryCharge={order?.deliveryCharge}
                 createdAt={order?.createdAt}
                 onEditClick={onEditClick}

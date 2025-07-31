@@ -331,6 +331,44 @@ const getMyOrderStatus = asyncHandler(async (req, res, next) => {
   }
 });
 
+const updateOrderDetails = asyncHandler(async (req, res, next) => {
+  const orderId = req.params.id;
+  const {
+    status,
+    paymentStatus,
+    deliveredAt,
+    shippingAddress
+  } = req.body;
+
+  if (!status || !paymentStatus || !deliveredAt || !shippingAddress) {
+    return next(new ErrorResponse("Please provide all required fields", 400))
+  }
+
+  const order = await Order.findById(orderId);
+
+  if (!order) {
+    return next(new ErrorResponse("Order not found", 404));
+  }
+
+  const updatedOrder = await Order.findByIdAndUpdate(orderId, {
+    status, paymentStatus, deliveredAt, shippingAddress
+  },
+    {
+      new: true,
+      runValidators: true
+    });
+
+  if(!updatedOrder){
+    console.log(updatedOrder);
+    return next(new ErrorResponse("Order Updation Error", 500))
+  }
+  res.status(200).json({
+    success:true,
+    data: updatedOrder,
+    message: "Order updated successfully!"
+  })
+})
+
 module.exports = {
   createOrder,
   getOrders,
@@ -340,5 +378,6 @@ module.exports = {
   getMyOrders,
   deleteOrder,
   getMyOrderStatus,
-  disableMyOrder
+  disableMyOrder,
+  updateOrderDetails
 };
